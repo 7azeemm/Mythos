@@ -1,0 +1,44 @@
+name,base_clock,boost_clock,core_count,thread_count,l1_cache,l2_cache,l3_cache,tdp,socket,integrated_gpu,memory_support
+AMD Ryzen 3 3200G,3.6,4,4,4,384,2,4,65,AMD Socket AM4,Radeon Vega 8,DDR4
+AMD Ryzen 5 3400G,3.7,4.2,4,8,384,2,4,65,AMD Socket AM4,Radeon RX Vega 11,DDR4
+AMD Ryzen 5 3600,3.6,4.2,6,12,384,3,32,65,AMD Socket AM4,N/A,DDR4
+AMD Ryzen 5 5500,3.6,4.2,6,12,384,3,16,65,AMD Socket AM4,N/A,DDR4
+AMD Ryzen 5 5500GT,3.6,4.4,6,12,384,3,16,65,AMD Socket AM4,Radeon Vega 7,DDR4
+AMD Ryzen 5 5600,3.5,4.4,6,12,384,3,32,65,AMD Socket AM4,N/A,DDR4
+AMD Ryzen 5 5600GT,3.6,4.6,6,12,384,3,16,65,AMD Socket AM4,Radeon Vega 7,DDR4
+AMD Ryzen 5 7500F,3.7,5,6,12,384,6,32,65,AMD Socket AM5,N/A,DDR5
+AMD Ryzen 5 7600,3.8,5.1,6,12,384,6,32,65,AMD Socket AM5,Radeon Graphics,DDR5
+AMD Ryzen 5 7600X,4.7,5.3,6,12,384,6,32,105,AMD Socket AM5,Radeon Graphics,DDR5
+AMD Ryzen 5 8400F,4.2,4.7,6,12,384,6,16,65,AMD Socket AM5,N/A,DDR5
+AMD Ryzen 5 9600X,3.9,5.4,6,12,480,6,32,65,AMD Socket AM5,Radeon Graphics,DDR5
+AMD Ryzen 5 Pro 5650G,3.9,4.4,6,12,384,3,16,65,AMD Socket AM4,Radeon Vega 7,DDR4
+AMD Ryzen 5 Pro 5655G,3.9,4.4,6,12,384,3,16,65,AMD Socket AM4,Radeon Vega 7,DDR4
+AMD Ryzen 7 5700,3.7,4.6,8,16,512,4,16,65,AMD Socket AM4,N/A,DDR4
+AMD Ryzen 7 5700G,3.8,4.6,8,16,512,4,16,65,AMD Socket AM4,Radeon Graphics 512SP,DDR4
+AMD Ryzen 7 5800X,3.8,4.7,8,16,512,4,32,105,AMD Socket AM4,N/A,DDR4
+AMD Ryzen 7 7700X,4.5,5.4,8,16,512,8,32,105,AMD Socket AM5,Radeon Graphics,DDR5
+AMD Ryzen 7 9700X,3.8,5.5,8,16,640,8,32,65,AMD Socket AM5,Radeon Graphics,DDR5
+AMD Ryzen 9 7950X,4.5,5.7,16,32,1024,16,64,170,AMD Socket AM5,Radeon Graphics,DDR5
+AMD Ryzen 9 9900X,4.4,5.6,12,24,960,12,64,120,AMD Socket AM5,Radeon Graphics,DDR5
+AMD Ryzen 9 9900X3D,4.4,5.5,12,24,960,12,128,120,AMD Socket AM5,Radeon Graphics,DDR5
+Intel Core i3-10105F,3.7,4.4,4,8,256,1,6,65,Intel Socket 1200,N/A,DDR4
+Intel Core i3-12100F,3.3,4.3,4,8,320,5,12,58,Intel Socket 1700,N/A,"DDR4, DDR5"
+Intel Core i5-11400F,2.6,4.4,6,12,480,3,12,65,Intel Socket 1200,N/A,DDR4
+Intel Core i5-12400F,2.5,4.4,6,12,480,7.5,18,65,Intel Socket 1700,N/A,"DDR4, DDR5"
+Intel Core i5-12600KF,3.7,4.9,10,16,800,12.5,20,125,Intel Socket 1700,N/A,"DDR4, DDR5"
+Intel Core i5-12600K,3.7,4.9,10,16,800,12.5,20,125,Intel Socket 1700,UHD Graphics 770,"DDR4, DDR5"
+Intel Core i5-13400F,2.5,4.6,10,16,800,12.5,20,65,Intel Socket 1700,N/A,"DDR4, DDR5"
+Intel Core i5-13600KF,3.5,5.1,14,20,1120,28,24,125,Intel Socket 1700,N/A,"DDR4, DDR5"
+Intel Core i5-14400F,2.5,4.7,10,16,800,12.5,20,65,Intel Socket 1700,N/A,"DDR4, DDR5"
+Intel Core i5-14600KF,3.5,5.3,14,20,1120,28,24,125,Intel Socket 1700,N/A,"DDR4, DDR5"
+Intel Core i7-12700F,2.1,4.9,12,20,960,15,25,65,Intel Socket 1700,N/A,"DDR4, DDR5"
+Intel Core i7-12700KF,3.6,5,12,20,960,15,25,125,Intel Socket 1700,N/A,"DDR4, DDR5"
+Intel Core i7-12700K,3.6,5,12,20,960,15,25,125,Intel Socket 1700,UHD Graphics 770,"DDR4, DDR5"
+Intel Core i7-13700F,2.1,5.2,16,24,1280,32,30,65,Intel Socket 1700,N/A,"DDR4, DDR5"
+Intel Core i7-14700F,2.1,5.6,20,28,1600,40,33,65,Intel Socket 1700,N/A,"DDR4, DDR5"
+Intel Core i7-14700K,3.4,5.6,20,28,1600,40,33,125,Intel Socket 1700,UHD Graphics 770,"DDR4, DDR5"
+Intel Core i7-14700KF,3.4,5.6,20,28,1600,40,33,125,Intel Socket 1700,N/A,"DDR4, DDR5"
+Intel Core i9-13900KF,3,5.8,24,32,1920,48,36,125,Intel Socket 1700,N/A,"DDR4, DDR5"
+Intel Core i9-14900KF,3.2,6,24,32,1920,48,36,125,Intel Socket 1700,N/A,"DDR4, DDR5"
+Intel Core Ultra 5 245KF,4.2,5.2,14,14,2688,42,24,125,Intel Socket 1851,N/A,DDR5
+Intel Core Ultra 7 265KF,3.9,5.5,20,20,3840,60,30,125,Intel Socket 1851,N/A,DDR5
