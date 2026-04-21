@@ -1,4 +1,4 @@
 pub mod server;
-pub mod handlers;
+pub mod endpoints;
 pub mod middleware;
 pub mod error;

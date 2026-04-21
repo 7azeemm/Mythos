@@ -22,7 +22,7 @@ pub struct Product {
     pub created_at: DateTime<Utc>,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, Clone)]
 pub enum ProductSpecs {
     PC(PCSpecs),
     Unknown

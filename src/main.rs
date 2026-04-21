@@ -24,7 +24,7 @@ async fn main() {
     setup_logging();
     database::connect().await;
     dataset::load_datasets();
-    // web_scraper::fetcher::schedule();
+    web_scraper::scheduler::schedule();
 
     server::run(3000).await.expect("Failed to start the server");
 }

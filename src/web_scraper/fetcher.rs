@@ -1,4 +1,5 @@
 use crate::utils::database::get_db_pool;
+use crate::web_scraper::product::Product;
 use crate::web_scraper::updater;
 use crate::HTTP_CLIENT;
 use chrono::Utc;
@@ -8,9 +9,7 @@ use scraper::element_ref::Text;
 use scraper::{ElementRef, Html, Selector};
 use serde_json::Value;
 use std::error::Error;
-use std::time::{Duration, Instant};
-use tokio::time::sleep;
-use crate::web_scraper::product::Product;
+use std::time::Instant;
 
 const URL: &str = "https://www.tunisianet.com.tn/682-pc-de-bureau-gamer";
 
@@ -26,22 +25,18 @@ static PRICE_SEL: Lazy<Selector> = Lazy::new(|| Selector::parse("span.price").un
 
 static ID_RE: Lazy<Regex> = Lazy::new(|| Regex::new(r"/(\d+)-").unwrap());
 
-pub fn schedule() {
-    tokio::spawn(async move {
-        loop {
-            if let Err(err) = scrape_tunisianet().await {
-                eprintln!("Failed to scrape tunisianet: {}", err);
-            }
-            sleep(Duration::from_secs(3600)).await;
-        }
-    });
-}
-
-pub async fn scrape_tunisianet() -> Result<(), Box<dyn Error>> {
+pub async fn scrape_tunisianet() {
     println!("Scraping Tunisianet...");
     let start_time = Instant::now();
 
-    let (page_count, mut products) = fetch_first_page().await?;
+    let (page_count, mut products) = match fetch_first_page().await {
+        Ok((page_count, mut products)) => (page_count, products),
+        Err(err) => {
+            eprintln!("Failed to fetch first page: {err}");
+            return;
+        }
+    };
+    
     println!("Found {page_count} pages");
     println!("Scraped 1 ({})", products.len());
 
@@ -69,9 +64,9 @@ pub async fn scrape_tunisianet() -> Result<(), Box<dyn Error>> {
         products.len()
     );
 
-    updater::sync_products(get_db_pool(), products).await?;
-
-    Ok(())
+    if let Err(err) = updater::sync_products(get_db_pool(), products).await {
+        eprintln!("Failed to sync products: {err}");
+    }
 }
 
 async fn fetch_page(url: &str) -> Result<Html, Box<dyn Error>> {

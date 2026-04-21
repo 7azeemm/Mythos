@@ -9,7 +9,7 @@ static GPU_PATTERNS: &[&str] = &[
     "AMD", "ASUS", "NVIDIA", "GIGABYTE", "MSI",
     "Graphics", "INNO3D", "TWIN", "VENTUS", "WINDFORCE", "Édition",
     "TRIO", "GAMING", "WHITE", "SAPPHIRE PULSE", "XFX Swift",
-    "ZOTAC", "EDGE", "Dual", "INSPIRE", "SHADOW", "BULK",
+    "ZOTAC", "EDGE", "Dual", "INSPIRE", "SHADOW", "BULK", "PLUS",
     "X2", "OC", "V2", "V3", "XS", "2X", "3X", ",",
 ];
 
@@ -111,9 +111,10 @@ fn parse_memory(input: &str) -> Result<MemorySpecs, Box<dyn Error>> {
     let sticks_part = input.split('(').nth(1).ok_or_else(|| format!("invalid memory line: {input}"))?;
     let sticks = sticks_part.chars().take_while(|c| c.is_ascii_digit())
         .collect::<String>().parse()?;
-    let ram_type = RamType::from_str(
-        input.split_whitespace().last().ok_or_else(|| format!("invalid memory line: {input}"))?
-    )?;
+
+    let ram_type = input.split_whitespace().rev()
+        .find_map(|s| RamType::from_str(s).ok())
+        .ok_or_else(|| format!("invalid memory line, missing ram type: {input}"))?;
 
     Ok(MemorySpecs {
         size,

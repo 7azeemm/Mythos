@@ -9,20 +9,9 @@ use serde_json::json;
 
 #[derive(Debug)]
 pub enum ApiError {
-    // Database errors
     DatabaseError(String),
     NotFound(String),
-    Conflict(String),
-
-    // Validation errors
-    InvalidInput(String),
     InvalidQuery(String),
-
-    // Client errors
-    Unauthorized,
-    Forbidden,
-
-    // Server errors
     InternalError(String),
 }
 
@@ -31,11 +20,7 @@ impl fmt::Display for ApiError {
         match self {
             ApiError::DatabaseError(msg) => write!(f, "Database error: {}", msg),
             ApiError::NotFound(msg) => write!(f, "Not found: {}", msg),
-            ApiError::Conflict(msg) => write!(f, "Conflict: {}", msg),
-            ApiError::InvalidInput(msg) => write!(f, "Invalid input: {}", msg),
             ApiError::InvalidQuery(msg) => write!(f, "Invalid query: {}", msg),
-            ApiError::Unauthorized => write!(f, "Unauthorized"),
-            ApiError::Forbidden => write!(f, "Forbidden"),
             ApiError::InternalError(msg) => write!(f, "Internal error: {}", msg),
         }
     }
@@ -49,25 +34,10 @@ impl IntoResponse for ApiError {
                 "NOT_FOUND",
                 msg.clone(),
             ),
-            ApiError::InvalidInput(msg) | ApiError::InvalidQuery(msg) => (
+            ApiError::InvalidQuery(msg) => (
                 StatusCode::BAD_REQUEST,
                 "INVALID_REQUEST",
                 msg.clone(),
-            ),
-            ApiError::Conflict(msg) => (
-                StatusCode::CONFLICT,
-                "CONFLICT",
-                msg.clone(),
-            ),
-            ApiError::Unauthorized => (
-                StatusCode::UNAUTHORIZED,
-                "UNAUTHORIZED",
-                "Unauthorized".to_string(),
-            ),
-            ApiError::Forbidden => (
-                StatusCode::FORBIDDEN,
-                "FORBIDDEN",
-                "Forbidden".to_string(),
             ),
             ApiError::DatabaseError(msg) => {
                 tracing::error!("Database error: {}", msg);
