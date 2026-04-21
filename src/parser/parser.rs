@@ -2,8 +2,8 @@ use std::error::Error;
 use std::str::FromStr;
 use once_cell::sync::Lazy;
 use regex::Regex;
-use crate::dataset::{CPU_DATASET, GPU_DATASET};
-use crate::models::{GPUSpecs, MemorySpecs, RamType, StorageSpecs, StorageInterface, StorageType, CPUSpecs, PCSpecs};
+use crate::utils::dataset::{CPU_DATASET, GPU_DATASET};
+use crate::parser::specs::{GPUSpecs, MemorySpecs, RamType, StorageSpecs, StorageInterface, StorageType, CPUSpecs, PCSpecs};
 
 static GPU_PATTERNS: &[&str] = &[
     "AMD", "ASUS", "NVIDIA", "GIGABYTE", "MSI",
@@ -15,10 +15,10 @@ static GPU_PATTERNS: &[&str] = &[
 
 static CPU_NAME_RE: Lazy<Regex> = Lazy::new(|| Regex::new(r"(?i)\s+\d+\s*(?:e|ème|eme)?\s+géné.*").unwrap());
 static GPU_NAME_RE: Lazy<Regex> = Lazy::new(|| Regex::new(&format!(r"(?i){}", GPU_PATTERNS.join("|"))).unwrap());
-static GPU_CLEANUP_RE: Lazy<Regex> = Lazy::new(|| Regex::new(r"(?i)\s+\d+\s*G[B]?$").unwrap());
+static GPU_CLEANUP_RE: Lazy<Regex> = Lazy::new(|| Regex::new(r"(?i)\s+\d+\s*GB?$").unwrap());
 static GPU_MEMORY_RE: Lazy<Regex> = Lazy::new(|| Regex::new(r"(\d+)\s*Go").unwrap());
 
-pub fn extract_specs(description: &str) -> Result<PCSpecs, Box<dyn Error>> {
+pub fn parse_specs(description: &str) -> Result<PCSpecs, Box<dyn Error>> {
     let mut parts = description.split(" - ").collect::<Vec<&str>>().into_iter();
 
     let first = parts.next().ok_or("description is empty")?;
@@ -59,9 +59,9 @@ pub fn extract_specs(description: &str) -> Result<PCSpecs, Box<dyn Error>> {
                 .replace("Noir", "Black"));
         }
     }
-    
+
     let psu = psu.ok_or("psu not found")?;
-    
+
     Ok(PCSpecs {
         cpu, gpu, motherboard, memory, storage,
         cooler, case, psu, monitor, os, warranty

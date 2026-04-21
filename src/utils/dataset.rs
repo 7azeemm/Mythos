@@ -2,7 +2,7 @@ use std::collections::HashMap;
 use std::error::Error;
 use csv::Reader;
 use once_cell::sync::Lazy;
-use crate::models::{GPUSpecs, CPUSpecs};
+use crate::parser::specs::{GPUSpecs, CPUSpecs};
 
 pub static CPU_DATASET: Lazy<HashMap<String, CPUSpecs>> = Lazy::new(|| {
     load_cpu_dataset().expect("Failed to load CPU dataset")
