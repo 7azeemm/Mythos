@@ -9,16 +9,19 @@ use sqlx::PgPool;
 use tokio::sync::Mutex;
 use crate::web_scraper::product::Product;
 
+const BATCH_SIZE: usize = 100;
+
 static MISSING_MAP: Lazy<Mutex<HashMap<String, u8>>> = Lazy::new(|| Mutex::new(HashMap::new()));
 
 pub async fn sync_products(pool: &PgPool, scraped: Vec<Product>) -> Result<(), Box<dyn Error>> {
     let ids: Vec<_> = scraped.iter().map(|p| p.id.clone()).collect();
     let ids_set = ids.iter().collect::<HashSet<_>>();
-    remove_old_products(pool, &ids_set).await?;
+
+    archive_missing_products(pool, &ids_set).await?;
 
     let db_products = sqlx::query!(
         r#"
-        SELECT id, p_ref, title, description, image, price, status, history
+        SELECT id, p_ref, section, source, title, description, image, price, status, history
         FROM products
         WHERE id = ANY($1)
         "#,
@@ -32,12 +35,13 @@ pub async fn sync_products(pool: &PgPool, scraped: Vec<Product>) -> Result<(), B
         existings.insert(p.id.clone(), p);
     }
 
+    let mut new_products = Vec::new();
+
     for product in scraped {
         let existing = match existings.get(&product.id) {
             Some(p) => p,
             None => {
-                insert_new_product(pool, &product, &product.id).await?;
-                println!("NEW: {}", product.id);
+                new_products.push(product);
                 continue;
             }
         };
@@ -83,8 +87,6 @@ pub async fn sync_products(pool: &PgPool, scraped: Vec<Product>) -> Result<(), B
                 push_change(&mut history, &existing.id, "image", &existing.image, &product.image);
             }
 
-            let new_history = Value::Array(history);
-
             sqlx::query!(
                 r#"
                 UPDATE products
@@ -102,7 +104,7 @@ pub async fn sync_products(pool: &PgPool, scraped: Vec<Product>) -> Result<(), B
                 product.status,
                 product.description,
                 product.image,
-                new_history,
+                Value::Array(history),
                 Utc::now(),
                 existing.id
             )
@@ -111,10 +113,43 @@ pub async fn sync_products(pool: &PgPool, scraped: Vec<Product>) -> Result<(), B
         }
     }
 
+    if !new_products.is_empty() {
+        insert_products(pool, &new_products).await?;
+    }
+
     Ok(())
 }
 
-async fn remove_old_products(pool: &PgPool, ids: &HashSet<&String>) -> Result<(), sqlx::Error> {
+async fn insert_products(pool: &PgPool, products: &[Product]) -> Result<(), Box<dyn Error>> {
+    let total = products.len();
+    for chunk in products.chunks(BATCH_SIZE) {
+        let mut query_builder: sqlx::QueryBuilder<sqlx::Postgres> = sqlx::QueryBuilder::new(
+            "INSERT INTO products (id, p_ref, section, source, title, description, url, image, status, price, history, added_at) "
+        );
+
+        query_builder.push_values(chunk, |mut b, product| {
+            b.push_bind(product.id.clone())
+                .push_bind(product.p_ref.clone())
+                .push_bind(product.section.clone())
+                .push_bind(product.source.clone())
+                .push_bind(product.title.clone())
+                .push_bind(product.description.clone())
+                .push_bind(product.url.clone())
+                .push_bind(product.image.clone())
+                .push_bind(product.status.clone())
+                .push_bind(product.price)
+                .push_bind(Value::Array(vec![]))
+                .push_bind(Utc::now());
+        });
+
+        query_builder.build().execute(pool).await?;
+    }
+
+    println!("NEW: {} products inserted in {} batches", total, (total + BATCH_SIZE - 1) / BATCH_SIZE);
+    Ok(())
+}
+
+async fn archive_missing_products(pool: &PgPool, ids: &HashSet<&String>) -> Result<(), sqlx::Error> {
     let db_products = sqlx::query!(
         r#"
         SELECT id FROM products
@@ -124,6 +159,7 @@ async fn remove_old_products(pool: &PgPool, ids: &HashSet<&String>) -> Result<()
         .await?;
 
     let mut map = MISSING_MAP.lock().await;
+    let mut to_archive = Vec::new();
 
     for db in db_products {
         if !ids.contains(&db.id) {
@@ -131,61 +167,57 @@ async fn remove_old_products(pool: &PgPool, ids: &HashSet<&String>) -> Result<()
             *count += 1;
 
             if *count >= 1 {
-                sqlx::query!(
-                    r#"
-                    INSERT INTO products_archive
-                    (id, p_ref, title, description, url, image, status, price, history,
-                     added_at, removed_at, updated_at, created_at)
-                    SELECT id, p_ref, title, description, url, image, status, price, history,
-                     added_at, $2, updated_at, created_at
-                    FROM products WHERE id = $1
-                    "#,
-                    db.id,
-                    Utc::now()
-                )
-                    .execute(pool)
-                    .await?;
-
-                sqlx::query!(
-                    r#"
-                    DELETE FROM products WHERE id = $1
-                    "#,
-                    db.id
-                )
-                    .execute(pool)
-                    .await?;
-
-                map.remove(&db.id);
-
-                println!("REMOVED: {}", db.id);
+                to_archive.push(db.id.clone());
             }
+        }
+    }
+
+    if !to_archive.is_empty() {
+        archive_products(pool, &to_archive).await?;
+
+        for id in &to_archive {
+            map.remove(id);
         }
     }
 
     Ok(())
 }
 
-async fn insert_new_product(pool: &PgPool, product: &Product, id: &str) -> Result<(), Box<dyn Error>> {
-    sqlx::query!(
-        r#"
-        INSERT INTO products
-        (id, p_ref, title, description, url, image, status, price,
-        history, added_at)
-        VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)
-        "#,
-        id,
-        product.p_ref,
-        product.title,
-        product.description,
-        product.url,
-        product.image,
-        product.status,
-        product.price,
-        Value::Array(vec![]),
-        Utc::now()
-    )
-        .execute(pool)
-        .await?;
+async fn archive_products(pool: &PgPool, ids: &[String]) -> Result<(), sqlx::Error> {
+    let now = Utc::now();
+
+    for chunk in ids.chunks(BATCH_SIZE) {
+        let mut query_builder: sqlx::QueryBuilder<sqlx::Postgres> = sqlx::QueryBuilder::new(
+            r#"
+            INSERT INTO products_archive
+            (id, p_ref, section, source, title, description, url, image, status, price, history, added_at, removed_at, updated_at, created_at)
+            SELECT id, p_ref, section, source, title, description, url, image, status, price, history, added_at, $1, updated_at, created_at
+            FROM products
+            WHERE id IN (
+            "#
+        );
+
+        query_builder.push_bind(now);
+
+        let mut separated = query_builder.separated(", ");
+        for id in chunk {
+            separated.push_bind(id);
+        }
+        separated.push_unseparated(")");
+
+        query_builder.build().execute(pool).await?;
+
+        let mut del_builder = sqlx::QueryBuilder::new("DELETE FROM products WHERE id IN (");
+        let mut del_separated = del_builder.separated(", ");
+        for id in chunk {
+            del_separated.push_bind(id);
+        }
+        del_separated.push_unseparated(")");
+
+        del_builder.build().execute(pool).await?;
+    }
+
+    println!("REMOVED: {} products archived and deleted", ids.len());
     Ok(())
 }
 

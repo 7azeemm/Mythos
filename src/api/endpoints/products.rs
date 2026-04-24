@@ -1,14 +1,13 @@
-use std::collections::HashSet;
+use std::collections::{HashMap, HashSet};
 use axum::{extract::{Path, Query}, Json};
 use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
 use sqlx::FromRow;
 use crate::api::error::{ApiError, ApiResult};
-use crate::parser::parser::parse_specs;
-use crate::parser::specs_cache::SPECS_CACHE;
+use crate::web_scraper::specs_cache::SPECS_CACHE;
 use crate::utils::database::get_db_pool;
-use crate::web_scraper::product::ProductSpecs;
+use crate::web_scraper::specs::ProductSpecs;
 
 pub const PRODUCTS_PER_PAGE: i32 = 24;
 
@@ -16,6 +15,8 @@ pub const PRODUCTS_PER_PAGE: i32 = 24;
 pub struct ProductMinimalResponse {
     pub id: String,
     pub p_ref: String,
+    pub section: String,
+    pub source: String,
     pub title: String,
     pub description: String,
     pub url: String,
@@ -28,6 +29,8 @@ pub struct ProductMinimalResponse {
 pub struct ProductDetailedResponse {
     id: String,
     p_ref: String,
+    section: String,
+    source: String,
     title: String,
     description: String,
     url: String,
@@ -43,14 +46,12 @@ pub struct ProductDetailedResponse {
 
 #[derive(Deserialize)]
 pub struct ListQuery {
+    section: String,
     page: Option<i32>,
     sort: Option<String>,
     min_price: Option<i32>,
     max_price: Option<i32>,
-    cpu: Option<String>,
-    gpu: Option<String>,
-    ram_type: Option<String>,
-    storage_type: Option<String>,
+    options: Option<HashMap<String, Vec<String>>>,
 }
 
 impl ListQuery {
@@ -93,53 +94,44 @@ pub async fn list(Query(query): Query<ListQuery>) -> ApiResult<Json<Vec<ProductM
     let offset = (page - 1) * PRODUCTS_PER_PAGE;
 
     let mut matching_ids: Option<HashSet<String>> = None;
-    {
+    if let Some(options) = query.options {
         let cache = SPECS_CACHE.read().await;
 
-        if let Some(cpu) = &query.cpu {
-            let cpu_products = cache.filter_products_by_cpu(cpu);
-            let cpu_set: HashSet<String> = cpu_products.into_iter().collect();
-            matching_ids = Some(match matching_ids {
-                None => cpu_set,
-                Some(existing) => existing.intersection(&cpu_set).cloned().collect(),
-            });
-        }
+        // Iterate over each filter category provided in query.options
+        for (filter_type, filter_values) in options {
+            let mut current_filter_set: HashSet<String> = HashSet::new();
 
-        if let Some(gpu) = &query.gpu {
-            let gpu_products = cache.filter_products_by_gpu(gpu);
-            let gpu_set: HashSet<String> = gpu_products.into_iter().collect();
-            matching_ids = Some(match matching_ids {
-                None => gpu_set,
-                Some(existing) => existing.intersection(&gpu_set).cloned().collect(),
-            });
-        }
+            // 1. Gather all products matching ANY of the values for this specific filter (OR logic)
+            for value in filter_values {
+                let products = cache.filter_products(&query.section, &filter_type, &value);
+                current_filter_set.extend(products);
+            }
 
-        if let Some(ram_type) = &query.ram_type {
-            let ram_products = cache.filter_products_by_ram_type(ram_type);
-            let ram_set: HashSet<String> = ram_products.into_iter().collect();
+            // 2. Intersect this category's results with the overall matching_ids (AND logic across categories)
             matching_ids = Some(match matching_ids {
-                None => ram_set,
-                Some(existing) => existing.intersection(&ram_set).cloned().collect(),
+                None => current_filter_set,
+                Some(existing) => existing.intersection(&current_filter_set).cloned().collect(),
             });
-        }
 
-        if let Some(storage_type) = &query.storage_type {
-            let storage_products = cache.filter_products_by_storage_type(storage_type);
-            let storage_set: HashSet<String> = storage_products.into_iter().collect();
-            matching_ids = Some(match matching_ids {
-                None => storage_set,
-                Some(existing) => existing.intersection(&storage_set).cloned().collect(),
-            });
+            // 3. If at any point the intersection is empty, stop checking further filters
+            if let Some(ref ids) = matching_ids {
+                if ids.is_empty() {
+                    break;
+                }
+            }
         }
     }
 
     let mut query_builder: sqlx::QueryBuilder<sqlx::Postgres> = sqlx::QueryBuilder::new(
         r#"
-        SELECT id, p_ref, title, description, url, image, status, price
+        SELECT id, p_ref, section, source, title, description, url, image, status, price
         FROM products
         WHERE 1=1
         "#
     );
+
+    query_builder.push(" AND section = ");
+    query_builder.push_bind(query.section);
 
     if let Some(min_price) = query.min_price {
         query_builder.push(" AND price >= ");
@@ -194,10 +186,9 @@ pub async fn get_by_id(Path(id): Path<String>) -> ApiResult<Json<ProductDetailed
         .map_err(|e| ApiError::DatabaseError(format!("Failed to fetch product: {}", e)))?
         .ok_or_else(|| ApiError::NotFound(format!("Product '{}' not found", id)))?;
 
-    match parse_specs(&product.description) {
-        Err(err) => eprintln!("Failed to parse product {id}: {err}"),
-        Ok(specs) => product.specs = Some(ProductSpecs::PC(specs))
-    };
+    if let Some(specs) = SPECS_CACHE.read().await.specs.get(&id).cloned() {
+        product.specs = Some(specs)
+    }
 
     Ok(Json(product))
 }

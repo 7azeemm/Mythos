@@ -40,7 +40,7 @@ pub async fn search(Query(query): Query<SearchQuery>) -> ApiResult<Json<Vec<Prod
 
     let products: Vec<ProductMinimalResponse> = sqlx::query_as(
         r#"
-        SELECT id, p_ref, title, description, url, image, status, price
+        SELECT id, p_ref, section, source, title, description, url, image, status, price
         FROM products
         WHERE title ILIKE $1 OR description ILIKE $1
         ORDER BY

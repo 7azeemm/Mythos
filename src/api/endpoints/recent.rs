@@ -13,6 +13,8 @@ const RECENT_LIMIT: i32 = 24;
 pub struct RecentProductResponse {
     pub id: String,
     pub p_ref: String,
+    pub section: String,
+    pub source: String,
     pub title: String,
     pub description: String,
     pub image: String,
@@ -27,6 +29,7 @@ pub struct RecentProductResponse {
 
 #[derive(Deserialize)]
 pub struct RecentQuery {
+    section: String,
     #[serde(rename = "type")]
     query_type: Option<String>,
 }
@@ -35,11 +38,11 @@ pub async fn recent(Query(query): Query<RecentQuery>) -> ApiResult<Json<Vec<Rece
     let query_type = query.query_type.as_deref().unwrap_or("both");
 
     match query_type {
-        "added" => fetch_recent_products("products", "added_at").await,
-        "removed" => fetch_recent_products("products_archive", "removed_at").await,
+        "added" => fetch_recent_products(query.section, "products", "added_at").await,
+        "removed" => fetch_recent_products(query.section, "products_archive", "removed_at").await,
         "both" => {
-            let added_future = fetch_recent_products("products", "added_at");
-            let removed_future = fetch_recent_products("products_archive", "removed_at");
+            let added_future = fetch_recent_products(query.section.clone(), "products", "added_at");
+            let removed_future = fetch_recent_products(query.section, "products_archive", "removed_at");
 
             let (added, removed) = tokio::join!(added_future, removed_future);
 
@@ -67,15 +70,18 @@ pub async fn recent(Query(query): Query<RecentQuery>) -> ApiResult<Json<Vec<Rece
     }
 }
 
-async fn fetch_recent_products(table: &str, date_column: &str) -> ApiResult<Json<Vec<RecentProductResponse>>> {
+async fn fetch_recent_products(section: String, table: &str, date_column: &str) -> ApiResult<Json<Vec<RecentProductResponse>>> {
     let mut query_builder: sqlx::QueryBuilder<sqlx::Postgres> = sqlx::QueryBuilder::new(
-        "SELECT id, p_ref, title, description, image, status, price, history, "
+        "SELECT id, p_ref, section, source, title, description, image, status, price, history, "
     );
 
     query_builder.push(date_column);
     query_builder.push(" as added_at FROM ");
     query_builder.push(table);
     query_builder.push(" WHERE ");
+    query_builder.push("section = ");
+    query_builder.push_bind(section);
+    query_builder.push(" AND ");
     query_builder.push(date_column);
     query_builder.push(" IS NOT NULL ORDER BY ");
     query_builder.push(date_column);

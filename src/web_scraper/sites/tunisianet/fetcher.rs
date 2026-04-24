@@ -1,36 +1,26 @@
-use crate::utils::database::get_db_pool;
 use crate::web_scraper::product::Product;
-use crate::web_scraper::updater;
 use crate::HTTP_CLIENT;
 use chrono::Utc;
-use once_cell::sync::Lazy;
-use regex::Regex;
 use scraper::element_ref::Text;
 use scraper::{ElementRef, Html, Selector};
 use serde_json::Value;
 use std::error::Error;
 use std::time::Instant;
+use crate::web_scraper::sites::tunisianet::{DESC_SEL, ID_RE, IMAGE_SEL, PRICE_SEL, PRODUCTS_SEL, PRODUCT_SEL, REF_SEL, STATUS_SEL, TITLE_SEL, SECTIONS, URL_SEL};
 
-const URL: &str = "https://www.tunisianet.com.tn/682-pc-de-bureau-gamer";
+pub async fn scrape(products: &mut Vec<Product>) {
+    for (section, url) in SECTIONS {
+        scrape_section(&section.to_str(), products, url).await;
+    }
+}
 
-static PRODUCTS_SEL: Lazy<Selector> = Lazy::new(|| Selector::parse("div.products").unwrap());
-static PRODUCT_SEL: Lazy<Selector> = Lazy::new(|| Selector::parse("div.item-product").unwrap());
-static TITLE_SEL: Lazy<Selector> = Lazy::new(|| Selector::parse("h2.product-title").unwrap());
-static REF_SEL: Lazy<Selector> = Lazy::new(|| Selector::parse("span.product-reference").unwrap());
-static URL_SEL: Lazy<Selector> = Lazy::new(|| Selector::parse("h2.product-title a[href]").unwrap());
-static IMAGE_SEL: Lazy<Selector> = Lazy::new(|| Selector::parse("a.product-thumbnail img[data-full-size-image-url]").unwrap());
-static DESC_SEL: Lazy<Selector> = Lazy::new(|| Selector::parse(r#"div.product-description div[itemprop="description"]"#).unwrap());
-static STATUS_SEL: Lazy<Selector> = Lazy::new(|| Selector::parse("div#stock_availability").unwrap());
-static PRICE_SEL: Lazy<Selector> = Lazy::new(|| Selector::parse("span.price").unwrap());
-
-static ID_RE: Lazy<Regex> = Lazy::new(|| Regex::new(r"/(\d+)-").unwrap());
-
-pub async fn scrape_tunisianet() {
-    println!("Scraping Tunisianet...");
+async fn scrape_section(section: &str, products: &mut Vec<Product>, url: &str) {
+    println!("Scraping {url}");
+    let init_count = products.len();
     let start_time = Instant::now();
 
-    let (page_count, mut products) = match fetch_first_page().await {
-        Ok((page_count, mut products)) => (page_count, products),
+    let (page_count, first_page_count) = match fetch_first_page(section, products, url).await {
+        Ok((count, first_page_count)) => (count, first_page_count),
         Err(err) => {
             eprintln!("Failed to fetch first page: {err}");
             return;
@@ -38,35 +28,27 @@ pub async fn scrape_tunisianet() {
     };
     
     println!("Found {page_count} pages");
-    println!("Scraped 1 ({})", products.len());
+    println!("Scraped 1 ({first_page_count})");
 
     for page in 2..page_count+1 {
-        let document = match fetch_page(&format!("{URL}?page={page}")).await {
+        let document = match fetch_page(&format!("{url}?page={page}")).await {
             Ok(doc) => doc,
             Err(err) => {
                 eprintln!("Failed to fetch page {page}: {err}");
                 continue;
             }
         };
-        match extract_products(document) {
-            Ok(list) => {
-                println!("Scraped {page} ({})", list.len());
-                products.extend(list);
-            },
+        match extract_products(section, products, document) {
+            Ok(count) => println!("Scraped {page} ({count})"),
             Err(err) => eprintln!("Failed to extract products from page {page}: {err}")
         }
     }
 
     println!(
-        "Scraped Tunisianet in {:.2?} ({} page, {} products)",
+        "Scraped in {:.2?} ({} products)",
         start_time.elapsed(),
-        page_count,
-        products.len()
+        products.len() - init_count
     );
-
-    if let Err(err) = updater::sync_products(get_db_pool(), products).await {
-        eprintln!("Failed to sync products: {err}");
-    }
 }
 
 async fn fetch_page(url: &str) -> Result<Html, Box<dyn Error>> {
@@ -74,27 +56,32 @@ async fn fetch_page(url: &str) -> Result<Html, Box<dyn Error>> {
     Ok(Html::parse_document(&body))
 }
 
-async fn fetch_first_page() -> Result<(u32, Vec<Product>), Box<dyn Error>> {
-    let document = fetch_page(URL).await?;
+async fn fetch_first_page(section: &str, products: &mut Vec<Product>, url: &str) -> Result<(u32, usize), Box<dyn Error>> {
+    let document = fetch_page(url).await?;
 
     let nav_sel = Selector::parse("nav.pagination ul.page-list")?;
     let page_sel = Selector::parse("li")?;
 
-    let nav = document.select(&nav_sel).next().ok_or("navigator not found")?;
-    let elements = nav.select(&page_sel).collect::<Vec<ElementRef>>();
-    let last_page = elements.get(elements.len() - 2).ok_or("last page button not found")?;
-    let page_count = last_page.text().collect::<Vec<_>>().join(" ").trim().parse::<u32>()?;
-    let products = extract_products(document)?;
+    let page_count = match document.select(&nav_sel).next() {
+        None => 1,
+        Some(nav) => {
+            let elements = nav.select(&page_sel).collect::<Vec<ElementRef>>();
+            let last_page = elements.get(elements.len() - 2).ok_or("last page button not found")?;
+            last_page.text().collect::<Vec<_>>().join(" ").trim().parse::<u32>()?
+        }
+    };
 
-    Ok((page_count, products))
+    let count = extract_products(section, products, document)?;
+
+    Ok((page_count, count))
 }
 
-fn extract_products(document: Html) -> Result<Vec<Product>, Box<dyn Error>> {
+fn extract_products(section: &str, products: &mut Vec<Product>, document: Html) -> Result<usize, Box<dyn Error>> {
     let list = document.select(&PRODUCTS_SEL).next().ok_or("products not found")?;
-    let mut products = Vec::new();
+    let init_count = products.len();
 
     for product in list.select(&PRODUCT_SEL) {
-        match extract_product(product) {
+        match extract_product(section, product) {
             Ok(product) => products.push(product),
             Err(err) => match product.select(&REF_SEL).next().and_then(|e| Some(extract_text(e.text()))) {
                 Some(id) => eprintln!("Failed to extract product {id}: {err}"),
@@ -103,10 +90,10 @@ fn extract_products(document: Html) -> Result<Vec<Product>, Box<dyn Error>> {
         }
     }
 
-    Ok(products)
+    Ok(products.len() - init_count)
 }
 
-fn extract_product(product: ElementRef) -> Result<Product, Box<dyn Error>> {
+fn extract_product(section: &str, product: ElementRef) -> Result<Product, Box<dyn Error>> {
     let title = product.select(&TITLE_SEL).next().ok_or("title not found")?;
     let url = product.select(&URL_SEL).next().ok_or("url not found")?;
     let image = product.select(&IMAGE_SEL).next().ok_or("image not found")?;
@@ -147,6 +134,8 @@ fn extract_product(product: ElementRef) -> Result<Product, Box<dyn Error>> {
     Ok(Product {
         id,
         title,
+        section: section.to_string(),
+        source: "Tunisianet".to_string(),
         p_ref,
         url,
         image,
