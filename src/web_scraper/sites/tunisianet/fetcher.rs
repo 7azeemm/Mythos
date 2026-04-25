@@ -1,3 +1,4 @@
+use std::collections::HashMap;
 use crate::web_scraper::product::Product;
 use crate::HTTP_CLIENT;
 use chrono::Utc;
@@ -6,7 +7,11 @@ use scraper::{ElementRef, Html, Selector};
 use serde_json::Value;
 use std::error::Error;
 use std::time::Instant;
+use once_cell::sync::Lazy;
+use tokio::sync::RwLock;
 use crate::web_scraper::sites::tunisianet::{DESC_SEL, ID_RE, IMAGE_SEL, PRICE_SEL, PRODUCTS_SEL, PRODUCT_SEL, REF_SEL, STATUS_SEL, TITLE_SEL, SECTIONS, URL_SEL};
+
+pub static PAGE_CACHE: Lazy<RwLock<HashMap<String, String>>> = Lazy::new(|| RwLock::new(HashMap::new()));
 
 pub async fn scrape(products: &mut Vec<Product>) {
     for (section, url) in SECTIONS {
@@ -52,7 +57,19 @@ async fn scrape_section(section: &str, products: &mut Vec<Product>, url: &str) {
 }
 
 async fn fetch_page(url: &str) -> Result<Html, Box<dyn Error>> {
+    // let body = HTTP_CLIENT.get(url).send().await?.text().await?;
+    // Ok(Html::parse_document(&body))
+
+    if let Some(html_str) = PAGE_CACHE.read().await.get(url).cloned() {
+        println!("Loaded from cache: {}", url);
+        return Ok(Html::parse_document(&html_str));
+    }
+
+    println!("Fetching from web: {}", url);
     let body = HTTP_CLIENT.get(url).send().await?.text().await?;
+
+    PAGE_CACHE.write().await.insert(url.to_string(), body.clone());
+
     Ok(Html::parse_document(&body))
 }
 

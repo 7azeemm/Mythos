@@ -22,50 +22,134 @@ static GPU_MEMORY_RE: Lazy<Regex> = Lazy::new(|| Regex::new(r"(\d+)\s*Go").unwra
 pub fn parse_specs(description: &str) -> Result<ProductSpecs, Box<dyn Error>> {
     let mut parts = description.split(" - ").collect::<Vec<&str>>().into_iter();
 
-    let first = parts.next().ok_or("description is empty")?;
-    let (case, monitor) = match first.contains("Écran") {
-        true => (parts.next().ok_or("case line not found")?.to_string(), Some(first.to_string())),
-        false => (first.to_string(), None)
-    };
+    let functions = vec![
+        (vec!["boîtier"], {}),
+        (vec!["écran"], {}),
+        (vec!["processeur"], {}),
+        (vec!["carte mère", "carte mére"], {}),
+        (vec!["mémoire", "ram"], {}),
+        (vec!["graphique"], {}),
+        (vec!["garantie"], {}),
+        (vec!["refroidisseur", "ventilateur"], {}),
+        (vec!["alimentation"], {}),
+        (vec!["watercooling"], {}),
+        (vec!["disque"], {}),
+        (vec!["windows", "exploitation"], {}),
+        (vec!["avec"], {}),
+    ];
 
-    let cpu = parse_cpu(parts.next().ok_or("cpu line not found")?)?;
-    let memory = parse_memory(parts.next().ok_or("memory line not found")?)?;
-    let storage = parse_storage(parts.next().ok_or("storage line not found")?)?;
-    let gpu = parse_gpu(parts.next().ok_or("gpu line not found")?)?;
-    let motherboard = parse_motherboard(parts.next().ok_or("motherboard line not found")?)?;
-    let mut cooler = None;
-    let mut psu = None;
-    let mut os = None;
-    let mut warranty = None;
-    let mut extra = None;
+    while let Some(part) = parts.next() {
+        let part_lower = part.to_lowercase();
 
-    while let Some(next) = parts.next() {
-        if (next.starts_with("Refroidisseur") || next.starts_with("Ventilateur")) &&
-            let Some(pos) = next.to_lowercase().find("processeur") {
-            cooler = Some(next[pos+10..].trim().to_string());
-        } else if next.starts_with("Boîte d'alimentation") {
-            psu = Some(next[22..].trim().to_string());
-        } else if next.starts_with("Garantie") {
-            warranty = Some(next.split_whitespace().nth(1).unwrap().parse::<u32>()?)
-        } else if let Some(pos) = next.to_lowercase().find("watercooling") {
-            cooler = Some(format!("W{}", next[pos+1..].trim()));
-        } else if next.starts_with("Windows") {
-            os = Some(next.to_string());
-        } else if next.starts_with("Avec") {
-            extra = Some(next.replace("Avec ", "")
-                .replace("Ensemble ", "")
-                .replace("Clavier", "Keyboard")
-                .replace("Souris", "Mouse")
-                .replace("Casque", "Headset")
-                .replace("Noir", "Black"));
-        }
+        let func = functions.iter().find_map(|(keys, func)| {
+            if keys.iter().any(|key| part_lower.contains(key)) {
+                Some(func)
+            } else {
+                None
+            }
+        });
+
+        let Some(func) = func else {
+            // println!("{}", part);
+            continue
+        };
+
+
     }
 
-    let psu = psu.ok_or("psu not found")?;
-
+    // let first = parts.next().ok_or("description is empty")?;
+    // let (case, monitor) = match first.contains("Écran") {
+    //     true => (parts.next().ok_or("case line not found")?.to_string(), Some(first.to_string())),
+    //     false => (first.to_string(), None)
+    // };
+    //
+    // let cpu = parse_cpu(parts.next().ok_or("cpu line not found")?)?;
+    // let memory = parse_memory(parts.next().ok_or("memory line not found")?)?;
+    // let storage = parse_storage(parts.next().ok_or("storage line not found")?)?;
+    // let gpu = parse_gpu(parts.next().ok_or("gpu line not found")?)?;
+    // let motherboard = parse_motherboard(parts.next().ok_or("motherboard line not found")?)?;
+    // let mut cooler = None;
+    // let mut psu = None;
+    // let mut os = None;
+    // let mut warranty = None;
+    // let mut extra = None;
+    //
+    // while let Some(next) = parts.next() {
+    //     if (next.starts_with("Refroidisseur") || next.starts_with("Ventilateur")) &&
+    //         let Some(pos) = next.to_lowercase().find("processeur") {
+    //         cooler = Some(next[pos+10..].trim().to_string());
+    //     } else if next.starts_with("Boîte d'alimentation") {
+    //         psu = Some(next[22..].trim().to_string());
+    //     } else if next.starts_with("Garantie") {
+    //         warranty = Some(next.split_whitespace().nth(1).unwrap().parse::<u32>()?)
+    //     } else if let Some(pos) = next.to_lowercase().find("watercooling") {
+    //         cooler = Some(format!("W{}", next[pos+1..].trim()));
+    //     } else if next.starts_with("Windows") {
+    //         os = Some(next.to_string());
+    //     } else if next.starts_with("Avec") {
+    //         extra = Some(next.replace("Avec ", "")
+    //             .replace("Ensemble ", "")
+    //             .replace("Clavier", "Keyboard")
+    //             .replace("Souris", "Mouse")
+    //             .replace("Casque", "Headset")
+    //             .replace("Noir", "Black"));
+    //     }
+    // }
+    //
+    // let psu = psu.ok_or("psu not found")?;
+    //
+    // Ok(ProductSpecs::PC(PCSpecs {
+    //     cpu, gpu, motherboard, memory, storage,
+    //     cooler, case, psu, monitor, os, warranty
+    // }))
     Ok(ProductSpecs::PC(PCSpecs {
-        cpu, gpu, motherboard, memory, storage,
-        cooler, case, psu, monitor, os, warranty
+        cpu: CPUSpecs {
+            name: "".to_string(),
+            base_clock: 0.0,
+            boost_clock: 0.0,
+            core_count: 0,
+            thread_count: 0,
+            l1_cache: 0.0,
+            l2_cache: 0.0,
+            l3_cache: 0.0,
+            tdp: 0,
+            socket: "".to_string(),
+            integrated_gpu: None,
+            memory_support: vec![],
+        },
+        motherboard: "".to_string(),
+        memory: MemorySpecs {
+            size: 0,
+            sticks: 0,
+            ram_type: RamType::DDR3,
+        },
+        storage: StorageSpecs {
+            storage_type: StorageType::HDD,
+            size: 0,
+            interface: StorageInterface::SATA,
+        },
+        gpu: GPUSpecs {
+            name: "".to_string(),
+            base_clock: 0,
+            boost_clock: 0,
+            memory_size: None,
+            memory_type: None,
+            memory_bus: None,
+            memory_bandwidth: None,
+            bus_interface: None,
+            transistors: 0.0,
+            cores: 0,
+            tensor_cores: 0,
+            rt_cores: 0,
+            t_flops: 0.0,
+            tdp: 0,
+        },
+        cooler: None,
+        case: "".to_string(),
+        psu: "".to_string(),
+        monitor: None,
+        os: None,
+        warranty: None,
     }))
 }
 

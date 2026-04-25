@@ -9,16 +9,12 @@ pub mod fetcher;
 static SECTIONS: &[(Section, &str)] = &[
     (Section::PC, "https://www.tunisianet.com.tn/373-pc-de-bureau"),
     (Section::GamingPc, "https://www.tunisianet.com.tn/682-pc-de-bureau-gamer"),
+    (Section::PcAllInOne, "https://www.tunisianet.com.tn/686-pc-tout-en-un"),
+    (Section::GamingSetup, "https://www.tunisianet.com.tn/732-full-setup-gamer"),
+    (Section::Laptop, "https://www.tunisianet.com.tn/301-pc-portable-tunisie"),
+    (Section::GamingLaptop, "https://www.tunisianet.com.tn/681-pc-portable-gamer"),
+    (Section::ProLaptop, "https://www.tunisianet.com.tn/703-pc-portable-pro"),
 ];
-
-const PC_URL: &str = "https://www.tunisianet.com.tn/373-pc-de-bureau";
-const GAMING_PC_URL: &str = "https://www.tunisianet.com.tn/682-pc-de-bureau-gamer";
-const PC_ALL_IN_ONE_URL: &str = "https://www.tunisianet.com.tn/686-pc-tout-en-un";
-const GAMING_SETUP_URL: &str = "https://www.tunisianet.com.tn/732-full-setup-gamer";
-
-const LAPTOP_URL: &str = "https://www.tunisianet.com.tn/301-pc-portable-tunisie";
-const GAMING_LAPTOP_URL: &str = "https://www.tunisianet.com.tn/681-pc-portable-gamer";
-const PRO_LAPTOP_URL: &str = "https://www.tunisianet.com.tn/703-pc-portable-pro";
 
 const MONITOR_URL: &str = "https://www.tunisianet.com.tn/667-ecran-pc-tunisie";
 const MOUSE_URL: &str = "https://www.tunisianet.com.tn/334-souris-informatique";
