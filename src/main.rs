@@ -1,5 +1,4 @@
 pub mod web_scraper;
-pub mod parser;
 pub mod api;
 pub mod utils;
 
