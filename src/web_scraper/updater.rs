@@ -191,13 +191,17 @@ async fn archive_products(pool: &PgPool, ids: &[String]) -> Result<(), sqlx::Err
             r#"
             INSERT INTO products_archive
             (id, p_ref, section, source, title, description, url, image, status, price, history, added_at, removed_at, updated_at, created_at)
-            SELECT id, p_ref, section, source, title, description, url, image, status, price, history, added_at, $1, updated_at, created_at
+            SELECT id, p_ref, section, source, title, description, url, image, status, price, history, added_at, "#
+        );
+
+        query_builder.push_bind(now);
+
+        query_builder.push(
+            r#", updated_at, created_at
             FROM products
             WHERE id IN (
             "#
         );
-
-        query_builder.push_bind(now);
 
         let mut separated = query_builder.separated(", ");
         for id in chunk {

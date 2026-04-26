@@ -1,17 +1,17 @@
-use crate::web_scraper::parsers::pc_parser::parse_specs;
+use crate::web_scraper::parsers::pc_parser::parse_pc;
 use std::error::Error;
 use crate::web_scraper::specs::ProductSpecs;
 
 pub mod tunisianet;
 
 pub static PARSERS: &[(Section, fn(&str) -> Result<ProductSpecs, Box<dyn Error>>)] = &[
-    (Section::PC, parse_specs),
-    (Section::GamingPc, parse_specs),
-    (Section::PcAllInOne, parse_specs),
-    (Section::GamingSetup, parse_specs),
-    (Section::Laptop, parse_specs),
-    (Section::GamingLaptop, parse_specs),
-    (Section::ProLaptop, parse_specs),
+    (Section::PC, parse_pc),
+    (Section::GamingPc, parse_pc),
+    (Section::PcAllInOne, parse_pc),
+    (Section::GamingSetup, parse_pc),
+    (Section::Laptop, parse_pc),
+    (Section::GamingLaptop, parse_pc),
+    (Section::ProLaptop, parse_pc),
 ];
 
 pub enum Section {

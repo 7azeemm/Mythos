@@ -11,7 +11,7 @@ use once_cell::sync::Lazy;
 use tokio::sync::RwLock;
 use crate::web_scraper::sites::tunisianet::{DESC_SEL, ID_RE, IMAGE_SEL, PRICE_SEL, PRODUCTS_SEL, PRODUCT_SEL, REF_SEL, STATUS_SEL, TITLE_SEL, SECTIONS, URL_SEL};
 
-pub static PAGE_CACHE: Lazy<RwLock<HashMap<String, String>>> = Lazy::new(|| RwLock::new(HashMap::new()));
+pub static PAGE_CACHE: Lazy<RwLock<HashMap<String, Vec<Product>>>> = Lazy::new(|| RwLock::new(HashMap::new()));
 
 pub async fn scrape(products: &mut Vec<Product>) {
     for (section, url) in SECTIONS {
@@ -23,6 +23,12 @@ async fn scrape_section(section: &str, products: &mut Vec<Product>, url: &str) {
     println!("Scraping {url}");
     let init_count = products.len();
     let start_time = Instant::now();
+
+    if let Some(cached_products) = PAGE_CACHE.read().await.get(url).cloned() {
+        println!("Loaded {} products from cache", cached_products.len());
+        products.extend(cached_products);
+        return;
+    }
 
     let (page_count, first_page_count) = match fetch_first_page(section, products, url).await {
         Ok((count, first_page_count)) => (count, first_page_count),
@@ -49,27 +55,20 @@ async fn scrape_section(section: &str, products: &mut Vec<Product>, url: &str) {
         }
     }
 
+    let count = products.len() - init_count;
+
+    let new_products = products[init_count..].to_vec();
+    PAGE_CACHE.write().await.insert(url.to_string(), new_products);
+
     println!(
         "Scraped in {:.2?} ({} products)",
         start_time.elapsed(),
-        products.len() - init_count
+        count
     );
 }
 
 async fn fetch_page(url: &str) -> Result<Html, Box<dyn Error>> {
-    // let body = HTTP_CLIENT.get(url).send().await?.text().await?;
-    // Ok(Html::parse_document(&body))
-
-    if let Some(html_str) = PAGE_CACHE.read().await.get(url).cloned() {
-        println!("Loaded from cache: {}", url);
-        return Ok(Html::parse_document(&html_str));
-    }
-
-    println!("Fetching from web: {}", url);
     let body = HTTP_CLIENT.get(url).send().await?.text().await?;
-
-    PAGE_CACHE.write().await.insert(url.to_string(), body.clone());
-
     Ok(Html::parse_document(&body))
 }
 
@@ -167,11 +166,7 @@ fn extract_product(section: &str, product: ElementRef) -> Result<Product, Box<dy
 }
 
 fn extract_text(text: Text) -> String {
-    text.collect::<Vec<_>>()
-        .join(" ")
-        .split_whitespace()
+    text.flat_map(|s| s.split_whitespace())
         .collect::<Vec<_>>()
         .join(" ")
-        .trim()
-        .to_string()
 }

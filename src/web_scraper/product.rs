@@ -5,7 +5,7 @@ use sqlx::{Decode, FromRow};
 use std::fmt::Display;
 use std::str::FromStr;
 
-#[derive(Debug, Serialize, Deserialize, FromRow)]
+#[derive(Debug, Clone, Serialize, Deserialize, FromRow)]
 pub struct Product {
     pub id: String,
     pub p_ref: String,

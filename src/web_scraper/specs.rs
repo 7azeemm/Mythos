@@ -14,12 +14,18 @@ impl ProductSpecs {
         match self {
             Self::PC(pc) => {
                 let mut filters = vec![
-                    ("cpu".to_string(), pc.cpu.name.clone()),
-                    ("gpu".to_string(), pc.gpu.name.clone()),
-                    ("ram_type".to_string(), format!("{:?}", pc.memory.ram_type)),
-                    ("ram_size".to_string(), format!("{}", pc.memory.size)),
-                    ("storage_type".to_string(), format!("{:?}", pc.storage.storage_type)),
+                    // ("cpu".to_string(), pc.cpu.name.clone()),
+                    // ("gpu".to_string(), pc.gpu.name.clone()),
+                    // ("ram_type".to_string(), format!("{:?}", pc.memory.ram_type)),
+                    // ("ram_size".to_string(), format!("{}", pc.memory.size)),
+                    // ("storage_type".to_string(), format!("{:?}", pc.storage.storage_type)),
                 ];
+
+                // PC:
+                // CPU, RAM, RAM Type, Storage, GPU, OS
+
+                // Laptop:
+                // Resolution, Refresh Rate, Brand
 
                 if let Some(os) = &pc.os {
                     filters.push(("os".to_string(), os.clone()));
