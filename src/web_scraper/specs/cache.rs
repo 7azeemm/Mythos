@@ -1,51 +1,37 @@
-use crate::web_scraper::sites::PARSERS;
 use crate::web_scraper::specs::{ProductSpecs};
 use once_cell::sync::Lazy;
-use sqlx::PgPool;
 use std::collections::HashMap;
 use tokio::sync::RwLock;
 use crate::api::endpoints::info::FilterOption;
-use crate::utils::database::get_db_pool;
+use crate::web_scraper::product::Product;
+use crate::web_scraper::sections::Section;
 
 pub static SPECS_CACHE: Lazy<RwLock<SpecsCache>> = Lazy::new(|| RwLock::new(SpecsCache::default()));
 
 #[derive(Debug, Clone, Default)]
 pub struct SpecsCache {
-    pub specs: HashMap<String, ProductSpecs>,
-    /// data[section][filter_type][filter_value] = [product_ids]
+    /// data[section][option][value] = [product_ids]
     /// Example: data["pc"]["cpu"]["Intel i9"] = ["prod_1", "prod_2"]
     pub data: HashMap<String, HashMap<String, HashMap<String, Vec<String>>>>,
+    pub specs: HashMap<String, ProductSpecs>,
 }
 
 impl SpecsCache {
-    pub async fn initialize(&mut self) {
+    pub async fn initialize(&mut self, products: Vec<Product>) {
         *self = SpecsCache::default();
 
-        let products: Vec<(String, String, String)> = match sqlx::query_as(
-            "SELECT id, section, description FROM products",
-        )
-            .fetch_all(get_db_pool())
-            .await
-        {
-            Ok(products) => products,
-            Err(err) => {
-                eprintln!("Failed to retrieve products from database for cache: {err}");
-                return;
-            }
-        };
-
-        for (product_id, product_type, description) in products {
-            self.add_product_specs(&product_id, &product_type, &description);
+        for product in products {
+            // self.add_product(&product.id, &product.section, &product.description);
         }
 
         println!("Specs cache initialized with {} products", self.specs.len());
     }
 
-    fn add_product_specs(&mut self, product_id: &str, product_type: &str, description: &str) {
-        let (_, parser) = match PARSERS.iter().find(|(name, _)| name.to_str() == product_type) {
-            Some(p) => p,
+    fn add_product(&mut self, product_id: &str, section: &str, description: &str) {
+        let parser = match Section::from_str(section) {
+            Some(section) => section.parser(),
             None => {
-                eprintln!("Unknown product type: {}", product_type);
+                eprintln!("Unknown section: {}", section);
                 return;
             }
         };
@@ -58,20 +44,18 @@ impl SpecsCache {
             }
         };
 
-        let filters = specs.get_filters();
-
-        let type_entry = self
+        let section_entry = self
             .data
-            .entry(product_type.to_string())
+            .entry(section.to_string())
             .or_insert_with(HashMap::new);
 
-        for (filter_type, filter_value) in filters {
-            let filter_entry = type_entry
-                .entry(filter_type)
+        for (option, value) in specs.get_filters() {
+            let option_entry = section_entry
+                .entry(option)
                 .or_insert_with(HashMap::new);
 
-            filter_entry
-                .entry(filter_value)
+            option_entry
+                .entry(value)
                 .or_insert_with(Vec::new)
                 .push(product_id.to_string());
         }

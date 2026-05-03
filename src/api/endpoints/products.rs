@@ -5,7 +5,7 @@ use serde::{Deserialize, Serialize};
 use serde_json::Value;
 use sqlx::FromRow;
 use crate::api::error::{ApiError, ApiResult};
-use crate::web_scraper::specs_cache::SPECS_CACHE;
+use crate::web_scraper::specs::cache::SPECS_CACHE;
 use crate::utils::database::get_db_pool;
 use crate::web_scraper::specs::ProductSpecs;
 

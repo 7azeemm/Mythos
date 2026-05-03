@@ -99,7 +99,7 @@ fn parse_cpu(input: &str) -> Option<CpuInfo> {
             Some(cpu) => Some(CpuInfo::Parsed(cpu)),
             None => {
                 // eprintln!("Cpu not found in the dataset: {name}");
-                Some(CpuInfo::Raw(name.to_string()))
+                Some(CpuInfo::Raw(name.trim().to_string()))
             }
         }
         None => {

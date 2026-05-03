@@ -1,39 +1,177 @@
-use crate::web_scraper::parsers::pc_parser::parse_pc;
+use crate::utils::web_client::{WebClient, WebClientType};
+use crate::web_scraper::product::Product;
+use crate::web_scraper::sections::Section;
+use crate::web_scraper::sites::skymil_shop::SkyMilShop;
+use once_cell::sync::Lazy;
+use scraper::{ElementRef, Html, Selector};
+use std::collections::HashMap;
 use std::error::Error;
-use crate::web_scraper::specs::ProductSpecs;
+use std::time::{Duration, Instant};
+use tokio::sync::RwLock;
+use tokio::time::sleep;
+use crate::web_scraper::sites::tunisianet::Tunisianet;
+use crate::web_scraper::sites::utils::ElementRefExt;
 
 pub mod tunisianet;
+pub mod utils;
+pub mod skymil_shop;
 
-pub static PARSERS: &[(Section, fn(&str) -> Result<ProductSpecs, Box<dyn Error>>)] = &[
-    (Section::PC, parse_pc),
-    (Section::GamingPc, parse_pc),
-    (Section::PcAllInOne, parse_pc),
-    (Section::GamingSetup, parse_pc),
-    (Section::Laptop, parse_pc),
-    (Section::GamingLaptop, parse_pc),
-    (Section::ProLaptop, parse_pc),
-];
+pub static PAGE_CACHE: Lazy<RwLock<HashMap<String, HashMap<String, Product>>>> = Lazy::new(|| RwLock::new(HashMap::new()));
+const MAX_RETRIES: i32 = 3;
 
-pub enum Section {
-    PC,
-    GamingPc,
-    PcAllInOne,
-    GamingSetup,
-    Laptop,
-    GamingLaptop,
-    ProLaptop,
+pub static SITES: Lazy<Vec<Box<dyn Site>>> = Lazy::new(|| vec![
+    // Box::new(Tunisianet),
+    Box::new(SkyMilShop),
+]);
+
+pub struct SiteConfig {
+    pub name: &'static str,
+    pub web_client_type: WebClientType,
+    pub nav_selector: Lazy<Selector>,
+    pub product_selector: Lazy<Selector>,
+    pub sections: &'static [(&'static Section, &'static str)],
 }
 
-impl Section {
-    pub fn to_str(&self) -> String {
-        match self {
-            Section::PC => "pc".to_string(),
-            Section::GamingPc => "gaming_pc".to_string(),
-            Section::PcAllInOne => "pc_all_in_one".to_string(),
-            Section::GamingSetup => "gaming_setup".to_string(),
-            Section::Laptop => "laptop".to_string(),
-            Section::GamingLaptop => "gaming_laptop".to_string(),
-            Section::ProLaptop => "pro_laptop".to_string(),
+#[async_trait::async_trait]
+pub trait Site: Send + Sync {
+    fn config(&self) -> &SiteConfig;
+    fn parse_product(&self, section: &Section, element: ElementRef) -> Result<Product, Box<dyn Error>>;
+
+    async fn scrape(&self, url: &str, section: &Section, products: &mut HashMap<String, Product>) {
+        let start_time = Instant::now();
+
+        // Loading from cache
+        // if let Some(cached_products) = PAGE_CACHE.read().await.get(url).cloned() {
+        //     println!("Loaded {} products from cache", cached_products.len());
+        //     products.extend(cached_products);
+        //     return;
+        // }
+
+        let mut products_list = HashMap::default();
+        let page_count = self.scrape_page(url, 1, section, &mut products_list).await.unwrap_or(1);
+
+        for page in 2..page_count+1 {
+            let _ = self.scrape_page(url, page, section, &mut products_list).await;
         }
+
+        // Saving to cache
+        let count = products_list.len();
+        PAGE_CACHE.write().await.insert(url.to_string(), products_list.clone());
+        products.extend(products_list);
+
+        println!(
+            "Scraped in {:.2?} ({} products)",
+            start_time.elapsed(),
+            count
+        );
+    }
+
+    async fn scrape_page(&self, base_url: &str, page: i32, section: &Section, products: &mut HashMap<String, Product>) -> Option<i32> {
+        let url = self.format_url(base_url, page);
+        let mut retries = 0;
+        let mut page_count = None;
+
+        while retries < MAX_RETRIES {
+            let fetch_result = WebClient::fetch(&url, &self.config().web_client_type)
+                .await
+                .map_err(|e| e.to_string());
+
+            let body = match fetch_result {
+                Ok(b) => b,
+                Err(err) => {
+                    eprintln!("Failed to fetch page {page} (Attempt {}/{MAX_RETRIES}): {err}", retries + 1);
+                    retries += 1;
+                    sleep(Duration::from_secs(2)).await;
+                    continue;
+                }
+            };
+
+            let parse_result = {
+                let doc = Html::parse_document(&body);
+                let mut page_count_error = None;
+
+                if page == 1 {
+                    match self.parse_page_count(&doc) {
+                        Ok(count) => {
+                            page_count = Some(count);
+                            println!("Found {count} pages");
+                        },
+                        Err(err) => page_count_error = Some(err.to_string()),
+                    }
+                }
+
+                match page_count_error {
+                    Some(err) => Err(format!("Failed to parse page count: {err}")),
+                    None => match self.parse_products(section, doc) {
+                        Ok(list) => match list.len() {
+                            0 => Err(format!("Found 0 products on page {page}")),
+                            _ => Ok(list)
+                        },
+                        Err(err) => Err(format!("Failed to parse products in page {page}: {err}")),
+                    }
+                }
+            };
+
+            match parse_result {
+                Ok(list) => {
+                    let count = list.len();
+                    for mut product in list {
+                        if let Some(existing) = products.get(&product.url) {
+                            for section in &existing.sections {
+                                if !product.sections.contains(section) {
+                                    product.sections.push(section.clone());
+                                }
+                            }
+                        }
+                        products.insert(product.url.clone(), product);
+                    }
+
+                    println!("Scraped page {page} ({count} products)");
+                    return page_count;
+                },
+                Err(err_msg) => {
+                    eprintln!("{} (Attempt {}/{MAX_RETRIES})", err_msg, retries + 1);
+                    retries += 1;
+                    if retries == MAX_RETRIES {
+                        eprintln!("Body: {body}");
+                    }
+                    sleep(Duration::from_secs(2)).await;
+                    continue;
+                }
+            }
+        }
+
+        eprintln!("Giving up on page {page} after {MAX_RETRIES} attempts ({url})");
+        page_count
+    }
+
+    fn parse_products(&self, section: &Section, doc: Html) -> Result<Vec<Product>, Box<dyn Error>> {
+        let mut products = Vec::new();
+        for product in doc.select(&self.config().product_selector) {
+            match self.parse_product(section, product) {
+                Ok(product) => products.push(product),
+                Err(err) => eprintln!("Failed to parse product: {err}")
+            }
+        }
+        Ok(products)
+    }
+
+    fn parse_page_count(&self, doc: &Html) -> Result<i32, Box<dyn Error>> {
+        let elements = doc.select(&self.config().nav_selector).collect::<Vec<ElementRef>>();
+        if elements.is_empty() || elements.len() == 1 {
+            return Ok(1);
+        }
+
+        let last_page = elements.get(elements.len() - 2).ok_or("last page button not found")?;
+        let button_text = last_page.get_text();
+        Ok(button_text.parse::<i32>().map_err(|err| format!("button text: `{button_text}` ({err})"))?)
+    }
+
+    fn name(&self) -> &'static str {
+        self.config().name
+    }
+
+    fn format_url(&self, url: &str, page: i32) -> String {
+        format!("{url}?page={page}")
     }
 }

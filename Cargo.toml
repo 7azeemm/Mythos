@@ -20,7 +20,7 @@ disallowed_types = "deny"
 
 [dependencies]
 tokio = { version = "1.51.1", features = ["macros", "rt-multi-thread"] }
-reqwest = "0.13.2"
+reqwest = { version = "0.13.2", features = ["json", "gzip", "deflate"] }
 serde = { version = "1.0.228", features = ["derive"] }
 serde_json = "1.0.149"
 once_cell = "1.21.4"
@@ -36,3 +36,4 @@ tracing = "0.1.44"
 tracing-subscriber = { version = "0.3.23",features = ["env-filter"] }
 thiserror = "2.0.18"
 async-trait = "0.1.89"
+playwright-rs = "0.12.3"

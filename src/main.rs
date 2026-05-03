@@ -2,28 +2,32 @@ pub mod web_scraper;
 pub mod api;
 pub mod utils;
 
-use std::error::Error;
-use dotenv::dotenv;
-use futures::StreamExt;
-use once_cell::sync::Lazy;
-use reqwest::{Client, ClientBuilder};
-use serde::{Deserialize, Serialize};
-use utils::{database, dataset};
 use crate::api::server;
 use crate::utils::logger::setup_logging;
-
-static HTTP_CLIENT: Lazy<Client> = Lazy::new(|| {
-    ClientBuilder::new().build().expect("Failed to build HTTP client")
-});
+use crate::utils::web_client::WebClient;
+use dotenv::dotenv;
+use futures::StreamExt;
+use serde::{Deserialize, Serialize};
+use std::error::Error;
+use utils::{database, dataset};
 
 #[tokio::main]
 async fn main() {
+    unsafe { std::env::set_var("RUST_LOG", "warn,playwright_rs=off"); }
+    
     println!("Starting...");
     dotenv().ok();
     setup_logging();
+    WebClient::init().await;
     database::connect().await;
     dataset::load_datasets();
     web_scraper::scheduler::schedule();
 
-    server::run(3000).await.expect("Failed to start the server");
+    tokio::spawn(async {
+        server::run(3000).await.expect("Failed to start server")
+    });
+
+    tokio::signal::ctrl_c().await.ok();
+
+    WebClient::cleanup().await.ok();
 }

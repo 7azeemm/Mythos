@@ -4,7 +4,7 @@ use axum::Json;
 use serde::{Deserialize, Serialize};
 use crate::api::endpoints::products::PRODUCTS_PER_PAGE;
 use crate::api::error::{ApiError, ApiResult};
-use crate::web_scraper::specs_cache::SPECS_CACHE;
+use crate::web_scraper::specs::cache::SPECS_CACHE;
 use crate::utils::database::get_db_pool;
 
 #[derive(Deserialize)]
