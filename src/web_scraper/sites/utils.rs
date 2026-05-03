@@ -15,7 +15,10 @@ impl<'a> ElementRefExt for ElementRef<'a> {
 }
 
 pub fn parse_price(text: &str) -> Result<i32, ParseIntError> {
-    text.split(',').next().unwrap_or(text)
+    text.replace(",", ".")
+        .split('.')
+        .next()
+        .unwrap_or(text)
         .replace("DT", "")
         .replace(" ", "")
         .parse::<i32>()

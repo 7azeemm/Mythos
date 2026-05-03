@@ -61,10 +61,13 @@ impl Site for Tunisianet {
 
         let description = match section.requires_description() {
             false => vec![],
-            true => {
-                let description = element.select(&DESCRIPTION_SEL).next().ok_or("description not found")?;
-                description.get_text().split("-").map(|s| s.trim().to_string()).collect::<Vec<String>>()
-            }
+            true => element.select(&DESCRIPTION_SEL)
+                .next()
+                .ok_or("description not found")?
+                .get_text()
+                .split("-")
+                .map(|s| s.trim().to_string())
+                .collect::<Vec<String>>(),
         };
 
         let url = url
