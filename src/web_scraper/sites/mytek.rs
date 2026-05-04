@@ -24,7 +24,27 @@ static CONFIG: SiteConfig = SiteConfig {
     nav_selector: Lazy::new(|| Selector::parse("nav.custom-pagination ul.pagination li.page-item").unwrap()),
     product_selector: Lazy::new(|| Selector::parse("div#product-list-container div#seo-product-data div[data-id]").unwrap()),
     sections: &[
-        (&Section::CPU, "https://www.mytek.tn/informatique/composants-informatique/processeur.html")
+        (&Section::Laptop, "https://www.mytek.tn/informatique/ordinateurs-portables/pc-portable.html"),
+        (&Section::GamingLaptop, "https://www.mytek.tn/informatique/ordinateurs-portables/pc-gamer.html"),
+        (&Section::ProLaptop, "https://www.mytek.tn/informatique/ordinateurs-portables/pc-portable-pro.html"),
+        (&Section::ProLaptop, "https://www.mytek.tn/informatique/ordinateurs-portables/mac.html"),
+        (&Section::ProLaptop, "https://www.mytek.tn/informatique/ordinateurs-portables/ultrabook.html"),
+        (&Section::PC, "https://www.mytek.tn/informatique/ordinateur-de-bureau/pc-de-bureau.html"),
+        (&Section::GamingPc, "https://www.mytek.tn/informatique/ordinateur-de-bureau/ordinateur-gamer.html"),
+        (&Section::PcAllInOne, "https://www.mytek.tn/informatique/ordinateur-de-bureau/pc-tout-en-un.html"),
+        (&Section::Monitor, "https://www.mytek.tn/informatique/ordinateur-de-bureau/ecran.html"),
+        (&Section::Monitor, "https://www.mytek.tn/gaming/peripheriques-et-accessoires-gamers/ecran-gamer.html"),
+        (&Section::SSD, "https://www.mytek.tn/informatique/stockage/disque-dur.html"),
+        (&Section::CPU, "https://www.mytek.tn/informatique/composants-informatique/processeur.html"),
+        (&Section::GPU, "https://www.mytek.tn/informatique/composants-informatique/carte-graphique.html"),
+        (&Section::RAM, "https://www.mytek.tn/gaming/composant-pc-gamer/barrette-memoire-gamer.html"),
+        (&Section::RAM, "https://www.mytek.tn/informatique/composants-informatique/barrettes-memoire.html"),
+        (&Section::MotherBoard, "https://www.mytek.tn/informatique/composants-informatique/carte-mere.html"),
+        (&Section::Cooler, "https://www.mytek.tn/gaming/composant-pc-gamer/refroidisseur-processeur-gamer.html"),
+        (&Section::Case, "https://www.mytek.tn/informatique/composants-informatique/boitier.html"),
+        (&Section::Case, "https://www.mytek.tn/gaming/composant-pc-gamer/boitier-pc-gamer.html"),
+        (&Section::PSU, "https://www.mytek.tn/gaming/composant-pc-gamer/alimentation-pc-gamer.html"),
+        (&Section::PSU, "https://www.mytek.tn/informatique/composants-informatique/bloc-d-alimentation.html"),
     ]
 };
 

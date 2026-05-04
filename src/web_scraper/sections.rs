@@ -41,6 +41,8 @@ macro_rules! define_sections {
     };
 }
 
+//TODO: add other things like Fan
+//TODO: combine ssd and hdd into Storage
 define_sections! {
     PC          => ("pc", parse_pc, true),
     GamingPc    => ("gaming_pc", parse_pc, true),

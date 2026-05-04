@@ -9,6 +9,8 @@ use std::error::Error;
 use std::time::{Duration, Instant};
 use tokio::sync::RwLock;
 use tokio::time::sleep;
+use crate::web_scraper::sites::gamershop::GamerShop;
+use crate::web_scraper::sites::megapc::MegaPC;
 use crate::web_scraper::sites::mytek::Mytek;
 use crate::web_scraper::sites::tunisianet::Tunisianet;
 use crate::web_scraper::sites::utils::ElementRefExt;
@@ -17,14 +19,20 @@ pub mod tunisianet;
 pub mod utils;
 pub mod skymil_shop;
 pub mod mytek;
+pub mod gamershop;
+pub mod megapc;
 
 pub static PAGE_CACHE: Lazy<RwLock<HashMap<String, HashMap<String, Product>>>> = Lazy::new(|| RwLock::new(HashMap::new()));
 const MAX_RETRIES: i32 = 3;
 
+//print(&format!("{url}, {title}, {in_stock}, {image}, {price}, {regular_price:?}, {description:?}"));
+
 pub static SITES: Lazy<Vec<Box<dyn Site>>> = Lazy::new(|| vec![
     // Box::new(Tunisianet),
     // Box::new(SkyMilShop),
-    Box::new(Mytek),
+    // Box::new(Mytek),
+    // Box::new(GamerShop),
+    Box::new(MegaPC),
 ]);
 
 pub struct SiteConfig {
