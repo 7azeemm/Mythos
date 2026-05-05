@@ -10,45 +10,38 @@ use crate::web_scraper::sections::Section;
 use crate::web_scraper::sites::{Site, SiteConfig};
 use crate::web_scraper::sites::utils::{parse_price, parse_url, ElementRefExt};
 
-static TITLE_SEL: Lazy<Selector> = Lazy::new(|| Selector::parse("h3.product-name a").unwrap());
-static URL_SEL: Lazy<Selector> = Lazy::new(|| Selector::parse("h3.product-name a[href]").unwrap());
-static IMAGE_SEL: Lazy<Selector> = Lazy::new(|| Selector::parse("div.thumbnail-wrapper a figure img[src]").unwrap());
-static DESCRIPTION_SEL: Lazy<Selector> = Lazy::new(|| Selector::parse("div.short-description").unwrap());
+static TITLE_SEL: Lazy<Selector> = Lazy::new(|| Selector::parse("h2.woocommerce-loop-product__title").unwrap());
+static URL_SEL: Lazy<Selector> = Lazy::new(|| Selector::parse("a.woocommerce-loop-product__link").unwrap());
+static IMAGE_SEL: Lazy<Selector> = Lazy::new(|| Selector::parse("div.product-thumbnail img[src]").unwrap());
+static DESCRIPTION_SEL: Lazy<Selector> = Lazy::new(|| Selector::parse("div.product-short-description p").unwrap());
 static PRICE_SEL: Lazy<Selector> = Lazy::new(|| Selector::parse("span.price span bdi").unwrap());
 static PRICE_SEL_2: Lazy<Selector> = Lazy::new(|| Selector::parse("span.price ins span bdi").unwrap());
 static REGULAR_PRICE_SEL: Lazy<Selector> = Lazy::new(|| Selector::parse("span.price del span bdi").unwrap());
 
 static CONFIG: SiteConfig = SiteConfig {
-    name: "ExpertGaming",
+    name: "SigShop",
     web_client_type: WebClientType::HttpClient,
     nav_selector: Lazy::new(|| Selector::parse("nav ul.page-numbers li").unwrap()),
-    product_selector: Lazy::new(|| Selector::parse("div.products section.product").unwrap()),
+    product_selector: Lazy::new(|| Selector::parse("ul.products li.product").unwrap()),
     sections: &[
-        (&Section::GamingPc, "https://www.expert-gaming.tn/pc-gaming-bureautique/"),
-        (&Section::GamingSetup, "https://www.expert-gaming.tn/full-setup-gaming/"),
-        (&Section::GamingLaptop, "https://www.expert-gaming.tn/pc-portable-gaming/"),
-        (&Section::Monitor, "https://www.expert-gaming.tn/ecran-gaming/"),
-        (&Section::Monitor, "https://www.expert-gaming.tn/ecrans-professionnelles/"),
-        (&Section::CPU, "https://www.expert-gaming.tn/processeurs-intel/"),
-        (&Section::CPU, "https://www.expert-gaming.tn/processeurs-amd/"),
-        (&Section::GPU, "https://www.expert-gaming.tn/carte-graphique-nvidia/"),
-        (&Section::GPU, "https://www.expert-gaming.tn/carte-graphique-amd/"),
-        (&Section::RAM, "https://www.expert-gaming.tn/memoire-vive/"),
-        (&Section::MotherBoard, "https://www.expert-gaming.tn/carte-mere-intel/"),
-        (&Section::MotherBoard, "https://www.expert-gaming.tn/carte-mere-amd/"),
-        (&Section::SSD, "https://www.expert-gaming.tn/stockage/"),
-        (&Section::HDD, "https://www.expert-gaming.tn/disque-interne-externe/"),
-        (&Section::PSU, "https://www.expert-gaming.tn/alimentation/"),
-        (&Section::Case, "https://www.expert-gaming.tn/boitier/"),
-        (&Section::Cooler, "https://www.expert-gaming.tn/refroidissement-a-eau-watercooling/"),
-        (&Section::Cooler, "https://www.expert-gaming.tn/refroidissement-a-air-aircooling/"),
-        (&Section::Cooler, "https://www.expert-gaming.tn/ventilateur-boitier/"),
-    ],
+        (&Section::Laptop, "https://sig-shop.tn/categorie-produit/pc-portable/"),
+        (&Section::GamingLaptop, "https://sig-shop.tn/categorie-produit/gaming-2/pc-portable-gaming-2/"),
+        (&Section::PC, "https://sig-shop.tn/categorie-produit/pc-bureau/"),
+        (&Section::GamingPc, "https://sig-shop.tn/categorie-produit/gaming-2/pc-bureau-gaming-2/"),
+        (&Section::PcAllInOne, "https://sig-shop.tn/categorie-produit/pc-bureau/all-in-one/"),
+        (&Section::Monitor, "https://sig-shop.tn/categorie-produit/accessoires/ecran/"),
+        (&Section::CPU, "https://sig-shop.tn/categorie-produit/accessoires/processeur/"),
+        (&Section::GPU, "https://sig-shop.tn/categorie-produit/accessoires/carte-graphique/"),
+        (&Section::RAM, "https://sig-shop.tn/categorie-produit/accessoires/barrette-memoire/"),
+        (&Section::MotherBoard, "https://sig-shop.tn/categorie-produit/accessoires/carte-mere-accessoires/"),
+        (&Section::Case, "https://sig-shop.tn/categorie-produit/accessoires/boitier/"),
+        (&Section::SSD, "https://sig-shop.tn/categorie-produit/accessoires/stockage/disque-dur-interne/"),
+    ]
 };
 
-pub struct ExpertGaming;
+pub struct SigShop;
 
-impl Site for ExpertGaming {
+impl Site for SigShop {
     fn config(&self) -> &SiteConfig {
         &CONFIG
     }
@@ -67,26 +60,29 @@ impl Site for ExpertGaming {
             None => (parse_price(&element.select(&PRICE_SEL).next().ok_or("price not found")?.get_text())?, None),
         };
 
-        let description = match section.requires_description() {
-            false => vec![],
-            true => element.select(&DESCRIPTION_SEL)
-                .next()
-                .ok_or("description not found")?
-                .get_text()
-                .split(".")
-                .map(|s| s.trim().to_string())
-                .collect::<Vec<String>>(),
-        };
-
         let url = url
             .value()
             .attr("href")
             .ok_or("product url not found")?
             .to_string();
 
+        let description = match section.requires_description() {
+            false => vec![],
+            true => element.select(&DESCRIPTION_SEL)
+                .next()
+                .map(|e| e.get_text()
+                    .split("-")
+                    .map(|s| s.trim().to_string())
+                    .collect::<Vec<String>>())
+                .unwrap_or_else(|| {
+                    eprintln!("description not found of product {url}");
+                    vec![]
+                }),
+        };
+
         let image = image
             .value()
-            .attr("data-src")
+            .attr("src")
             .ok_or("image url not found")?
             .to_string();
 

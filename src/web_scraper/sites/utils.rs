@@ -1,3 +1,4 @@
+use std::error::Error;
 use std::num::ParseIntError;
 use scraper::ElementRef;
 
@@ -14,11 +15,15 @@ impl<'a> ElementRefExt for ElementRef<'a> {
     }
 }
 
-pub fn parse_price(text: &str) -> Result<i32, ParseIntError> {
-    let clean_text = text.replace("DT", "").replace(" ", "").replace('\u{a0}', "");
+pub fn parse_price(text: &str) -> Result<i32, Box<dyn Error>> {
+    let clean_text = text
+        .replace("DT", "")
+        .replace("TND", "")
+        .replace(" ", "")
+        .replace('\u{a0}', "");
 
     // "1.369,000" or "1369,000"
-    if clean_text.contains(',') {
+    let price = if clean_text.contains(',') {
         clean_text.replace('.', "")
             .split(',')
             .next()
@@ -30,7 +35,9 @@ pub fn parse_price(text: &str) -> Result<i32, ParseIntError> {
             .next()
             .unwrap_or(&clean_text)
             .parse::<i32>()
-    }
+    };
+
+    price.map_err(|err| format!("Failed to parse price {text}: {err}").into())
 }
 
 pub fn parse_url(site: &str, url: &str) -> String {

@@ -13,6 +13,7 @@ use crate::web_scraper::sites::expert_gaming::ExpertGaming;
 use crate::web_scraper::sites::gamershop::GamerShop;
 use crate::web_scraper::sites::megapc::MegaPC;
 use crate::web_scraper::sites::mytek::Mytek;
+use crate::web_scraper::sites::sig_shop::SigShop;
 use crate::web_scraper::sites::spacenet::SpaceNet;
 use crate::web_scraper::sites::tunisianet::Tunisianet;
 use crate::web_scraper::sites::utils::ElementRefExt;
@@ -25,6 +26,7 @@ pub mod gamershop;
 pub mod megapc;
 pub mod spacenet;
 pub mod expert_gaming;
+pub mod sig_shop;
 
 pub static PAGE_CACHE: Lazy<RwLock<HashMap<String, HashMap<String, Product>>>> = Lazy::new(|| RwLock::new(HashMap::new()));
 const MAX_RETRIES: i32 = 3;
@@ -38,7 +40,8 @@ pub static SITES: Lazy<Vec<Box<dyn Site>>> = Lazy::new(|| vec![
     // Box::new(GamerShop),
     // Box::new(MegaPC),
     // Box::new(SpaceNet),
-    Box::new(ExpertGaming),
+    // Box::new(ExpertGaming),
+    Box::new(SigShop),
 
 
     //zstore.com.tn
@@ -46,7 +49,6 @@ pub static SITES: Lazy<Vec<Box<dyn Site>>> = Lazy::new(|| vec![
     //mbm-tn.com
     //www.planete-informatique.tn
     //www.sbsinformatique.com
-    //www.expert-gaming.tn
     //bestbuytunisie.tn
     //clickup.tn
     //www.technopro-online.com
