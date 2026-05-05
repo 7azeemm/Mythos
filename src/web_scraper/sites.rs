@@ -9,6 +9,7 @@ use std::error::Error;
 use std::time::{Duration, Instant};
 use tokio::sync::RwLock;
 use tokio::time::sleep;
+use crate::web_scraper::sites::carthago_informatique::CarthagoInformatique;
 use crate::web_scraper::sites::expert_gaming::ExpertGaming;
 use crate::web_scraper::sites::gamershop::GamerShop;
 use crate::web_scraper::sites::megapc::MegaPC;
@@ -17,6 +18,7 @@ use crate::web_scraper::sites::sig_shop::SigShop;
 use crate::web_scraper::sites::spacenet::SpaceNet;
 use crate::web_scraper::sites::tunisianet::Tunisianet;
 use crate::web_scraper::sites::utils::ElementRefExt;
+use crate::web_scraper::sites::wiki_tn::WikiTN;
 
 pub mod tunisianet;
 pub mod utils;
@@ -27,6 +29,8 @@ pub mod megapc;
 pub mod spacenet;
 pub mod expert_gaming;
 pub mod sig_shop;
+pub mod carthago_informatique;
+pub mod wiki_tn;
 
 pub static PAGE_CACHE: Lazy<RwLock<HashMap<String, HashMap<String, Product>>>> = Lazy::new(|| RwLock::new(HashMap::new()));
 const MAX_RETRIES: i32 = 3;
@@ -41,8 +45,9 @@ pub static SITES: Lazy<Vec<Box<dyn Site>>> = Lazy::new(|| vec![
     // Box::new(MegaPC),
     // Box::new(SpaceNet),
     // Box::new(ExpertGaming),
-    Box::new(SigShop),
-
+    // Box::new(SigShop),
+    // Box::new(CarthagoInformatique),
+    Box::new(WikiTN),
 
     //zstore.com.tn
     //wiki.tn
@@ -60,8 +65,6 @@ pub static SITES: Lazy<Vec<Box<dyn Site>>> = Lazy::new(|| vec![
     //tunewtec.com
     //kamounhome.tn
     //infotec.tn
-    //sig-shop.tn
-    //carthagoinformatique.tn
 ]);
 
 pub struct SiteConfig {
