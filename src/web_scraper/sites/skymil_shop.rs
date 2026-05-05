@@ -58,9 +58,7 @@ impl Site for SkyMilShop {
 
         let description = match section.requires_description() {
             false => vec![],
-            true => {
-                todo!()
-            }
+            true => todo!()
         };
 
         let url = title

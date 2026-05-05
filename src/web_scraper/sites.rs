@@ -15,6 +15,7 @@ use crate::web_scraper::sites::expert_gaming::ExpertGaming;
 use crate::web_scraper::sites::gamershop::GamerShop;
 use crate::web_scraper::sites::info_tec::InfoTec;
 use crate::web_scraper::sites::jmb::JMB;
+use crate::web_scraper::sites::jumbo::Jumbo;
 use crate::web_scraper::sites::leader_deal::LeaderDeal;
 use crate::web_scraper::sites::mbm_informatique::MBMInformatique;
 use crate::web_scraper::sites::media_vision::MediaVision;
@@ -43,6 +44,7 @@ pub mod cyberinfo;
 pub mod leader_deal;
 pub mod mbm_informatique;
 pub mod jmb;
+pub mod jumbo;
 
 pub static PAGE_CACHE: Lazy<RwLock<HashMap<String, HashMap<String, Product>>>> = Lazy::new(|| RwLock::new(HashMap::new()));
 const MAX_RETRIES: i32 = 3;
@@ -68,6 +70,7 @@ pub static SITES: Lazy<Vec<Box<dyn Site>>> = Lazy::new(|| vec![
     // Box::new(CyberInfo),
     // Box::new(MBMInformatique),
     // Box::new(JMB),
+    Box::new(Jumbo),
 
     //nexuspc.shop
     //zstore.com.tn
