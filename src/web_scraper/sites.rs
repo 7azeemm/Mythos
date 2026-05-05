@@ -10,6 +10,7 @@ use std::time::{Duration, Instant};
 use tokio::sync::RwLock;
 use tokio::time::sleep;
 use crate::web_scraper::sites::affariyet::Affariyet;
+use crate::web_scraper::sites::batam::Batam;
 use crate::web_scraper::sites::carthago_informatique::CarthagoInformatique;
 use crate::web_scraper::sites::cyberinfo::CyberInfo;
 use crate::web_scraper::sites::expert_gaming::ExpertGaming;
@@ -47,6 +48,7 @@ pub mod mbm_informatique;
 pub mod jmb;
 pub mod jumbo;
 pub mod affariyet;
+pub mod batam;
 
 pub static PAGE_CACHE: Lazy<RwLock<HashMap<String, HashMap<String, Product>>>> = Lazy::new(|| RwLock::new(HashMap::new()));
 const MAX_RETRIES: i32 = 3;
@@ -74,6 +76,7 @@ pub static SITES: Lazy<Vec<Box<dyn Site>>> = Lazy::new(|| vec![
     // Box::new(JMB),
     // Box::new(Jumbo),
     // Box::new(Affariyet),
+    Box::new(Batam),
 
     //nexuspc.shop
     //zstore.com.tn
@@ -82,10 +85,9 @@ pub static SITES: Lazy<Vec<Box<dyn Site>>> = Lazy::new(|| vec![
     //clickup.tn
     //www.technopro-online.com
     //tdiscount.tn
+    //tunewtec.com
     //https://www.scoopgaming.com.tn/
     //https://www.scoop.com.tn/
-    //tunewtec.com
-    //https://batam.com.tn/
 
     //qsnet.tn
     //www.planete-informatique.tn

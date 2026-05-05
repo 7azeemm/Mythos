@@ -12,6 +12,7 @@ use crate::web_scraper::sites::utils::{parse_price, parse_url, ElementRefExt};
 static TITLE_SEL: Lazy<Selector> = Lazy::new(|| Selector::parse("div.product_name a[href]").unwrap());
 static IMAGE_SEL: Lazy<Selector> = Lazy::new(|| Selector::parse("a.product-thumbnail img[src]").unwrap());
 static DESCRIPTION_SEL: Lazy<Selector> = Lazy::new(|| Selector::parse("div.decriptions-short p").unwrap());
+static STATUS_SEL: Lazy<Selector> = Lazy::new(|| Selector::parse("button.add-to-cart i").unwrap());
 static PRICE_SEL: Lazy<Selector> = Lazy::new(|| Selector::parse("span.price").unwrap());
 static REGULAR_PRICE_SEL: Lazy<Selector> = Lazy::new(|| Selector::parse("span.regular-price").unwrap());
 
@@ -61,7 +62,12 @@ impl Site for Jumbo {
         let price = parse_price(&element.select(&PRICE_SEL).next().ok_or("price not found")?.get_text())?;
         let url = title.attr("href").ok_or("url not found")?.to_string();
         let title = title.get_text();
-        let in_stock = true;
+
+        let in_stock = element.select(&STATUS_SEL).next()
+            .ok_or("status not found")?
+            .attr("fa-ban")
+            .map(|_| false)
+            .unwrap_or(true);
 
         let regular_price = match element.select(&REGULAR_PRICE_SEL).next() {
             Some(p) => Some(parse_price(&p.get_text())?),
