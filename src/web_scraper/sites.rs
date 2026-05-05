@@ -14,6 +14,7 @@ use crate::web_scraper::sites::cyberinfo::CyberInfo;
 use crate::web_scraper::sites::expert_gaming::ExpertGaming;
 use crate::web_scraper::sites::gamershop::GamerShop;
 use crate::web_scraper::sites::info_tec::InfoTec;
+use crate::web_scraper::sites::jmb::JMB;
 use crate::web_scraper::sites::leader_deal::LeaderDeal;
 use crate::web_scraper::sites::mbm_informatique::MBMInformatique;
 use crate::web_scraper::sites::media_vision::MediaVision;
@@ -41,6 +42,7 @@ pub mod info_tec;
 pub mod cyberinfo;
 pub mod leader_deal;
 pub mod mbm_informatique;
+pub mod jmb;
 
 pub static PAGE_CACHE: Lazy<RwLock<HashMap<String, HashMap<String, Product>>>> = Lazy::new(|| RwLock::new(HashMap::new()));
 const MAX_RETRIES: i32 = 3;
@@ -65,6 +67,7 @@ pub static SITES: Lazy<Vec<Box<dyn Site>>> = Lazy::new(|| vec![
     // Box::new(InfoTec),
     // Box::new(CyberInfo),
     // Box::new(MBMInformatique),
+    // Box::new(JMB),
 
     //nexuspc.shop
     //zstore.com.tn
@@ -76,12 +79,10 @@ pub static SITES: Lazy<Vec<Box<dyn Site>>> = Lazy::new(|| vec![
     //https://www.scoopgaming.com.tn/
     //https://www.scoop.com.tn/
     //tunewtec.com
-    //https://www.leaderdeal.tn/sites/4/13/3/7/Ordinateur-portable
     //https://tunewtec.com/c/gaming/composant-pc-gamer/carte-graphique-gamer/
     //https://batam.com.tn/
     //https://www.affariyet.com/
     //https://jumbo.tn/
-    //https://jmb.com.tn/
 
     //qsnet.tn
     //www.planete-informatique.tn
