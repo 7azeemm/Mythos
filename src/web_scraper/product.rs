@@ -5,6 +5,8 @@ use sqlx::{Decode, FromRow};
 use std::fmt::Display;
 use std::str::FromStr;
 
+//TODO: Enum Status maybe, to prevent bugs in the future caused by site changements of text
+
 #[derive(Debug, Clone, Serialize, Deserialize, FromRow)]
 pub struct Product {
     pub id: String,
