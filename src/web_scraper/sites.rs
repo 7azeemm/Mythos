@@ -12,6 +12,7 @@ use tokio::time::sleep;
 use crate::web_scraper::sites::carthago_informatique::CarthagoInformatique;
 use crate::web_scraper::sites::expert_gaming::ExpertGaming;
 use crate::web_scraper::sites::gamershop::GamerShop;
+use crate::web_scraper::sites::media_vision::MediaVision;
 use crate::web_scraper::sites::megapc::MegaPC;
 use crate::web_scraper::sites::mytek::Mytek;
 use crate::web_scraper::sites::sig_shop::SigShop;
@@ -31,6 +32,7 @@ pub mod expert_gaming;
 pub mod sig_shop;
 pub mod carthago_informatique;
 pub mod wiki_tn;
+pub mod media_vision;
 
 pub static PAGE_CACHE: Lazy<RwLock<HashMap<String, HashMap<String, Product>>>> = Lazy::new(|| RwLock::new(HashMap::new()));
 const MAX_RETRIES: i32 = 3;
@@ -47,10 +49,10 @@ pub static SITES: Lazy<Vec<Box<dyn Site>>> = Lazy::new(|| vec![
     // Box::new(ExpertGaming),
     // Box::new(SigShop),
     // Box::new(CarthagoInformatique),
-    Box::new(WikiTN),
+    // Box::new(WikiTN),
+    // Box::new(MediaVision),
 
     //zstore.com.tn
-    //wiki.tn
     //mbm-tn.com
     //www.planete-informatique.tn
     //www.sbsinformatique.com
@@ -61,7 +63,6 @@ pub static SITES: Lazy<Vec<Box<dyn Site>>> = Lazy::new(|| vec![
     //https://www.scoopgaming.com.tn/
     //https://www.scoop.com.tn/
     //qsnet.tn
-    //www.mediavision.tn
     //tunewtec.com
     //kamounhome.tn
     //infotec.tn
