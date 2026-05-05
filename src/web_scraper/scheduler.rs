@@ -23,7 +23,7 @@ pub fn schedule() {
 
             let mut products = HashMap::default();
 
-            for section in [Section::CPU] {
+            for section in [Section::Laptop] {
                 for site in SITES.iter() {
                     println!("------- {} -------", site.name());
                     for (_, url) in site.config().sections.iter().filter(|(s, _)| *s == &section) {

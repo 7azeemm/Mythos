@@ -10,6 +10,7 @@ use std::time::{Duration, Instant};
 use tokio::sync::RwLock;
 use tokio::time::sleep;
 use crate::web_scraper::sites::carthago_informatique::CarthagoInformatique;
+use crate::web_scraper::sites::cyberinfo::CyberInfo;
 use crate::web_scraper::sites::expert_gaming::ExpertGaming;
 use crate::web_scraper::sites::gamershop::GamerShop;
 use crate::web_scraper::sites::info_tec::InfoTec;
@@ -35,11 +36,13 @@ pub mod carthago_informatique;
 pub mod wiki_tn;
 pub mod media_vision;
 pub mod info_tec;
+pub mod cyberinfo;
 
 pub static PAGE_CACHE: Lazy<RwLock<HashMap<String, HashMap<String, Product>>>> = Lazy::new(|| RwLock::new(HashMap::new()));
 const MAX_RETRIES: i32 = 3;
 
 //print(&format!("{url}, {title}, {in_stock}, {image}, {price}, {regular_price:?}, {description:?}"));
+//println!("{url}, {title}, {status}, {image}, {price}, {regular_price:?}, {description:?}");
 
 pub static SITES: Lazy<Vec<Box<dyn Site>>> = Lazy::new(|| vec![
     // Box::new(Tunisianet),
@@ -54,6 +57,7 @@ pub static SITES: Lazy<Vec<Box<dyn Site>>> = Lazy::new(|| vec![
     // Box::new(WikiTN),
     // Box::new(MediaVision),
     // Box::new(InfoTec),
+    Box::new(CyberInfo),
 
     //zstore.com.tn
     //mbm-tn.com

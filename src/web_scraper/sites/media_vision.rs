@@ -81,7 +81,7 @@ impl Site for MediaVision {
                 .get_text()
                 .split("-")
                 .map(|s| s.trim().to_string())
-                .collect::<Vec<String>>(),
+                .collect::<Vec<String>>()
         };
 
         let image = image
