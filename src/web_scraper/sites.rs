@@ -11,6 +11,7 @@ use tokio::sync::RwLock;
 use tokio::time::sleep;
 use crate::web_scraper::sites::affariyet::Affariyet;
 use crate::web_scraper::sites::batam::Batam;
+use crate::web_scraper::sites::bestbuytunisie::BestBuyTunisie;
 use crate::web_scraper::sites::carthago_informatique::CarthagoInformatique;
 use crate::web_scraper::sites::cyberinfo::CyberInfo;
 use crate::web_scraper::sites::expert_gaming::ExpertGaming;
@@ -55,6 +56,7 @@ pub mod batam;
 pub mod tunewtec;
 pub mod techspace;
 pub mod technopro;
+pub mod bestbuytunisie;
 
 pub static PAGE_CACHE: Lazy<RwLock<HashMap<String, HashMap<String, Product>>>> = Lazy::new(|| RwLock::new(HashMap::new()));
 const MAX_RETRIES: i32 = 3;
@@ -86,10 +88,10 @@ pub static SITES: Lazy<Vec<Box<dyn Site>>> = Lazy::new(|| vec![
     // Box::new(TunewTec),
     // Box::new(TechSpace),
     // Box::new(TechnoPro),
+    // Box::new(BestBuyTunisie),
 
     //zstore.com.tn
     //www.sbsinformatique.com
-    //bestbuytunisie.tn
     //clickup.tn
     //tdiscount.tn
     //https://www.scoopgaming.com.tn/

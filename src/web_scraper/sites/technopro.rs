@@ -24,6 +24,24 @@ static CONFIG: SiteConfig = SiteConfig {
     product_selector: Lazy::new(|| Selector::parse("div.products article.product-miniature").unwrap()),
     sections: &[
         (&Section::Laptop, "https://www.technopro-online.com/prix-pc-portable-hp-dell-asus-lenovo-acer-Tunisie.html"),
+        (&Section::Laptop, "https://www.technopro-online.com/prix-macbook-tunisie.html"),
+        (&Section::GamingPc, "https://www.technopro-online.com/pc-gamer.html"),
+        (&Section::PC, "https://www.technopro-online.com/pc-de-bureau.html"),
+        (&Section::PC, "https://www.technopro-online.com/prix-apple-imac-tunisie.html"),
+        (&Section::PcAllInOne, "https://www.technopro-online.com/prix-pc-de-bureau-tout-en-un-tunisie.html"),
+        (&Section::GamingLaptop, "https://www.technopro-online.com/pc-portable-gamer.html"),
+        (&Section::Monitor, "https://www.technopro-online.com/prix-ecran-ordinateur-moniteur-samsung-dell-hp-lenovo-acer-lg-tunisie.html"),
+        (&Section::Monitor, "https://www.technopro-online.com/-ecran-gamer.html"),
+        (&Section::CPU, "https://www.technopro-online.com/processeurs.html"),
+        (&Section::GPU, "https://www.technopro-online.com/cartes-graphiques-msi-asus-macy-tunisie.html"),
+        (&Section::RAM, "https://www.technopro-online.com/barrette-memoire-pour-pc-de-bureau.html"),
+        (&Section::MotherBoard, "https://www.technopro-online.com/carte-mere-pour-pc-de-bureau-.html"),
+        (&Section::SSD, "https://www.technopro-online.com/disques-durs-internes.html"),
+        (&Section::SSD, "https://www.technopro-online.com/disque-dur-ssd-tunisie.html"),
+        (&Section::PSU, "https://www.technopro-online.com/bloc-d-alimentation-.html"),
+        (&Section::Case, "https://www.technopro-online.com/boitier-pc-gamer-.html"),
+        (&Section::Cooler, "https://www.technopro-online.com/ventilateur-gamer-.html"),
+        (&Section::Cooler, "https://www.technopro-online.com/prix-systemes-de-refroidissement-tunisie.html"),
     ]
 };
 

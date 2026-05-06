@@ -5,7 +5,6 @@ use scraper::{ElementRef, Selector};
 use serde_json::Value;
 use crate::utils::web_client::WebClientType;
 use crate::web_scraper::product::Product;
-use crate::web_scraper::scheduler::print;
 use crate::web_scraper::sections::Section;
 use crate::web_scraper::sites::{Site, SiteConfig};
 use crate::web_scraper::sites::utils::{parse_price, parse_url, ElementRefExt};
@@ -19,33 +18,34 @@ static PRICE_SEL_2: Lazy<Selector> = Lazy::new(|| Selector::parse("span.price in
 static REGULAR_PRICE_SEL: Lazy<Selector> = Lazy::new(|| Selector::parse("span.price del span bdi").unwrap());
 
 static CONFIG: SiteConfig = SiteConfig {
-    name: "CarthagoInformatique",
+    name: "BestBuyTunisie",
     web_client_type: WebClientType::HttpClient,
     nav_selector: Lazy::new(|| Selector::parse("nav.woocommerce-pagination ul li").unwrap()),
     product_selector: Lazy::new(|| Selector::parse("div.products div.product").unwrap()),
     sections: &[
-        (&Section::PC, "https://carthagoinformatique.tn/categorie-produit/informatique/pc/pc-de-bureau/"),
-        (&Section::GamingPc, "https://carthagoinformatique.tn/categorie-produit/gaming/pc-gamer/"),
-        (&Section::PcAllInOne, "https://carthagoinformatique.tn/categorie-produit/informatique/pc/pc-tout-en-un/"),
-        (&Section::Monitor, "https://carthagoinformatique.tn/categorie-produit/informatique/accessoires-ordinateur/ecran/"),
-        (&Section::Laptop, "https://carthagoinformatique.tn/categorie-produit/informatique/pc/pc-portable/"),
-        (&Section::GamingLaptop, "https://carthagoinformatique.tn/categorie-produit/informatique/pc/pc-portable-gamer/"),
-        (&Section::CPU, "https://carthagoinformatique.tn/categorie-produit/gaming/composant-pc-gamer/processeur/"),
-        (&Section::GPU, "https://carthagoinformatique.tn/categorie-produit/gaming/composants/carte-graphique/"),
-        (&Section::MotherBoard, "https://carthagoinformatique.tn/categorie-produit/informatique/composants-pc/carte-mere-pc/"),
-        (&Section::RAM, "https://carthagoinformatique.tn/categorie-produit/gaming/composants/barrette-memoire/"),
-        (&Section::SSD, "https://carthagoinformatique.tn/categorie-produit/gaming/composant-pc-gamer/disque-dur-ssd-hdd-mvme/"),
-        (&Section::SSD, "https://carthagoinformatique.tn/categorie-produit/informatique/stockage/disque-dur-interne/"),
-        (&Section::Cooler, "https://carthagoinformatique.tn/categorie-produit/gaming/composant-pc-gamer/refroidissement/"),
-        (&Section::PSU, "https://carthagoinformatique.tn/categorie-produit/gaming/composant-pc-gamer/bloc-dalimentation/"),
-        (&Section::PSU, "https://carthagoinformatique.tn/categorie-produit/informatique/composants-pc/bloc-dalimentation-pc/"),
-        (&Section::Case, "https://carthagoinformatique.tn/categorie-produit/gaming/composant-pc-gamer/boitier-pc-gamer/"),
-    ],
+        (&Section::Laptop, "https://bestbuytunisie.tn/vente/informatique/pc/pc-portable-tunisie/"),
+        (&Section::GamingLaptop, "https://bestbuytunisie.tn/vente/informatique/pc/pc-portable-gamer-tunisie/"),
+        (&Section::PC, "https://bestbuytunisie.tn/vente/informatique/pc/pc-de-bureau-tunisie/"),
+        (&Section::GamingPc, "https://bestbuytunisie.tn/vente/gaming/pc-gamer-tunisie/"),
+        (&Section::PcAllInOne, "https://bestbuytunisie.tn/vente/informatique/pc/pc-tout-en-un-tunisie/"),
+        (&Section::Monitor, "https://bestbuytunisie.tn/vente/informatique/accessoires-ordinateur/ecran-tunisie/"),
+        (&Section::Monitor, "https://bestbuytunisie.tn/vente/gaming/peripheriques-et-accessoires-gamers/ecrans-gamer-tunisie/"),
+        (&Section::CPU, "https://bestbuytunisie.tn/vente/gaming/composant-pc-gamer/processeur-tunisie/"),
+        (&Section::GPU, "https://bestbuytunisie.tn/vente/gaming/composants/carte-graphique-tunisie/"),
+        (&Section::RAM, "https://bestbuytunisie.tn/vente/gaming/composants/barrette-memoire-tunisie/"),
+        (&Section::MotherBoard, "https://bestbuytunisie.tn/vente/informatique/composants-pc/carte-mere-pc-tunisie/"),
+        (&Section::SSD, "https://bestbuytunisie.tn/vente/informatique/stockage/disque-dur-interne-tunisie/"),
+        (&Section::SSD, "https://bestbuytunisie.tn/vente/gaming/composant-pc-gamer/disque-dur-ssd-hdd-mvme-tunisie/"),
+        (&Section::Cooler, "https://bestbuytunisie.tn/vente/gaming/composant-pc-gamer/refroidissement-tunisie/"),
+        (&Section::PSU, "https://bestbuytunisie.tn/vente/informatique/composants-pc/bloc-dalimentation-pc-tunisie/"),
+        (&Section::PSU, "https://bestbuytunisie.tn/vente/gaming/composant-pc-gamer/bloc-dalimentation-tunisie/"),
+        (&Section::Case, "https://bestbuytunisie.tn/vente/gaming/composant-pc-gamer/boitier-pc-gamer-tunisie/"),
+    ]
 };
 
-pub struct CarthagoInformatique;
+pub struct BestBuyTunisie;
 
-impl Site for CarthagoInformatique {
+impl Site for BestBuyTunisie {
     fn config(&self) -> &SiteConfig {
         &CONFIG
     }
@@ -65,8 +65,8 @@ impl Site for CarthagoInformatique {
         };
 
         let description = match section.requires_description() {
-            false => vec![],
-            true => todo!(),
+            true => vec![],
+            false => todo!(),
         };
 
         let url = url
@@ -77,7 +77,7 @@ impl Site for CarthagoInformatique {
 
         let image = image
             .value()
-            .attr("src")
+            .attr("data-lazy-src")
             .ok_or("image url not found")?
             .to_string();
 
