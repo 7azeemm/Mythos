@@ -25,6 +25,7 @@ use crate::web_scraper::sites::megapc::MegaPC;
 use crate::web_scraper::sites::mytek::Mytek;
 use crate::web_scraper::sites::sig_shop::SigShop;
 use crate::web_scraper::sites::spacenet::SpaceNet;
+use crate::web_scraper::sites::techspace::TechSpace;
 use crate::web_scraper::sites::tunewtec::TunewTec;
 use crate::web_scraper::sites::tunisianet::Tunisianet;
 use crate::web_scraper::sites::utils::ElementRefExt;
@@ -51,6 +52,7 @@ pub mod jumbo;
 pub mod affariyet;
 pub mod batam;
 pub mod tunewtec;
+pub mod techspace;
 
 pub static PAGE_CACHE: Lazy<RwLock<HashMap<String, HashMap<String, Product>>>> = Lazy::new(|| RwLock::new(HashMap::new()));
 const MAX_RETRIES: i32 = 3;
@@ -80,8 +82,8 @@ pub static SITES: Lazy<Vec<Box<dyn Site>>> = Lazy::new(|| vec![
     // Box::new(Affariyet),
     // Box::new(Batam),
     // Box::new(TunewTec),
+    // Box::new(TechSpace),
 
-    //https://techspace.tn/
     //nexuspc.shop
     //zstore.com.tn
     //www.sbsinformatique.com
