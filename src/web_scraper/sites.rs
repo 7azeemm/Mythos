@@ -25,6 +25,7 @@ use crate::web_scraper::sites::megapc::MegaPC;
 use crate::web_scraper::sites::mytek::Mytek;
 use crate::web_scraper::sites::sig_shop::SigShop;
 use crate::web_scraper::sites::spacenet::SpaceNet;
+use crate::web_scraper::sites::tunewtec::TunewTec;
 use crate::web_scraper::sites::tunisianet::Tunisianet;
 use crate::web_scraper::sites::utils::ElementRefExt;
 use crate::web_scraper::sites::wiki_tn::WikiTN;
@@ -49,6 +50,7 @@ pub mod jmb;
 pub mod jumbo;
 pub mod affariyet;
 pub mod batam;
+pub mod tunewtec;
 
 pub static PAGE_CACHE: Lazy<RwLock<HashMap<String, HashMap<String, Product>>>> = Lazy::new(|| RwLock::new(HashMap::new()));
 const MAX_RETRIES: i32 = 3;
@@ -76,8 +78,10 @@ pub static SITES: Lazy<Vec<Box<dyn Site>>> = Lazy::new(|| vec![
     // Box::new(JMB),
     // Box::new(Jumbo),
     // Box::new(Affariyet),
-    Box::new(Batam),
+    // Box::new(Batam),
+    // Box::new(TunewTec),
 
+    //https://techspace.tn/
     //nexuspc.shop
     //zstore.com.tn
     //www.sbsinformatique.com
@@ -85,12 +89,13 @@ pub static SITES: Lazy<Vec<Box<dyn Site>>> = Lazy::new(|| vec![
     //clickup.tn
     //www.technopro-online.com
     //tdiscount.tn
-    //tunewtec.com
     //https://www.scoopgaming.com.tn/
     //https://www.scoop.com.tn/
 
     //qsnet.tn
     //www.planete-informatique.tn
+    //https://xtreme-pc.tn/
+    //https://lofficielshop.tn/ ??
 ]);
 
 pub struct SiteConfig {

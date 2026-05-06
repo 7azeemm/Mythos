@@ -22,15 +22,23 @@ pub fn parse_price(text: &str) -> Result<i32, Box<dyn Error>> {
         .replace(" ", "")
         .replace('\u{a0}', "");
 
-    // "1.369,000" or "1369,000"
-    let price = if clean_text.contains(',') {
+    let price = if clean_text.contains(',') && clean_text.contains('.')
+        && clean_text.find(',') < clean_text.find('.') {
+        // "1,369.000"
+        clean_text.replace(',', "")
+            .split('.')
+            .next()
+            .unwrap_or(&clean_text)
+            .parse::<i32>()
+    } else if clean_text.contains(',') {
+        // "1.369,000" or "1369,000"
         clean_text.replace('.', "")
             .split(',')
             .next()
             .unwrap_or(&clean_text)
             .parse::<i32>()
     } else {
-        // "1369.000"
+        // "1369.000" or "1369"
         clean_text.split('.')
             .next()
             .unwrap_or(&clean_text)

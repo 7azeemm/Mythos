@@ -5,7 +5,6 @@ use scraper::{ElementRef, Selector};
 use serde_json::Value;
 use crate::utils::web_client::WebClientType;
 use crate::web_scraper::product::Product;
-use crate::web_scraper::scheduler::print;
 use crate::web_scraper::sections::Section;
 use crate::web_scraper::sites::{Site, SiteConfig};
 use crate::web_scraper::sites::utils::{parse_price, parse_url, ElementRefExt};
