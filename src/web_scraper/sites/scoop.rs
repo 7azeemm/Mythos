@@ -1,4 +1,3 @@
-use std::collections::HashMap;
 use std::error::Error;
 use chrono::Utc;
 use once_cell::sync::Lazy;
@@ -10,7 +9,7 @@ use crate::web_scraper::sections::Section;
 use crate::web_scraper::sites::{Site, SiteConfig};
 use crate::web_scraper::sites::utils::{parse_price, parse_url, ElementRefExt};
 
-const PRODUCTS_PER_PAGE: i32 = 12;
+const PRODUCTS_PER_PAGE: i32 = 3;
 
 static TITLE_SEL: Lazy<Selector> = Lazy::new(|| Selector::parse("div.product-title a[href]").unwrap());
 static IMAGE_SEL: Lazy<Selector> = Lazy::new(|| Selector::parse("a.product-thumbnail img[src]").unwrap());
@@ -20,43 +19,37 @@ static PRICE_SEL: Lazy<Selector> = Lazy::new(|| Selector::parse("span.price").un
 static REGULAR_PRICE_SEL: Lazy<Selector> = Lazy::new(|| Selector::parse("span.regular-price").unwrap());
 
 static CONFIG: SiteConfig = SiteConfig {
-    name: "MBMInformatique",
+    name: "Scoop",
     web_client_type: WebClientType::HttpClient,
     nav_selector: Lazy::new(|| Selector::parse("div#js-product-list-top div.tv-total-product p").unwrap()),
     product_selector: Lazy::new(|| Selector::parse("div.products article.item").unwrap()),
     sections: &[
-        (&Section::Laptop, "https://mbm-tn.com/145-pc-portable"),
-        (&Section::Laptop, "https://mbm-tn.com/257-macbook"),
-        (&Section::GamingLaptop, "https://mbm-tn.com/256-pc-portable-gamer"),
-        (&Section::PcAllInOne, "https://mbm-tn.com/232-pc-tout-en-un-all-in-one"),
-        (&Section::PC, "https://mbm-tn.com/76-pc-de-bureau"),
-        (&Section::PC, "https://mbm-tn.com/111-mac"),
-        (&Section::GamingPc, "https://mbm-tn.com/325-pc-de-bureau-gamer"),
-        (&Section::Monitor, "https://mbm-tn.com/56-ecran"),
-        (&Section::Monitor, "https://mbm-tn.com/291-ecran-gamer"),
-        (&Section::CPU, "https://mbm-tn.com/124-processeur"),
-        (&Section::GPU, "https://mbm-tn.com/86-cartes-graphique"),
-        (&Section::RAM, "https://mbm-tn.com/85-barrettes-memoire-dimm"),
-        (&Section::RAM, "https://mbm-tn.com/110-barrettes-memoire-so-dimm"),
-        (&Section::MotherBoard, "https://mbm-tn.com/109-cartes-meres"),
-        (&Section::MotherBoard, "https://mbm-tn.com/87-cartes-meres"),
-        (&Section::SSD, "https://mbm-tn.com/174-disque-ssd"),
-        (&Section::SSD, "https://mbm-tn.com/176-boitier-disque-dur"),
-        (&Section::SSD, "https://mbm-tn.com/334-disque-dur-interne"),
-        (&Section::SSD, "https://mbm-tn.com/66-disques-dur-internes"),
-        (&Section::SSD, "https://mbm-tn.com/59-disque-dur-interne"),
-        (&Section::Case, "https://mbm-tn.com/335-boitier"),
-        (&Section::Cooler, "https://mbm-tn.com/71-ventilateurs"),
-        (&Section::Cooler, "https://mbm-tn.com/155-ventilateurs"),
-        (&Section::Cooler, "https://mbm-tn.com/143-refroidisseur"),
-        (&Section::PSU, "https://mbm-tn.com/108-blocs-alimentation-"),
+        (&Section::Laptop, "https://www.scoop.com.tn/321-ordinateurs-portables"),
+        (&Section::GamingLaptop, "https://www.scoop.com.tn/192-pc-portable-gamer"),
+        (&Section::PC, "https://www.scoop.com.tn/291-pc-de-bureau"),
+        (&Section::GamingPc, "https://www.scoop.com.tn/2185-gamme-alpha-by-scoop"),
+        (&Section::GamingPc, "https://www.scoop.com.tn/198-pc-gamer-brande"),
+        (&Section::GamingPc, "https://www.scoop.com.tn/2128-powered-by-msi"),
+        (&Section::PcAllInOne, "https://www.scoop.com.tn/127-pc-tout-en-un"),
+        (&Section::Monitor, "https://www.scoop.com.tn/209-ecrans-gaming"),
+        (&Section::Monitor, "https://www.scoop.com.tn/208-ecrans-professionnels"),
+        (&Section::CPU, "https://www.scoop.com.tn/253-processeur"),
+        (&Section::GPU, "https://www.scoop.com.tn/168-carte-graphique"),
+        (&Section::RAM, "https://www.scoop.com.tn/139-memoire-pc"),
+        (&Section::MotherBoard, "https://www.scoop.com.tn/170-carte-mere"),
+        (&Section::SSD, "https://www.scoop.com.tn/261-disque-ssd"),
+        (&Section::SSD, "https://www.scoop.com.tn/2131-disque-nvme"),
+        (&Section::HDD, "https://www.scoop.com.tn/2132-disque-hdd"),
+        (&Section::Case, "https://www.scoop.com.tn/169-boitier"),
+        (&Section::PSU, "https://www.scoop.com.tn/179-alimentation"),
+        (&Section::Cooler, "https://www.scoop.com.tn/180-refroidissement"),
+        (&Section::Cooler, "https://www.scoop.com.tn/272-ventilateur"),
     ]
 };
 
-pub struct MBMInformatique;
+pub struct Scoop;
 
-#[async_trait::async_trait]
-impl Site for MBMInformatique {
+impl Site for Scoop {
     fn config(&self) -> &SiteConfig {
         &CONFIG
     }
@@ -115,7 +108,7 @@ impl Site for MBMInformatique {
 
         let text = element.replace("products", "").trim().to_string();
         let count = text.parse::<i32>()
-            .map_err(|err| format!("failed to parse products count ({text}): {err}"))?;
+            .map_err(|err| format!("failed to parse products count `{text}`: {err}"))?;
 
         Ok((count + PRODUCTS_PER_PAGE - 1) / PRODUCTS_PER_PAGE)
     }

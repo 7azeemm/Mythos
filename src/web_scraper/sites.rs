@@ -25,6 +25,8 @@ use crate::web_scraper::sites::media_vision::MediaVision;
 use crate::web_scraper::sites::megapc::MegaPC;
 use crate::web_scraper::sites::mytek::Mytek;
 use crate::web_scraper::sites::sbs_informatique::SBSInformatique;
+use crate::web_scraper::sites::scoop::Scoop;
+use crate::web_scraper::sites::scoop_gaming::ScoopGaming;
 use crate::web_scraper::sites::sig_shop::SigShop;
 use crate::web_scraper::sites::spacenet::SpaceNet;
 use crate::web_scraper::sites::tdiscount::TDiscount;
@@ -63,6 +65,8 @@ pub mod bestbuytunisie;
 pub mod tdiscount;
 pub mod zstore;
 pub mod sbs_informatique;
+pub mod scoop;
+pub mod scoop_gaming;
 
 pub static PAGE_CACHE: Lazy<RwLock<HashMap<String, HashMap<String, Product>>>> = Lazy::new(|| RwLock::new(HashMap::new()));
 const MAX_RETRIES: i32 = 3;
@@ -98,10 +102,10 @@ pub static SITES: Lazy<Vec<Box<dyn Site>>> = Lazy::new(|| vec![
     // Box::new(TDiscount),
     // Box::new(ZStore),
     // Box::new(SBSInformatique),
+    // Box::new(Scoop),
+    // Box::new(ScoopGaming),
 
     //clickup.tn
-    //https://www.scoopgaming.com.tn/
-    //https://www.scoop.com.tn/
 
     //qsnet.tn
     //www.planete-informatique.tn
