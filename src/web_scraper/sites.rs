@@ -25,6 +25,7 @@ use crate::web_scraper::sites::megapc::MegaPC;
 use crate::web_scraper::sites::mytek::Mytek;
 use crate::web_scraper::sites::sig_shop::SigShop;
 use crate::web_scraper::sites::spacenet::SpaceNet;
+use crate::web_scraper::sites::technopro::TechnoPro;
 use crate::web_scraper::sites::techspace::TechSpace;
 use crate::web_scraper::sites::tunewtec::TunewTec;
 use crate::web_scraper::sites::tunisianet::Tunisianet;
@@ -53,6 +54,7 @@ pub mod affariyet;
 pub mod batam;
 pub mod tunewtec;
 pub mod techspace;
+pub mod technopro;
 
 pub static PAGE_CACHE: Lazy<RwLock<HashMap<String, HashMap<String, Product>>>> = Lazy::new(|| RwLock::new(HashMap::new()));
 const MAX_RETRIES: i32 = 3;
@@ -83,13 +85,12 @@ pub static SITES: Lazy<Vec<Box<dyn Site>>> = Lazy::new(|| vec![
     // Box::new(Batam),
     // Box::new(TunewTec),
     // Box::new(TechSpace),
+    // Box::new(TechnoPro),
 
-    //nexuspc.shop
     //zstore.com.tn
     //www.sbsinformatique.com
     //bestbuytunisie.tn
     //clickup.tn
-    //www.technopro-online.com
     //tdiscount.tn
     //https://www.scoopgaming.com.tn/
     //https://www.scoop.com.tn/
@@ -98,6 +99,7 @@ pub static SITES: Lazy<Vec<Box<dyn Site>>> = Lazy::new(|| vec![
     //www.planete-informatique.tn
     //https://xtreme-pc.tn/
     //https://lofficielshop.tn/ ??
+    //nexuspc.shop
 ]);
 
 pub struct SiteConfig {
