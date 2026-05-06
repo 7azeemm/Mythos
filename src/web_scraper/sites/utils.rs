@@ -19,6 +19,7 @@ pub fn parse_price(text: &str) -> Result<i32, Box<dyn Error>> {
     let clean_text = text
         .replace("DT", "")
         .replace("TND", "")
+        .replace("TTC", "")
         .replace(" ", "")
         .replace('\u{a0}', "");
 
@@ -45,7 +46,7 @@ pub fn parse_price(text: &str) -> Result<i32, Box<dyn Error>> {
             .parse::<i32>()
     };
 
-    price.map_err(|err| format!("Failed to parse price {text}: {err}").into())
+    price.map_err(|err| format!("Failed to parse price `{text}`: {err}").into())
 }
 
 pub fn parse_url(site: &str, url: &str) -> String {

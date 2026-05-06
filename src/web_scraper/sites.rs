@@ -33,6 +33,7 @@ use crate::web_scraper::sites::tunewtec::TunewTec;
 use crate::web_scraper::sites::tunisianet::Tunisianet;
 use crate::web_scraper::sites::utils::ElementRefExt;
 use crate::web_scraper::sites::wiki_tn::WikiTN;
+use crate::web_scraper::sites::zstore::ZStore;
 
 pub mod tunisianet;
 pub mod utils;
@@ -93,8 +94,8 @@ pub static SITES: Lazy<Vec<Box<dyn Site>>> = Lazy::new(|| vec![
     // Box::new(TechnoPro),
     // Box::new(BestBuyTunisie),
     // Box::new(TDiscount),
+    // Box::new(ZStore),
 
-    //zstore.com.tn
     //www.sbsinformatique.com
     //clickup.tn
     //https://www.scoopgaming.com.tn/
