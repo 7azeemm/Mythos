@@ -75,8 +75,6 @@ impl Site for ScoopGaming {
             None => None,
         };
 
-        println!("{url}, {title}, {image}, {price}, {regular_price:?}, {description:?}");
-
         Ok(Product {
             id: parse_url(self.name(), &url),
             url,

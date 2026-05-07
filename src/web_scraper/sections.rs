@@ -54,8 +54,8 @@ define_sections! {
     ProLaptop    => ("pro_laptop", parse_pc, true),
 
     Monitor      => ("monitor", parse_component, true),
-    Mouse        => ("mouse", parse_component, true),
-    KeyBoard     => ("keyboard", parse_component, true),
+    Mouse        => ("mouse", parse_component, false),
+    KeyBoard     => ("keyboard", parse_component, false),
 
     CPU         => ("cpu", parse_component, false),
     GPU         => ("gpu", parse_component, false),

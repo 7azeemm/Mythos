@@ -71,8 +71,8 @@ impl Site for TechSpace {
         let title = title.get_text();
 
         let description = match section.requires_description() {
-            true => vec![],
-            false => todo!(),
+            false => vec![],
+            true => todo!(),
         };
 
         let image = image

@@ -10,7 +10,7 @@ use crate::web_scraper::sites::{Site, SiteConfig};
 use crate::web_scraper::sites::utils::{parse_price, parse_url, ElementRefExt};
 
 static TITLE_SEL: Lazy<Selector> = Lazy::new(|| Selector::parse("div.product-meta a[href]").unwrap());
-static IMAGE_SEL: Lazy<Selector> = Lazy::new(|| Selector::parse("img.hover-gallery-image").unwrap());
+static IMAGE_SEL: Lazy<Selector> = Lazy::new(|| Selector::parse("img.hover-gallery-image").unwrap());//TODO: not hover
 static PRICE_SEL: Lazy<Selector> = Lazy::new(|| Selector::parse("span.price span bdi").unwrap());
 static PRICE_SEL_2: Lazy<Selector> = Lazy::new(|| Selector::parse("span.price ins span bdi").unwrap());
 static REGULAR_PRICE_SEL: Lazy<Selector> = Lazy::new(|| Selector::parse("span.price del span bdi").unwrap());
@@ -70,8 +70,8 @@ impl Site for ZStore {
         };
 
         let description = match section.requires_description() {
-            true => vec![],
-            false => todo!(),
+            false => vec![],
+            true => todo!(),
         };
 
         let image = image

@@ -9,6 +9,7 @@ use std::error::Error;
 use std::time::{Duration, Instant};
 use tokio::sync::RwLock;
 use tokio::time::sleep;
+use crate::web_scraper::scheduler::print;
 use crate::web_scraper::sites::affariyet::Affariyet;
 use crate::web_scraper::sites::batam::Batam;
 use crate::web_scraper::sites::bestbuytunisie::BestBuyTunisie;
@@ -81,33 +82,33 @@ const MAX_RETRIES: i32 = 3;
 //leaderDeal
 
 pub static SITES: Lazy<Vec<Box<dyn Site>>> = Lazy::new(|| vec![
-    // Box::new(Tunisianet),
-    // Box::new(SkyMilShop),
-    // Box::new(Mytek),
-    // Box::new(GamerShop),
-    // Box::new(MegaPC),
-    // Box::new(SpaceNet),
-    // Box::new(ExpertGaming),
-    // Box::new(SigShop),
-    // Box::new(CarthagoInformatique),
-    // Box::new(WikiTN),
-    // Box::new(MediaVision),
-    // Box::new(InfoTec),
-    // Box::new(CyberInfo),
-    // Box::new(MBMInformatique),
-    // Box::new(JMB),
-    // Box::new(Jumbo),
-    // Box::new(Affariyet),
-    // Box::new(Batam),
-    // Box::new(TunewTec),
-    // Box::new(TechSpace),
-    // Box::new(TechnoPro),
-    // Box::new(BestBuyTunisie),
-    // Box::new(TDiscount),
-    // Box::new(ZStore),
-    // Box::new(SBSInformatique),
-    // Box::new(Scoop),
-    // Box::new(ScoopGaming),
+    Box::new(Tunisianet),
+    Box::new(SkyMilShop),
+    Box::new(Mytek),
+    Box::new(GamerShop),
+    Box::new(MegaPC),
+    Box::new(SpaceNet),
+    Box::new(ExpertGaming),
+    Box::new(SigShop),
+    Box::new(CarthagoInformatique),
+    Box::new(WikiTN),
+    Box::new(MediaVision),
+    Box::new(InfoTec),
+    Box::new(CyberInfo),
+    Box::new(MBMInformatique),
+    Box::new(JMB),
+    Box::new(Jumbo),
+    Box::new(Affariyet),
+    Box::new(Batam),
+    Box::new(TunewTec),
+    Box::new(TechSpace),
+    Box::new(TechnoPro),
+    Box::new(BestBuyTunisie),
+    Box::new(TDiscount),
+    Box::new(ZStore),
+    Box::new(SBSInformatique),
+    Box::new(Scoop),
+    Box::new(ScoopGaming),
 ]);
 
 pub struct SiteConfig {
@@ -138,6 +139,10 @@ pub trait Site: Send + Sync {
             for page in 2..page_count+1 {
                 let _ = self.scrape_page(url, page, section, &mut products_list).await;
             }
+        }
+        
+        for (_, p) in products_list.iter() {
+            print(&format!("{}", p.title));
         }
 
         // Saving to cache

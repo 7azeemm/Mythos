@@ -65,8 +65,8 @@ impl Site for BestBuyTunisie {
         };
 
         let description = match section.requires_description() {
-            true => vec![],
-            false => todo!(),
+            false => vec![],
+            true => todo!(),
         };
 
         let url = url

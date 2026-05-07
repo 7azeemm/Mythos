@@ -43,7 +43,6 @@ static CONFIG: SiteConfig = SiteConfig {
         (&Section::PSU, "https://jumbo.tn/643-bloc-d-alimentation"),
         (&Section::Case, "https://jumbo.tn/641-boitier"),
         (&Section::Case, "https://jumbo.tn/485-boitier-pc-gamer"),
-        (&Section::Cooler, "https://jumbo.tn/567-refroidisseur"),
         (&Section::Cooler, "https://jumbo.tn/642-ventilateur"),
         (&Section::Cooler, "https://jumbo.tn/581-refroidisseur"),
     ]

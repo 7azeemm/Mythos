@@ -89,8 +89,6 @@ impl Site for InfoTec {
             .ok_or("image url not found")?
             .to_string();
 
-        println!("{url}, {title}, {in_stock}, {image}, {price}, {regular_price:?}, {description:?}");
-
         Ok(Product {
             id: parse_url(self.name(), &url),
             url,

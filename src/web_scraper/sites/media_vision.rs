@@ -12,7 +12,7 @@ use crate::web_scraper::sites::utils::{parse_price, parse_url, ElementRefExt};
 static TITLE_SEL: Lazy<Selector> = Lazy::new(|| Selector::parse("span.product-title a[href]").unwrap());
 static IMAGE_SEL: Lazy<Selector> = Lazy::new(|| Selector::parse("a.product-thumbnail img[src]").unwrap());
 static DESCRIPTION_SEL: Lazy<Selector> = Lazy::new(|| Selector::parse("div.product-desc-short").unwrap());
-static STATUS_SEL: Lazy<Selector> = Lazy::new(|| Selector::parse("span#product-availability").unwrap());
+static STATUS_SEL: Lazy<Selector> = Lazy::new(|| Selector::parse("div.product-add-to-cart button[title] span").unwrap());
 static PRICE_SEL: Lazy<Selector> = Lazy::new(|| Selector::parse("span.price").unwrap());
 static REGULAR_PRICE_SEL: Lazy<Selector> = Lazy::new(|| Selector::parse("span.regular-price").unwrap());
 
@@ -103,7 +103,7 @@ impl Site for MediaVision {
             sections: vec![section.to_str().to_string()],
             description,
             image,
-            in_stock: status.contains("Disponible"),
+            in_stock: status.contains("Ajouter au panier"),
             price,
             regular_price,
             history: Value::Array(vec![]),

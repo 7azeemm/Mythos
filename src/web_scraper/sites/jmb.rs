@@ -38,7 +38,6 @@ static CONFIG: SiteConfig = SiteConfig {
         (&Section::SSD, "https://jmb.com.tn/informatique-tunisie/stockage/disque-dur-ssd/"),
         (&Section::Case, "https://jmb.com.tn/gaming/composant-gamer/boitier-gamer/"),
         (&Section::PSU, "https://jmb.com.tn/gaming/composant-gamer/bloc-dalimentation-gamer-composants-gamer-gaming/"),
-        (&Section::Cooler, "https://jmb.com.tn/informatique-tunisie/peripheriques-et-accessoires/refroidisseur/"),
     ]
 };
 
