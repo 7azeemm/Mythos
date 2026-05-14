@@ -1,43 +1,42 @@
-use std::error::Error;
-use chrono::Utc;
+use crate::utils::web_client::WebClientType;
+use crate::web_scraper::product::ProductStatus;
+use crate::web_scraper::sections::Section;
+use crate::web_scraper::sites::utils::ElementRefExt;
+use crate::web_scraper::sites::{Site, SiteConfig};
 use once_cell::sync::Lazy;
 use scraper::{ElementRef, Selector};
-use serde_json::Value;
-use crate::utils::web_client::WebClientType;
-use crate::web_scraper::product::Product;
-use crate::web_scraper::sections::Section;
-use crate::web_scraper::sites::{Site, SiteConfig};
-use crate::web_scraper::sites::utils::{parse_price, parse_url, ElementRefExt};
-
-static TITLE_SEL: Lazy<Selector> = Lazy::new(|| Selector::parse("h3.woocommerce-loop-product__title a[href]").unwrap());
-static IMAGE_SEL: Lazy<Selector> = Lazy::new(|| Selector::parse("div.product-image img[src]").unwrap());
-static STATUS_SEL: Lazy<Selector> = Lazy::new(|| Selector::parse("span.inventory_status").unwrap());
-static PRICE_SEL: Lazy<Selector> = Lazy::new(|| Selector::parse("span.price span bdi").unwrap());
-static PRICE_SEL_2: Lazy<Selector> = Lazy::new(|| Selector::parse("span.price ins span bdi").unwrap());
-static REGULAR_PRICE_SEL: Lazy<Selector> = Lazy::new(|| Selector::parse("span.price del span bdi").unwrap());
+use std::str::FromStr;
 
 static CONFIG: SiteConfig = SiteConfig {
     name: "TechSpace",
     web_client_type: WebClientType::HttpClient,
-    nav_selector: Lazy::new(|| Selector::parse("nav.woocommerce-pagination ul li").unwrap()),
-    product_selector: Lazy::new(|| Selector::parse("ul.products li.product").unwrap()),
+    nav_sel: Lazy::new(|| Selector::parse("nav.woocommerce-pagination ul li").unwrap()),
+    product_sel: Lazy::new(|| Selector::parse("ul.products li.product").unwrap()),
+    title_sel: Lazy::new(|| Selector::parse("h3.woocommerce-loop-product__title a[href]").unwrap()),
+    image_sel: Lazy::new(|| Selector::parse("div.product-image img[src]").unwrap()),
+    price_sel: Lazy::new(|| Selector::parse("span.price span bdi").unwrap()),
+    old_price_sel: Lazy::new(|| Selector::parse("span.price del span bdi").unwrap()),
+    price_sel_2: Some(Lazy::new(|| Selector::parse("span.price ins span bdi").unwrap())),
+    status_sel: Some(Lazy::new(|| Selector::parse("span.inventory_status").unwrap())),
+    desc_sel: None,
+    page_desc_sel: Some(Lazy::new(|| Selector::parse("div.woocommerce-product-details__short-description").unwrap())),
     sections: &[
-        (&Section::Laptop, "https://techspace.tn/pc-portable-tunisie/"),
-        (&Section::GamingPc, "https://techspace.tn/pc-gamer-tunisie/"),
-        (&Section::GamingSetup, "https://techspace.tn/full-setup/"),
-        (&Section::Monitor, "https://techspace.tn/ecrans-gaming/"),
-        (&Section::CPU, "https://techspace.tn/processeur-intel/"),
-        (&Section::CPU, "https://techspace.tn/processeur-amd/"),
-        (&Section::GPU, "https://techspace.tn/carte-graphique/"),
-        (&Section::RAM, "https://techspace.tn/barette-memoire/"),
-        (&Section::MotherBoard, "https://techspace.tn/carte-mere-intel/"),
-        (&Section::MotherBoard, "https://techspace.tn/carte-mere-amd/"),
-        (&Section::SSD, "https://techspace.tn/stockage/"),
-        (&Section::PSU, "https://techspace.tn/boite-dalimentation/"),
-        (&Section::Cooler, "https://techspace.tn/air-cooling/"),
-        (&Section::Cooler, "https://techspace.tn/water-cooling/"),
-        (&Section::Cooler, "https://techspace.tn/ventilateur/"),
-        (&Section::Case, "https://techspace.tn/boitier/"),
+        (Section::Laptop, "https://techspace.tn/pc-portable-tunisie/"),
+        (Section::GamingPC, "https://techspace.tn/pc-gamer-tunisie/"),
+        (Section::GamingSetup, "https://techspace.tn/full-setup/"),
+        (Section::Monitor, "https://techspace.tn/ecrans-gaming/"),
+        (Section::CPU, "https://techspace.tn/processeur-intel/"),
+        (Section::CPU, "https://techspace.tn/processeur-amd/"),
+        (Section::GPU, "https://techspace.tn/carte-graphique/"),
+        (Section::RAM, "https://techspace.tn/barette-memoire/"),
+        (Section::MotherBoard, "https://techspace.tn/carte-mere-intel/"),
+        (Section::MotherBoard, "https://techspace.tn/carte-mere-amd/"),
+        (Section::Storage, "https://techspace.tn/stockage/"),
+        (Section::PSU, "https://techspace.tn/boite-dalimentation/"),
+        (Section::Cooler, "https://techspace.tn/air-cooling/"),
+        (Section::Cooler, "https://techspace.tn/water-cooling/"),
+        (Section::Cooler, "https://techspace.tn/ventilateur/"),
+        (Section::Case, "https://techspace.tn/boitier/"),
     ]
 };
 
@@ -47,56 +46,15 @@ impl Site for TechSpace {
     fn config(&self) -> &SiteConfig {
         &CONFIG
     }
-
-    fn parse_product(&self, section: &Section, element: ElementRef) -> Result<Product, Box<dyn Error>> {
-        let title = element.select(&TITLE_SEL).next().ok_or("title not found")?;
-        let image = element.select(&IMAGE_SEL).next().ok_or("image not found")?;
-        let status = element.select(&STATUS_SEL).next().ok_or("status not found")?
-            .get_text().replace("Availability:", "").trim().to_string();
-
-        let (price, regular_price) = match element.select(&REGULAR_PRICE_SEL).next() {
-            Some(p) => {
-                let price = element.select(&PRICE_SEL_2).next().ok_or("price not found")?.get_text();
-                (parse_price(&price)?, Some(parse_price(&p.get_text())?))
+    
+    fn parse_status(&self, element: ElementRef) -> Result<ProductStatus, String> {
+        match &self.config().status_sel {
+            Some(sel) => {
+                let status = element.select_text(sel, "status")?.replace("Availability:", "");
+                Ok(ProductStatus::from_str(status.trim())?)
             },
-            None => (parse_price(&element.select(&PRICE_SEL).next().ok_or("price not found")?.get_text())?, None),
-        };
-
-        let url = title
-            .value()
-            .attr("href")
-            .ok_or("url not found")?
-            .to_string();
-
-        let title = title.get_text();
-
-        let description = match section.requires_description() {
-            false => vec![],
-            true => todo!(),
-        };
-
-        let image = image
-            .value()
-            .attr("src")
-            .ok_or("image url not found")?
-            .to_string();
-
-        Ok(Product {
-            id: parse_url(self.name(), &url),
-            url,
-            title,
-            source: self.name().to_string(),
-            sections: vec![section.to_str().to_string()],
-            description,
-            image,
-            in_stock: status == "In Stock",
-            price,
-            regular_price,
-            history: Value::Array(vec![]),
-            added_at: None,
-            updated_at: None,
-            created_at: Utc::now(),
-        })
+            None => Ok(ProductStatus::InStock)
+        }
     }
 
     fn format_url(&self, url: &str, page: i32) -> String {

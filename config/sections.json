@@ -1,0 +1,108 @@
+[
+  {
+    "id": "cpu",
+    "use_dataset": false,
+    "keywords": [
+      "(?i)\\b(?:intel|core|i3|i5|i7|i9|amd|ryzen)\\b"
+    ],
+    "exclude": [],
+    "subsections": [],
+    "required_fields": [],
+    "title_cleaner": {
+      "replace_words": [],
+      "remove_words": ["processeur"],
+      "remove_patterns": []
+    },
+    "specs": {}
+  },
+  {
+    "id": "gpu",
+    "use_dataset": false,
+    "keywords": [
+      "(?i)\\b(?:graphique|garphique|rtx|radeon|vega|arc|gt|gtx|rx)\\b"
+    ],
+    "exclude": ["(?i)\\b(?:support)\\b"],
+    "subsections": [],
+    "required_fields": [],
+    "title_cleaner": {
+      "replace_words": [],
+      "remove_words": ["carte", "graphique", "garphique"],
+      "remove_patterns": []
+    },
+    "specs": {
+      "size": "(?i)\\b(\\d+)\\s*(?:gb|go|g)\\b"
+    }
+  },
+  {
+    "id": "ram",
+    "use_dataset": false,
+    "keywords": [
+      "(?i)\\b(?:mémoire|ram|memoire|mem|barette|barrette)\\b"
+    ],
+    "exclude": ["(?i)\\b(?:carte)\\b"],
+    "subsections": [],
+    "required_fields": [],
+    "title_cleaner": {
+      "replace_words": [[" - ", " "], ["D4", "DDR4"], ["D5", "DDR5"], ["DDR 4", "DDR4"], ["DDR 5", "DDR5"], ["DRR4", "DDR4"]],
+      "remove_words": ["ram", "mémoire", "memoire", "barrette", "barette", "barettes"],
+      "remove_patterns": []
+    },
+    "specs": {
+      "size": "(?i)\\b(\\d+)\\s*(?:gb|go|g)\\b",
+      "memory_type": "(?i)\\b(ddr[345])(?:l)?\\b",
+      "speed": "(?i)\\b(\\d{4})"
+    }
+  },
+  {
+    "id": "motherboard",
+    "use_dataset": false,
+    "keywords": [
+      "(?i)\\b(?:mere|mére|mère|msi|asrock|asus|gigabyte|aorus|biostar)\\b"
+    ],
+    "exclude": ["(?i)\\b(?:alimentation)\\b"],
+    "subsections": [],
+    "required_fields": [],
+    "title_cleaner": {
+      "replace_words": [],
+      "remove_words": ["carte", "mere", "mére", "mère"],
+      "remove_patterns": []
+    },
+    "specs": {}
+  },
+  {
+    "id": "storage",
+    "use_dataset": false,
+    "keywords": [
+      "(?i)\\b(?:ssd|nvme|hdd|SPATIUM|SATA|disque dur)\\b"
+    ],
+    "exclude": ["(?i)\\b(?:externe|usb|argus|Boîtier|BOITIER|caddy)\\b"],
+    "subsections": [
+      {
+        "id": "ssd",
+        "detectable": true,
+        "keywords": ["(?i)\\b(?:ssd|SPATIUM)\\b"],
+        "exclude": ["(?i)\\b(?:nvme)\\b"]
+      },
+      {
+        "id": "nvme",
+        "detectable": true,
+        "keywords": ["(?i)\\b(?:nvme)\\b"],
+        "exclude": ["(?i)\\b(?:hdd)\\b"]
+      },
+      {
+        "id": "hdd",
+        "detectable": true,
+        "keywords": ["(?i)\\b(?:hdd|disque dur)\\b"],
+        "exclude": ["(?i)\\b(?:ssd|nvme)\\b"]
+      }
+    ],
+    "required_fields": ["size"],
+    "title_cleaner": {
+      "replace_words": [[" - ", " "]],
+      "remove_words": ["disque dur", "interne"],
+      "remove_patterns": []
+    },
+    "specs": {
+      "size": "(?i)\\b((?:\\d+)\\s*(?:g|go|gb|t|to|tb)|(?:256|500|512|1024))\\b"}
+  }
+]

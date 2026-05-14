@@ -1,15 +1,8 @@
 use crate::utils::web_client::{WebClient, WebClientType};
-use crate::web_scraper::product::Product;
+use crate::web_scraper::errors::{PageReport, ScrapeError, ScrapeErrorKind, SiteReport};
+use crate::web_scraper::manager::{add_product_description, get_product_description};
+use crate::web_scraper::product::{Product, ProductStatus};
 use crate::web_scraper::sections::Section;
-use crate::web_scraper::sites::skymil_shop::SkyMilShop;
-use once_cell::sync::Lazy;
-use scraper::{ElementRef, Html, Selector};
-use std::collections::HashMap;
-use std::error::Error;
-use std::time::{Duration, Instant};
-use tokio::sync::RwLock;
-use tokio::time::sleep;
-use crate::web_scraper::scheduler::print;
 use crate::web_scraper::sites::affariyet::Affariyet;
 use crate::web_scraper::sites::batam::Batam;
 use crate::web_scraper::sites::bestbuytunisie::BestBuyTunisie;
@@ -28,18 +21,29 @@ use crate::web_scraper::sites::sbs_informatique::SBSInformatique;
 use crate::web_scraper::sites::scoop::Scoop;
 use crate::web_scraper::sites::scoop_gaming::ScoopGaming;
 use crate::web_scraper::sites::sig_shop::SigShop;
+use crate::web_scraper::sites::skymil_shop::SkyMilShop;
 use crate::web_scraper::sites::spacenet::SpaceNet;
 use crate::web_scraper::sites::tdiscount::TDiscount;
 use crate::web_scraper::sites::technopro::TechnoPro;
 use crate::web_scraper::sites::techspace::TechSpace;
 use crate::web_scraper::sites::tunewtec::TunewTec;
 use crate::web_scraper::sites::tunisianet::Tunisianet;
-use crate::web_scraper::sites::utils::ElementRefExt;
+use crate::web_scraper::sites::utils::{extract_basics, extract_prices, validate_url, ElementRefExt};
 use crate::web_scraper::sites::wiki_tn::WikiTN;
 use crate::web_scraper::sites::zstore::ZStore;
+use chrono::Utc;
+use once_cell::sync::Lazy;
+use scraper::{ElementRef, Html, Selector};
+use serde::Serialize;
+use std::collections::HashMap;
+use std::error::Error;
+use std::str::FromStr;
+use std::time::{Duration, Instant};
+use tokio::sync::RwLock;
+use tokio::time::sleep;
 
+mod utils;
 pub mod tunisianet;
-pub mod utils;
 pub mod skymil_shop;
 pub mod mytek;
 pub mod gamershop;
@@ -67,11 +71,9 @@ pub mod sbs_informatique;
 pub mod scoop;
 pub mod scoop_gaming;
 
-pub static PAGE_CACHE: Lazy<RwLock<HashMap<String, HashMap<String, Product>>>> = Lazy::new(|| RwLock::new(HashMap::new()));
 const MAX_RETRIES: i32 = 3;
 
-//print(&format!("{url}, {title}, {status}, {image}, {price}, {regular_price:?}, {description:?}"));
-//println!("{url}, {title}, {status}, {image}, {price}, {regular_price:?}, {description:?}");
+pub static PAGE_CACHE: Lazy<RwLock<HashMap<String, Vec<Product>>>> = Lazy::new(|| RwLock::new(HashMap::new()));
 
 //clickup.tn
 //qsnet.tn
@@ -82,168 +84,201 @@ const MAX_RETRIES: i32 = 3;
 //leaderDeal
 
 pub static SITES: Lazy<Vec<Box<dyn Site>>> = Lazy::new(|| vec![
-    Box::new(Tunisianet),
-    Box::new(SkyMilShop),
-    Box::new(Mytek),
-    Box::new(GamerShop),
-    Box::new(MegaPC),
-    Box::new(SpaceNet),
-    Box::new(ExpertGaming),
-    Box::new(SigShop),
-    Box::new(CarthagoInformatique),
-    Box::new(WikiTN),
-    Box::new(MediaVision),
-    Box::new(InfoTec),
-    Box::new(CyberInfo),
-    Box::new(MBMInformatique),
-    Box::new(JMB),
-    Box::new(Jumbo),
-    Box::new(Affariyet),
-    Box::new(Batam),
-    Box::new(TunewTec),
-    Box::new(TechSpace),
-    Box::new(TechnoPro),
-    Box::new(BestBuyTunisie),
-    Box::new(TDiscount),
-    Box::new(ZStore),
-    Box::new(SBSInformatique),
-    Box::new(Scoop),
-    Box::new(ScoopGaming),
+    Box::new(Tunisianet), Box::new(SkyMilShop), Box::new(Mytek), Box::new(GamerShop), Box::new(MegaPC),
+    Box::new(SpaceNet), Box::new(ExpertGaming), Box::new(SigShop), Box::new(CarthagoInformatique),
+    Box::new(WikiTN), Box::new(MediaVision), Box::new(InfoTec), Box::new(CyberInfo), Box::new(MBMInformatique),
+    Box::new(JMB), Box::new(Jumbo), Box::new(Affariyet), Box::new(Batam), Box::new(TunewTec), Box::new(TechSpace),
+    Box::new(TechnoPro), Box::new(BestBuyTunisie), Box::new(TDiscount), Box::new(ZStore), Box::new(SBSInformatique),
+    Box::new(Scoop), Box::new(ScoopGaming),
 ]);
 
 pub struct SiteConfig {
     pub name: &'static str,
     pub web_client_type: WebClientType,
-    pub nav_selector: Lazy<Selector>,
-    pub product_selector: Lazy<Selector>,
-    pub sections: &'static [(&'static Section, &'static str)],
+    pub nav_sel: Lazy<Selector>,
+    pub product_sel: Lazy<Selector>,
+    pub title_sel: Lazy<Selector>,
+    pub image_sel: Lazy<Selector>,
+    pub price_sel: Lazy<Selector>,
+    pub old_price_sel: Lazy<Selector>,
+    pub price_sel_2: Option<Lazy<Selector>>,
+    pub status_sel: Option<Lazy<Selector>>,
+    pub desc_sel: Option<Lazy<Selector>>,
+    pub page_desc_sel: Option<Lazy<Selector>>,
+    pub sections: &'static [(Section, &'static str)],
 }
 
 #[async_trait::async_trait]
 pub trait Site: Send + Sync {
     fn config(&self) -> &SiteConfig;
-    fn parse_product(&self, section: &Section, element: ElementRef) -> Result<Product, Box<dyn Error>>;
 
-    async fn scrape(&self, url: &str, section: &Section, products: &mut HashMap<String, Product>) {
+    async fn scrape(&self, url: &str, section: Section) -> (SiteReport, Vec<Product>) {
         let start_time = Instant::now();
+        let mut all_products = Vec::new();
+        let mut pages = Vec::new();
 
         // Loading from cache
-        // if let Some(cached_products) = PAGE_CACHE.read().await.get(url).cloned() {
-        //     println!("Loaded {} products from cache", cached_products.len());
-        //     products.extend(cached_products);
-        //     return;
-        // }
+        if let Some(products) = PAGE_CACHE.read().await.get(url).cloned() {
+            println!("Loaded {} products from cache", products.len());
+            all_products.extend(products);
+            return (SiteReport {
+                site: self.name().to_string(),
+                page_count: pages.len(),
+                total_products: all_products.len(),
+                pages: Vec::new()
+            }, all_products)
+        }
 
-        let mut products_list = HashMap::default();
-        if let Some(page_count) = self.scrape_page(url, 1, section, &mut products_list).await {
-            for page in 2..page_count+1 {
-                let _ = self.scrape_page(url, page, section, &mut products_list).await;
-            }
+        let (page_stats, products, page_count) = self.scrape_page(url, 1, section).await;
+        let page_count = page_count.unwrap_or(1);
+        pages.push(page_stats);
+        all_products.extend(products);
+
+        for page in 2..page_count+1 {
+            let (page_stats, products, _) = self.scrape_page(url, page, section).await;
+            pages.push(page_stats);
+            all_products.extend(products);
         }
-        
-        for (_, p) in products_list.iter() {
-            print(&format!("{}", p.title));
-        }
+
+        let time_taken = start_time.elapsed();
+        println!(
+            "Successfully Scrapped {} products ({:?}, {} Pages) from {} in {:.2?}",
+            all_products.len(), section, pages.len(), self.name(), time_taken
+        );
 
         // Saving to cache
-        let count = products_list.len();
-        PAGE_CACHE.write().await.insert(url.to_string(), products_list.clone());
-        products.extend(products_list);
+        PAGE_CACHE.write().await.insert(url.to_string(), all_products.clone());
 
-        println!(
-            "Scraped in {:.2?} ({} products)",
-            start_time.elapsed(),
-            count
-        );
+        (SiteReport {
+            site: self.name().to_string(),
+            total_products: all_products.len(),
+            page_count: pages.len(),
+            pages,
+        }, all_products)
     }
 
-    async fn scrape_page(&self, base_url: &str, page: i32, section: &Section, products: &mut HashMap<String, Product>) -> Option<i32> {
+    async fn scrape_page(&self, base_url: &str, page: i32, section: Section) -> (PageReport, Vec<Product>, Option<i32>) {
         let url = self.format_url(base_url, page);
-        let mut retries = 0;
+        let mut products = Vec::new();
         let mut page_count = None;
+        let mut errors = Vec::new();
+        let mut retries = 0;
 
         while retries < MAX_RETRIES {
+            retries += 1;
+            let last_retry = retries == MAX_RETRIES;
+
             let body = match self.fetch(&url).await {
-                Ok(b) => b,
+                Ok(body) => body,
                 Err(err) => {
-                    eprintln!("Failed to fetch page {page} (Attempt {}/{MAX_RETRIES}): {err}", retries + 1);
-                    retries += 1;
-                    sleep(Duration::from_secs(2)).await;
+                    if last_retry {
+                        let error = format!("Failed to fetch page (Attempt {}/{}): {}", retries, MAX_RETRIES, err);
+                        errors.push(create_scrape_error(ScrapeErrorKind::FetchFailed(error), section, self.name(), &url));
+                    }
+                    sleep(Duration::from_secs(1)).await;
                     continue;
                 }
             };
 
-            let parse_result = self.parse(section, page, body, &mut page_count);
-            if page == 1 && let Some(count) = page_count {
-                println!("Found {count} pages");
+            let (parsed_products, parse_errors) = self.parse(section, page, body, &mut page_count);
+            if parsed_products.is_empty() {
+                errors.push(create_scrape_error(ScrapeErrorKind::ZeroProducts, section, self.name(), &url));
             }
+            
+            if (errors.is_empty() && parse_errors.is_empty()) || last_retry {
+                errors.extend(parse_errors.into_iter()
+                    .map(|e| create_scrape_error(ScrapeErrorKind::ParseFailed(e), section, self.name(), &url))
+                    .collect::<Vec<ScrapeError>>());
 
-            let parsed = match parse_result {
-                Ok(p) => p,
-                Err(err) => {
-                    eprintln!("{} (Attempt {}/{MAX_RETRIES})", err, retries + 1);
-                    retries += 1;
-                    sleep(Duration::from_secs(2)).await;
-                    continue;
-                }
-            };
-
-            let count = parsed.len();
-            for mut product in parsed {
-                if let Some(existing) = products.get(&product.url) {
-                    for section in &existing.sections {
-                        if !product.sections.contains(section) {
-                            product.sections.push(section.clone());
+                for mut product in parsed_products {
+                    if section.requires_description() && product.description.is_none() {
+                        match self.fetch_description(&product.url).await {
+                            Err(err) if last_retry => errors.push(
+                                create_scrape_error(ScrapeErrorKind::ParseFailed(err), section, self.name(), &url)
+                            ),
+                            Ok(desc) => product.description = Some(desc),
+                            _ => {}
                         }
                     }
+                    products.push(product)
                 }
-                products.insert(product.url.clone(), product);
+
+               break;
             }
 
-            println!("Scraped page {page} ({count} products)");
-            return page_count;
+            errors.clear();
+            sleep(Duration::from_secs(1)).await;
         }
 
-        eprintln!("Giving up on page {page} after {MAX_RETRIES} attempts ({url})");
-        page_count
+        (PageReport {
+            url,
+            products: products.len(),
+            errors,
+        }, products, page_count)
     }
 
-    fn parse(&self, section: &Section, page: i32, body: String, page_count: &mut Option<i32>) -> Result<Vec<Product>, String> {
+    fn parse(&self, section: Section, page: i32, body: String, page_count: &mut Option<i32>) -> (Vec<Product>, Vec<String>) {
         let doc = Html::parse_document(&body);
-        let mut error = None;
+        let mut errors = Vec::new();
 
         if page == 1 {
             match self.parse_page_count(&doc) {
                 Ok(count) => { let _ = page_count.insert(count); },
-                Err(err) => error = Some(err.to_string()),
+                Err(err) => errors.push(format!("Failed to parse page count: {err}")),
             }
         }
 
-        match error {
-            Some(err) => Err(format!("Failed to parse page count: {err}")),
-            None => match self.parse_products(section, doc) {
-                Ok(list) => match list.len() {
-                    0 => Err(format!("Found 0 products on page {page}")),
-                    _ => Ok(list)
-                },
-                Err(err) => Err(format!("Failed to parse products in page {page}: {err}")),
-            }
-        }
+        let (products, errs) = self.parse_products(section, doc);
+        errors.extend(errs);
+
+        (products, errors)
     }
 
-    fn parse_products(&self, section: &Section, doc: Html) -> Result<Vec<Product>, Box<dyn Error>> {
+    fn parse_products(&self, section: Section, doc: Html) -> (Vec<Product>, Vec<String>) {
         let mut products = Vec::new();
-        for product in doc.select(&self.config().product_selector) {
+        let mut errors = Vec::new();
+        for product in doc.select(&self.config().product_sel) {
             match self.parse_product(section, product) {
                 Ok(product) => products.push(product),
-                Err(err) => eprintln!("Failed to parse product: {err}")
+                Err(err) => errors.push(format!("Failed to parse product: {err}"))
             }
         }
-        Ok(products)
+        (products, errors)
+    }
+
+    fn parse_product(&self, section: Section, element: ElementRef) -> Result<Product, Box<dyn Error>> {
+        let config = self.config();
+        let (title, url, image) = self.parse_basics(element)?;
+        let (price, old_price) = extract_prices(element, &config.price_sel, &config.old_price_sel, &config.price_sel_2)?;
+        let status = self.parse_status(element)?;
+        let description = match (section.requires_description(), &config.desc_sel) {
+            (true, Some(sel)) => Some(element.select_text(sel, "description")?),
+            _ => None
+        };
+
+        Ok(Product::new(
+            self.name(), url, title, section, description,
+            image, status, price, old_price
+        )?)
+    }
+
+    fn parse_basics(&self, element: ElementRef) -> Result<(String, String, String), String> {
+        let config = self.config();
+        let (title, url, image) = extract_basics(element, &config.title_sel, &config.image_sel)?;
+        validate_url(&url)?;
+        validate_url(&image)?;
+        Ok((title, url, image))
+    }
+
+    fn parse_status(&self, element: ElementRef) -> Result<ProductStatus, String> {
+        match &self.config().status_sel {
+            Some(sel) => Ok(ProductStatus::from_str(&element.select_text(sel, "status")?)?),
+            None => Ok(ProductStatus::InStock)
+        }
     }
 
     fn parse_page_count(&self, doc: &Html) -> Result<i32, Box<dyn Error>> {
-        let elements = doc.select(&self.config().nav_selector).collect::<Vec<ElementRef>>();
+        let elements = doc.select(&self.config().nav_sel).collect::<Vec<ElementRef>>();
         if elements.is_empty() || elements.len() == 1 {
             return Ok(1);
         }
@@ -251,6 +286,27 @@ pub trait Site: Send + Sync {
         let last_page = elements.get(elements.len() - 2).ok_or("last page button not found")?;
         let button_text = last_page.get_text();
         Ok(button_text.parse::<i32>().map_err(|err| format!("button text: `{button_text}` ({err})"))?)
+    }
+
+    async fn fetch_description(&self, url: &str) -> Result<String, String> {
+        if let Some(desc) = get_product_description(url).await {
+            return Ok(desc)
+        }
+
+        let Some(sel) = &self.config().page_desc_sel else {
+            return Err("Page Description Selector not found".to_string())
+        };
+
+        let page_content = self.fetch(url).await
+            .map_err(|err| format!("Failed to fetch product description: {err}"))?;
+
+        let desc = {
+            let doc = Html::parse_document(&page_content);
+            doc.select(&sel).next().ok_or("description not found")?.get_text()
+        };
+
+        add_product_description(url.to_string(), desc.clone()).await;
+        Ok(desc)
     }
 
     async fn fetch(&self, url: &str) -> Result<String, String> {
@@ -264,5 +320,15 @@ pub trait Site: Send + Sync {
 
     fn format_url(&self, url: &str, page: i32) -> String {
         format!("{url}?page={page}")
+    }
+}
+
+fn create_scrape_error(error: ScrapeErrorKind, section: Section, site: &str, url: &str) -> ScrapeError {
+    ScrapeError {
+        error,
+        section,
+        site: site.to_string(),
+        url: url.to_string(),
+        timestamp: Utc::now()
     }
 }

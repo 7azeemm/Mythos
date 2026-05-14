@@ -30,10 +30,12 @@ futures = "0.3.32"
 regex = "1.12.3"
 csv = "1.4.0"
 chrono = { version = "0.4.44", features = ["serde"] }
-sqlx = { version = "0.9.0-alpha.1", features = ["runtime-tokio", "postgres", "uuid", "json", "chrono", "macros"] }
+sqlx = { version = "0.9.0-alpha.1", features = ["runtime-tokio", "tls-native-tls", "postgres", "uuid", "json", "chrono", "macros"] }
 dotenv = "0.15.0"
 tracing = "0.1.44"
 tracing-subscriber = { version = "0.3.23",features = ["env-filter"] }
 thiserror = "2.0.18"
 async-trait = "0.1.89"
 playwright-rs = "0.12.3"
+strsim = "0.11.1"
+humantime-serde = "1.1.1"

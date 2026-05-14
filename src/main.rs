@@ -5,29 +5,25 @@ pub mod utils;
 use crate::api::server;
 use crate::utils::logger::setup_logging;
 use crate::utils::web_client::WebClient;
+use crate::web_scraper::manager::ProductManager;
 use dotenv::dotenv;
 use futures::StreamExt;
 use serde::{Deserialize, Serialize};
 use std::error::Error;
-use utils::{database, dataset};
+use utils::database;
 
 #[tokio::main]
 async fn main() {
-    unsafe { std::env::set_var("RUST_LOG", "warn,playwright_rs=off"); }
+    unsafe { std::env::set_var("RUST_LOG", "info,playwright_rs=off"); }
     
     println!("Starting...");
     dotenv().ok();
     setup_logging();
     WebClient::init().await;
     database::connect().await;
-    dataset::load_datasets();
-    web_scraper::scheduler::schedule();
+    ProductManager::schedule().await;
 
-    tokio::spawn(async {
-        server::run(3000).await.expect("Failed to start server")
-    });
-
-    tokio::signal::ctrl_c().await.ok();
+    server::run(3000).await.expect("Failed to start server");
 
     WebClient::cleanup().await.ok();
 }

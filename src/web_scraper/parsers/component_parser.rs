@@ -1,7 +1,6 @@
-use std::error::Error;
-use crate::web_scraper::scheduler::{print, TO_PRINT};
 use crate::web_scraper::specs::component_specs::ComponentSpecs;
 use crate::web_scraper::specs::ProductSpecs;
+use std::error::Error;
 
 pub fn parse_component(description: &str) -> Result<ProductSpecs, Box<dyn Error>> {
     let mut parts = description.split("- ").collect::<Vec<&str>>().into_iter();

@@ -1,242 +1,244 @@
-use std::collections::{HashMap, HashSet};
-use std::error::Error;
-use std::fmt::Display;
+use crate::utils::database::get_db_pool;
+use crate::web_scraper::errors::{CycleReport, UpdateError, UpdateErrorKind};
+use crate::web_scraper::product::Product;
 use chrono::Utc;
-use once_cell::sync::Lazy;
 use serde::Serialize;
 use serde_json::{json, Value};
-use sqlx::PgPool;
-use tokio::sync::Mutex;
-use crate::utils::database::get_db_pool;
-use crate::web_scraper::product::Product;
+use sqlx::{Postgres, QueryBuilder};
+use std::collections::HashMap;
 
-const BATCH_SIZE: usize = 100;
-const UNSEEN_TIMES_TO_ARCHIVE: u8 = 1;
+const BATCH_SIZE: usize = 250;
 
-static MISSING_MAP: Lazy<Mutex<HashMap<String, u8>>> = Lazy::new(|| Mutex::new(HashMap::new()));
+pub struct ProductUpdater;
 
-pub async fn sync_products(products: &Vec<Product>) -> Result<(), Box<dyn Error>> {
-    let pool = get_db_pool();
-    let ids: Vec<_> = products.iter().map(|p| p.id.clone()).collect();
-    let ids_set = ids.iter().collect::<HashSet<_>>();
+impl ProductUpdater {
+    pub async fn archive_missing_products(report: &mut CycleReport, products: &Vec<Product>) {
+        let pool = get_db_pool();
 
-    archive_missing_products(pool, &ids_set).await?;
+        let mut to_archive: Vec<Product> = match sqlx::query_as::<_, Product>(r#"
+            SELECT *
+            FROM products
+            WHERE url NOT IN (SELECT UNNEST($1::TEXT[]))
+        "#)
+            .bind(products.iter().map(|p| p.url.as_str()).collect::<Vec<_>>())
+            .fetch_all(pool)
+            .await
+        {
+            Ok(p) => p,
+            Err(err) => {
+                report.update.errors.push(UpdateError {
+                    error: UpdateErrorKind::FetchMissingProducts,
+                    message: err.to_string(),
+                    timestamp: Utc::now()
+                });
+                return
+            }
+        };
 
-    let db_products = sqlx::query!(
-        r#"
-        SELECT id, p_ref, section, source, title, description, image, price, status, history
-        FROM products
-        WHERE id = ANY($1)
-        "#,
-        &ids
-    )
-        .fetch_all(pool)
-        .await?;
+        if to_archive.is_empty() {
+            return
+        }
 
-    let mut existings = HashMap::new();
-    for p in db_products {
-        existings.insert(p.id.clone(), p);
-    }
+        let now = Utc::now();
+        for product in to_archive.iter_mut() {
+            product.removed_at = Some(now.clone());
+        }
 
-    let mut new_products = Vec::new();
+        for chunk in to_archive.chunks(BATCH_SIZE) {
+            let mut query_builder: QueryBuilder<Postgres> = QueryBuilder::new(r#"
+                INSERT INTO archive
+                (id, name, url, title, site, original_section, sections, description, image, status, price,
+                 old_price, specs, history, added_at, removed_at)
+            "#);
 
-    // for product in products {
-    //     let existing = match existings.get(&product.id) {
-    //         Some(p) => p,
-    //         None => {
-    //             new_products.push(product);
-    //             continue;
-    //         }
-    //     };
-    //
-    //     if existing.title != product.title {
-    //         eprintln!(
-    //             r#"FOUND DUPE:
-    //             - id: {} | ref: {} | title: {}
-    //             - id: {} | ref: {} | title: {}
-    //             "#,
-    //             existing.id, existing.p_ref, existing.title,
-    //             product.id, product.p_ref, product.title
-    //         );
-    //         continue;
-    //     }
-    //
-    //     let price_changed = product.price != existing.price;
-    //     // let status_changed = product.status != existing.status;
-    //     // let desc_changed = product.description != existing.description;
-    //     let title_changed = product.title != existing.title;
-    //     let image_changed = product.image != existing.image;
-    //
-    //     if price_changed || status_changed || desc_changed || title_changed || image_changed {
-    //         let mut history = existing
-    //             .history
-    //             .as_array()
-    //             .cloned()
-    //             .unwrap_or_default();
-    //
-    //         if price_changed {
-    //             push_change(&mut history, &existing.id, "price", existing.price, product.price);
-    //         }
-    //         if status_changed {
-    //             push_change(&mut history, &existing.id, "status", &existing.status, &product.status);
-    //         }
-    //         if desc_changed {
-    //             push_change(&mut history, &existing.id, "description", &existing.description, &product.description);
-    //         }
-    //         if title_changed {
-    //             push_change(&mut history, &existing.id, "title", &existing.title, &product.title);
-    //         }
-    //         if image_changed {
-    //             push_change(&mut history, &existing.id, "image", &existing.image, &product.image);
-    //         }
-    //
-    //         sqlx::query!(
-    //             r#"
-    //             UPDATE products
-    //             SET title = $1,
-    //                 price = $2,
-    //                 status = $3,
-    //                 description = $4,
-    //                 image = $5,
-    //                 history = $6,
-    //                 updated_at = $7
-    //             WHERE id = $8
-    //             "#,
-    //             product.title,
-    //             product.price,
-    //             product.status,
-    //             product.description,
-    //             product.image,
-    //             Value::Array(history),
-    //             Utc::now(),
-    //             existing.id
-    //         )
-    //             .execute(pool)
-    //             .await?;
-    //     }
-    // }
+            bind_product(&mut query_builder, chunk, false);
 
-    if !new_products.is_empty() {
-        insert_products(pool, &new_products).await?;
-    }
+            if let Err(err) = query_builder.build().execute(pool).await {
+                report.update.errors.push(UpdateError {
+                    error: UpdateErrorKind::InsertToArchive,
+                    message: err.to_string(),
+                    timestamp: Utc::now()
+                });
+                return
+            }
 
-    Ok(())
-}
-
-async fn insert_products(pool: &PgPool, products: &[&Product]) -> Result<(), Box<dyn Error>> {
-    let total = products.len();
-    for chunk in products.chunks(BATCH_SIZE) {
-        // let mut query_builder: sqlx::QueryBuilder<sqlx::Postgres> = sqlx::QueryBuilder::new(
-        //     "INSERT INTO products (id, p_ref, section, source, title, description, url, image, status, price, history, added_at) "
-        // );
-        //
-        // query_builder.push_values(chunk, |mut b, product| {
-        //     b.push_bind(product.id.clone())
-        //         .push_bind(product.p_ref.clone())
-        //         .push_bind(product.section.clone())
-        //         .push_bind(product.source.clone())
-        //         .push_bind(product.title.clone())
-        //         .push_bind(product.description.clone())
-        //         .push_bind(product.url.clone())
-        //         .push_bind(product.image.clone())
-        //         .push_bind(product.status.clone())
-        //         .push_bind(product.price)
-        //         .push_bind(Value::Array(vec![]))
-        //         .push_bind(Utc::now());
-        // });
-        //
-        // query_builder.build().execute(pool).await?;
-    }
-
-    println!("NEW: {} products inserted in {} batches", total, (total + BATCH_SIZE - 1) / BATCH_SIZE);
-    Ok(())
-}
-
-async fn archive_missing_products(pool: &PgPool, ids: &HashSet<&String>) -> Result<(), sqlx::Error> {
-    let db_products = sqlx::query!(
-        r#"
-        SELECT id FROM products
-        "#
-    )
-        .fetch_all(pool)
-        .await?;
-
-    let mut map = MISSING_MAP.lock().await;
-    let mut to_archive = Vec::new();
-
-    for db in db_products {
-        if !ids.contains(&db.id) {
-            let count = map.entry(db.id.clone()).or_insert(0);
-            *count += 1;
-
-            if *count >= UNSEEN_TIMES_TO_ARCHIVE {
-                to_archive.push(db.id.clone());
+            if let Err(err) = sqlx::query("DELETE FROM products WHERE url = ANY($1)")
+                .bind::<Vec<&String>>(chunk.iter().map(|p| &p.url).collect())
+                .execute(pool)
+                .await
+            {
+                report.update.errors.push(UpdateError {
+                    error: UpdateErrorKind::DeleteProducts,
+                    message: err.to_string(),
+                    timestamp: Utc::now()
+                });
+                return
             }
         }
+
+        report.update.removed += to_archive.len();
+        report.removed_items.extend(to_archive);
     }
 
-    if !to_archive.is_empty() {
-        archive_products(pool, &to_archive).await?;
+    pub async fn sync(report: &mut CycleReport, products: Vec<Product>) -> Vec<Product> {
+        let pool = get_db_pool();
+        let now = Utc::now();
+        let urls: Vec<&str> = products.iter().map(|p| p.url.as_str()).collect();
+        let mut new_products = Vec::new();
 
-        for id in &to_archive {
-            map.remove(id);
-        }
-    }
-
-    Ok(())
-}
-
-async fn archive_products(pool: &PgPool, ids: &[String]) -> Result<(), sqlx::Error> {
-    let now = Utc::now();
-
-    for chunk in ids.chunks(BATCH_SIZE) {
-        let mut query_builder: sqlx::QueryBuilder<sqlx::Postgres> = sqlx::QueryBuilder::new(
-            r#"
-            INSERT INTO products_archive
-            (id, p_ref, section, source, title, description, url, image, status, price, history, added_at, removed_at, updated_at, created_at)
-            SELECT id, p_ref, section, source, title, description, url, image, status, price, history, added_at, "#
-        );
-
-        query_builder.push_bind(now);
-
-        query_builder.push(
-            r#", updated_at, created_at
+        let db_products: Vec<Product> = match sqlx::query_as::<_, Product>(r#"
+            SELECT *
             FROM products
-            WHERE id IN (
-            "#
-        );
+            WHERE url = ANY($1)
+        "#)
+            .bind(urls)
+            .fetch_all(pool)
+            .await
+        {
+            Ok(p) => p,
+            Err(err) => {
+                report.update.errors.push(UpdateError {
+                    error: UpdateErrorKind::SelectProducts,
+                    message: err.to_string(),
+                    timestamp: Utc::now()
+                });
+                return new_products
+            }
+        };
 
-        let mut separated = query_builder.separated(", ");
-        for id in chunk {
-            separated.push_bind(id);
+        let mut map = HashMap::new();
+        for p in db_products {
+            map.insert(p.url.clone(), p);
         }
-        separated.push_unseparated(")");
 
-        query_builder.build().execute(pool).await?;
+        for mut product in products {
+            let Some(db_product) = map.get(&product.url) else {
+                // New Product
+                new_products.push(product);
+                continue
+            };
 
-        let mut del_builder = sqlx::QueryBuilder::new("DELETE FROM products WHERE id IN (");
-        let mut del_separated = del_builder.separated(", ");
-        for id in chunk {
-            del_separated.push_bind(id);
+            let title_changed = product.title != db_product.title;
+            let desc_changed = product.description != db_product.description;
+            let image_changed = product.image != db_product.image;
+            let status_changed = product.status != db_product.status;
+            let price_changed = product.price != db_product.price;
+            let old_price_changed = product.old_price != db_product.old_price;
+
+            // Changed Product
+            if title_changed | desc_changed | image_changed | status_changed | price_changed | old_price_changed {
+                fn push_change<T: Serialize>(history: &mut Vec<Value>, field: &str, old: T, new: T) {
+                    history.push(json!({
+                        "field": field,
+                        "old_value": old,
+                        "new_value": new,
+                        "timestamp": Utc::now()
+                    }));
+                }
+
+                let mut changes = Vec::new();
+
+                if title_changed { push_change(&mut changes, "title", &product.title, &db_product.title); }
+                if desc_changed { push_change(&mut changes, "description", &product.description, &db_product.description); }
+                if image_changed { push_change(&mut changes, "image", &product.image, &db_product.image); }
+                if status_changed { push_change(&mut changes, "status", &product.status, &db_product.status); }
+                if price_changed { push_change(&mut changes, "price", &product.price, &db_product.price); }
+                if old_price_changed { push_change(&mut changes, "old_price", &product.old_price, &db_product.old_price); }
+
+                report.update.edited += 1;
+                report.edited_items.push((product.clone(), changes.clone()));
+
+                let mut history = db_product.history.as_array().cloned().unwrap_or_default();
+                history.extend(changes);
+
+                product.history = Value::Array(history);
+                product.updated_at = Some(now.clone());
+
+                if let Err(error) = Self::update_product(product).await {
+                    report.update.errors.push(error);
+                }
+            }
         }
-        del_separated.push_unseparated(")");
 
-        del_builder.build().execute(pool).await?;
+        new_products
     }
 
-    println!("REMOVED: {} products archived and deleted", ids.len());
-    Ok(())
+    pub async fn insert_products(report: &mut CycleReport, products: Vec<Product>) {
+        for chunk in products.chunks(BATCH_SIZE) {
+            let mut query_builder: QueryBuilder<Postgres> = QueryBuilder::new(r#"
+                INSERT INTO products
+                (id, name, url, title, site, original_section, sections, description, image, status, price,
+                 old_price, specs, history, added_at, updated_at)
+            "#);
+
+            bind_product(&mut query_builder, chunk, true);
+
+            if let Err(err) = query_builder.build().execute(get_db_pool()).await {
+                report.update.errors.push(UpdateError {
+                    error: UpdateErrorKind::InsertProducts,
+                    message: err.to_string(),
+                    timestamp: Utc::now()
+                });
+            }
+        }
+
+        report.update.added += products.len();
+        report.added_items.extend(products);
+    }
+
+    async fn update_product(product: Product) -> Result<(), (UpdateError)> {
+        match sqlx::query!(r#"
+            UPDATE products
+            SET title = $1,
+                description = $2,
+                image = $3,
+                status = $4,
+                price = $5,
+                old_price = $6,
+                history = $7,
+                updated_at = $8
+            WHERE url = $9
+            "#,
+            product.title,
+            product.description,
+            product.image,
+            &product.status.to_string(),
+            product.price,
+            product.old_price,
+            product.history,
+            product.updated_at,
+            product.url
+        )
+            .execute(get_db_pool())
+            .await
+        {
+            Ok(_) => Ok(()),
+            Err(err) => Err(UpdateError {
+                error: UpdateErrorKind::UpdateProduct,
+                message: err.to_string(),
+                timestamp: Utc::now()
+            })
+        }
+    }
 }
 
-fn push_change<T: Serialize + Display>(history: &mut Vec<Value>, id: &str, field: &str, old: T, new: T) {
-    history.push(json!({
-        "field": field,
-        "old": old,
-        "new": new,
-        "ts": Utc::now()
-    }));
-    println!(
-        "EDIT `{}` in {}: {} => {}",
-        field, id, old, new
-    );
+fn bind_product(builder: &mut QueryBuilder<Postgres>, chunk: &[Product], update: bool) {
+    builder.push_values(chunk, |mut b, product| {
+        b.push_bind(&product.id)
+            .push_bind(&product.name)
+            .push_bind(&product.url)
+            .push_bind(&product.title)
+            .push_bind(&product.site)
+            .push_bind(&product.original_section)
+            .push_bind(&product.sections)
+            .push_bind(&product.description)
+            .push_bind(&product.image)
+            .push_bind(&product.status)
+            .push_bind(&product.price)
+            .push_bind(&product.old_price)
+            .push_bind(&product.specs)
+            .push_bind(&product.history)
+            .push_bind(&product.added_at)
+            .push_bind(if update { &product.updated_at } else { &product.removed_at });
+    });
 }

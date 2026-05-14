@@ -1,10 +1,9 @@
-use crate::web_scraper::specs::{ProductSpecs};
+use crate::api::endpoints::info::FilterOption;
+use crate::web_scraper::product::Product;
+use crate::web_scraper::specs::ProductSpecs;
 use once_cell::sync::Lazy;
 use std::collections::HashMap;
 use tokio::sync::RwLock;
-use crate::api::endpoints::info::FilterOption;
-use crate::web_scraper::product::Product;
-use crate::web_scraper::sections::Section;
 
 pub static SPECS_CACHE: Lazy<RwLock<SpecsCache>> = Lazy::new(|| RwLock::new(SpecsCache::default()));
 
@@ -28,39 +27,39 @@ impl SpecsCache {
     }
 
     fn add_product(&mut self, product_id: &str, section: &str, description: &str) {
-        let parser = match Section::from_str(section) {
-            Some(section) => section.parser(),
-            None => {
-                eprintln!("Unknown section: {}", section);
-                return;
-            }
-        };
-
-        let specs = match parser(description) {
-            Ok(specs) => specs,
-            Err(err) => {
-                eprintln!("Failed to parse product {product_id}: {err}");
-                return
-            }
-        };
-
-        let section_entry = self
-            .data
-            .entry(section.to_string())
-            .or_insert_with(HashMap::new);
-
-        for (option, value) in specs.get_filters() {
-            let option_entry = section_entry
-                .entry(option)
-                .or_insert_with(HashMap::new);
-
-            option_entry
-                .entry(value)
-                .or_insert_with(Vec::new)
-                .push(product_id.to_string());
-        }
-
-        self.specs.insert(product_id.to_string(), specs);
+        // let parser = match Section::from_str(section) {
+        //     Some(section) => section.parser(),
+        //     None => {
+        //         eprintln!("Unknown section: {}", section);
+        //         return;
+        //     }
+        // };
+        //
+        // let specs = match parser(description) {
+        //     Ok(specs) => specs,
+        //     Err(err) => {
+        //         eprintln!("Failed to parse product {product_id}: {err}");
+        //         return
+        //     }
+        // };
+        //
+        // let section_entry = self
+        //     .data
+        //     .entry(section.to_string())
+        //     .or_insert_with(HashMap::new);
+        //
+        // for (option, value) in specs.get_filters() {
+        //     let option_entry = section_entry
+        //         .entry(option)
+        //         .or_insert_with(HashMap::new);
+        //
+        //     option_entry
+        //         .entry(value)
+        //         .or_insert_with(Vec::new)
+        //         .push(product_id.to_string());
+        // }
+        //
+        // self.specs.insert(product_id.to_string(), specs);
     }
 
     pub fn get_filter_options(&self, product_type: &str) -> HashMap<String, Vec<FilterOption>> {

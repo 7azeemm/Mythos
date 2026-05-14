@@ -1,18 +1,24 @@
-use crate::Error;
-use crate::web_scraper::parsers::component_parser::parse_component;
-use crate::web_scraper::parsers::pc_parser::parse_pc;
-use crate::web_scraper::specs::ProductSpecs;
+use serde::{Deserialize, Serialize};
+use sqlx::encode::IsNull;
+use sqlx::error::BoxDynError;
+use sqlx::{Database, Postgres};
 
 macro_rules! define_sections {
     (
-        $( $variant:ident => ($name:expr, $parser:expr, $requires_desc:expr) ),* $(,)?
+        $(
+            $variant:ident => ($name:expr, $requires_desc:expr, $parent:expr)
+        ),* $(,)?
     ) => {
-        #[derive(Clone, Debug, PartialEq, Eq)]
+        #[derive(Copy, Clone, Debug, Hash, PartialEq, Eq, Serialize, Deserialize)]
         pub enum Section {
             $( $variant ),*
         }
 
         impl Section {
+            pub const ALL: &'static [Section] = &[
+                $( Section::$variant ),*
+            ];
+
             pub fn to_str(&self) -> &'static str {
                 match self {
                     $( Section::$variant => $name ),*
@@ -26,44 +32,88 @@ macro_rules! define_sections {
                 }
             }
 
-            pub fn parser(&self) -> fn(&str) -> Result<ProductSpecs, Box<dyn Error>> {
-                match self {
-                    $( Section::$variant => $parser ),*
-                }
-            }
-
             pub fn requires_description(&self) -> bool {
                 match self {
                     $( Section::$variant => $requires_desc ),*
                 }
             }
+
+            pub fn parent(&self) -> Option<Section> {
+                match self {
+                    $(
+                        Section::$variant => $parent,
+                    )*
+                }
+            }
+
+            pub fn children(&self) -> Vec<Section> {
+                let mut children = vec![*self];
+                $(
+                    let parent_opt: Option<Section> = $parent;
+                    if let Some(parent) = parent_opt {
+                        if parent == *self {
+                            children.push(Section::$variant);
+                        }
+                    }
+                )*
+                children
+            }
         }
     };
 }
 
-//TODO: add other things like Fan
-//TODO: combine ssd and hdd into Storage
 define_sections! {
-    PC          => ("pc", parse_pc, true),
-    GamingPc    => ("gaming_pc", parse_pc, true),
-    PcAllInOne  => ("pc_all_in_one", parse_pc, true),
-    GamingSetup => ("gaming_setup", parse_pc, true),
+    PC           => ("pc", false, None),
+    GamingPC     => ("gaming_pc", false, Some(Section::PC)),
+    AllInOnePC   => ("pc_all_in_one", false, Some(Section::PC)),
+    GamingSetup  => ("gaming_setup", false, Some(Section::PC)),
 
-    Laptop       => ("laptop", parse_pc, true),
-    GamingLaptop => ("gaming_laptop", parse_pc, true),
-    ProLaptop    => ("pro_laptop", parse_pc, true),
+    Laptop       => ("laptop", false, None),
+    GamingLaptop => ("gaming_laptop", false, Some(Section::Laptop)),
+    ProLaptop    => ("pro_laptop", false, Some(Section::Laptop)),
+    MacBook      => ("macbook", false, Some(Section::Laptop)),
 
-    Monitor      => ("monitor", parse_component, true),
-    Mouse        => ("mouse", parse_component, false),
-    KeyBoard     => ("keyboard", parse_component, false),
+    Monitor      => ("monitor", false, None),
+    Mouse        => ("mouse", false, None),
+    KeyBoard     => ("keyboard", false, None),
 
-    CPU         => ("cpu", parse_component, false),
-    GPU         => ("gpu", parse_component, false),
-    RAM         => ("ram", parse_component, false),
-    MotherBoard => ("motherboard", parse_component, false),
-    HDD         => ("hdd", parse_component, false),
-    SSD         => ("ssd", parse_component, false),
-    Cooler      => ("cooler", parse_component, false),
-    Case        => ("case", parse_component, false),
-    PSU         => ("psu", parse_component, false),
+    CPU          => ("cpu", false, None),
+    GPU          => ("gpu", false, None),
+    RAM          => ("ram", false, None),
+    MotherBoard  => ("motherboard", false, None),
+    Storage      => ("storage", false, None),
+    SSD          => ("ssd", false, Some(Section::Storage)),
+    NVMe         => ("nvme", false, Some(Section::Storage)),
+    HDD          => ("hdd", false, Some(Section::Storage)),
+    Case         => ("case", false, None),
+    PSU          => ("psu", false, None),
+    Cooler       => ("cooler", false, None),
+    AirCooler    => ("air_cooler", false, Some(Section::Cooler)),
+    WaterCooler  => ("water_cooler", false, Some(Section::Cooler)),
+    Fan          => ("fan", false, Some(Section::Cooler)),
+}
+
+impl sqlx::Type<Postgres> for Section {
+    fn type_info() -> sqlx::postgres::PgTypeInfo {
+        <&str as sqlx::Type<Postgres>>::type_info()
+    }
+}
+
+impl<'q> sqlx::Encode<'q, Postgres> for Section {
+    fn encode_by_ref(&self, buf: &mut <Postgres as Database>::ArgumentBuffer) -> Result<IsNull, BoxDynError> {
+        <&str as sqlx::Encode<'_, Postgres>>::encode_by_ref(&self.to_str(), buf)
+    }
+}
+
+impl<'r> sqlx::Decode<'r, Postgres> for Section {
+    fn decode(value: <Postgres as Database>::ValueRef<'r>) -> Result<Self, BoxDynError> {
+        let s = <&str as sqlx::Decode<'r, Postgres>>::decode(value)?;
+        Section::from_str(s).ok_or_else(|| format!("Unknown section: {}", s).into())
+    }
+}
+
+impl sqlx::postgres::PgHasArrayType for Section {
+    fn array_type_info() -> sqlx::postgres::PgTypeInfo {
+        <&str as sqlx::postgres::PgHasArrayType>::array_type_info()
+    }
 }
