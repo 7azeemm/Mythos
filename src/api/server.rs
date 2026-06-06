@@ -2,17 +2,25 @@ use std::error::Error;
 use axum::{middleware, Router};
 use axum::routing::get;
 use tokio::net::TcpListener;
+use tower_http::cors::CorsLayer;
 use crate::api::endpoints;
 use crate::api::middleware::logging_middleware;
 
 pub async fn run(port: u16) -> Result<(), Box<dyn Error>> {
     let app = Router::new()
         .route("/health", get(health_check))
-        .route("/api/info", get(endpoints::info::info))
-        .route("/api/search", get(endpoints::search::search))
-        .route("/api/products", get(endpoints::products::list))
-        .route("/api/products/recent", get(endpoints::recent::recent))
-        .route("/api/products/{id}", get(endpoints::products::get_by_id))
+        // .route("/api/info", get(endpoints::info::info))
+        // .route("/api/search", get(endpoints::search::search))
+        // .route("/api/products", get(endpoints::products::list))
+        // .route("/api/products/recent", get(endpoints::recent::recent))
+        // .route("/api/products/{id}", get(endpoints::products::get_by_id))
+
+        .route("/debug/sections", get(endpoints::debug::get_sections))
+        .route("/debug/{section}", get(endpoints::debug::get_section))
+        .route("/debug/{section}/products", get(endpoints::debug::get_products))
+
+        .layer(CorsLayer::permissive())// For Debugging ONLY
+
         .layer(middleware::from_fn(logging_middleware));
 
     let listener = TcpListener::bind(format!("0.0.0.0:{}", port)).await?;

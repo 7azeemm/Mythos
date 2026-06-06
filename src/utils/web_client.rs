@@ -58,7 +58,8 @@ impl WebClient {
     }
 
     pub async fn fetch(url: &str, web_client_type: &WebClientType) -> Result<String, Box<dyn Error>> {
-        let web_client = Self::get().await;
+        println!("Sending http request to `{url}`");
+        let web_client = WEB_CLIENT.get().unwrap();
         match web_client_type {
             WebClientType::HttpClient => {
                 let response = web_client.http_client.get(url).send().await?;
@@ -98,9 +99,5 @@ impl WebClient {
             client.playwright.shutdown().await?
         }
         Ok(())
-    }
-
-    pub async fn get() -> &'static WebClient {
-        WEB_CLIENT.get().unwrap()
     }
 }

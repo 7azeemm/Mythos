@@ -6,21 +6,31 @@ use serde::Serialize;
 use serde_json::{json, Value};
 use sqlx::{Postgres, QueryBuilder};
 use std::collections::HashMap;
+use crate::web_scraper::sections::Section;
 
 const BATCH_SIZE: usize = 250;
 
 pub struct ProductUpdater;
 
 impl ProductUpdater {
-    pub async fn archive_missing_products(report: &mut CycleReport, products: &Vec<Product>) {
+    pub async fn archive_missing_products(
+        report: &mut CycleReport,
+        products: &Vec<Product>,
+        sections: &Option<Vec<Section>>,
+        sites: &Option<Vec<&'static str>>
+    ) {
         let pool = get_db_pool();
 
         let mut to_archive: Vec<Product> = match sqlx::query_as::<_, Product>(r#"
             SELECT *
             FROM products
             WHERE url NOT IN (SELECT UNNEST($1::TEXT[]))
+                  AND ($2::TEXT[] IS NULL OR section = ANY($2::TEXT[]))
+                  AND ($3::TEXT[] IS NULL OR site = ANY($3::TEXT[]))
         "#)
             .bind(products.iter().map(|p| p.url.as_str()).collect::<Vec<_>>())
+            .bind(sections)
+            .bind(sites)
             .fetch_all(pool)
             .await
         {
@@ -45,22 +55,22 @@ impl ProductUpdater {
         }
 
         for chunk in to_archive.chunks(BATCH_SIZE) {
-            let mut query_builder: QueryBuilder<Postgres> = QueryBuilder::new(r#"
-                INSERT INTO archive
-                (id, name, url, title, site, original_section, sections, description, image, status, price,
-                 old_price, specs, history, added_at, removed_at)
-            "#);
-
-            bind_product(&mut query_builder, chunk, false);
-
-            if let Err(err) = query_builder.build().execute(pool).await {
-                report.update.errors.push(UpdateError {
-                    error: UpdateErrorKind::InsertToArchive,
-                    message: err.to_string(),
-                    timestamp: Utc::now()
-                });
-                return
-            }
+            // let mut query_builder: QueryBuilder<Postgres> = QueryBuilder::new(r#"
+            //     INSERT INTO archive
+            //     (url, name, title, site, section, description, image, status, price,
+            //      old_price, specs, history, added_at, removed_at)
+            // "#);
+            //
+            // bind_product(&mut query_builder, chunk, false);
+            //
+            // if let Err(err) = query_builder.build().execute(pool).await {
+            //     report.update.errors.push(UpdateError {
+            //         error: UpdateErrorKind::InsertToArchive,
+            //         message: err.to_string(),
+            //         timestamp: Utc::now()
+            //     });
+            //     return
+            // }
 
             if let Err(err) = sqlx::query("DELETE FROM products WHERE url = ANY($1)")
                 .bind::<Vec<&String>>(chunk.iter().map(|p| &p.url).collect())
@@ -167,7 +177,7 @@ impl ProductUpdater {
         for chunk in products.chunks(BATCH_SIZE) {
             let mut query_builder: QueryBuilder<Postgres> = QueryBuilder::new(r#"
                 INSERT INTO products
-                (id, name, url, title, site, original_section, sections, description, image, status, price,
+                (url, name, title, site, section, description, image, status, price,
                  old_price, specs, history, added_at, updated_at)
             "#);
 
@@ -224,13 +234,11 @@ impl ProductUpdater {
 
 fn bind_product(builder: &mut QueryBuilder<Postgres>, chunk: &[Product], update: bool) {
     builder.push_values(chunk, |mut b, product| {
-        b.push_bind(&product.id)
+        b.push_bind(&product.url)
             .push_bind(&product.name)
-            .push_bind(&product.url)
             .push_bind(&product.title)
             .push_bind(&product.site)
-            .push_bind(&product.original_section)
-            .push_bind(&product.sections)
+            .push_bind(&product.section)
             .push_bind(&product.description)
             .push_bind(&product.image)
             .push_bind(&product.status)

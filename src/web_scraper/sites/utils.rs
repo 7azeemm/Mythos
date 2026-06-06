@@ -43,7 +43,7 @@ pub fn extract_basics(
     let mut image_opt = None;
     for image_attr in vec!["data-full-size-image-url", "src", "data-original", "data-src", "data-lazy-src", "data-nectar-img-src"] {
         if let Some(value) = image_elem.attr(image_attr) {
-            if value.starts_with("http") {
+            if value.starts_with("http") && !value.ends_with(".gif") {
                 image_opt = Some(value.to_string());
                 break;
             }
@@ -116,6 +116,12 @@ pub fn validate_url(url: &str) -> Result<(), String> {
     if url.is_empty() {
         return Err("url is empty".to_string());
     }
+
+    //TODO: if contains base64 then fetch the product page to get image url
+
+    // if url.contains("base64") {
+    //     return Err(format!("url is encoded, probably the page isn't fully loaded: {url}"));
+    // }
 
     if !(url.starts_with("http://") || url.starts_with("https://")) {
         return Err(format!("url must start with http:// or https://: `{url}`"));

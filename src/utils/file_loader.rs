@@ -1,11 +1,13 @@
+use std::fs::File;
 use serde::de::DeserializeOwned;
 use serde::Serialize;
 use std::path::Path;
+use serde_json::Value;
 use tokio::fs::{create_dir_all, read_to_string, write};
 
-pub struct JsonLoader;
+pub struct FileLoader;
 
-impl JsonLoader {
+impl FileLoader {
     pub async fn load_from_file<T: DeserializeOwned>(path: &str) -> Result<T, String> {
         let content = read_to_string(path)
             .await
@@ -13,7 +15,7 @@ impl JsonLoader {
         Ok(serde_json::from_str(&content).map_err(|e| format!("Failed to load {path}: {e}"))?)
     }
 
-    pub async fn load_or_create_default<T: DeserializeOwned + Serialize + Default>(
+    pub async fn load_or_create<T: DeserializeOwned + Serialize + Default>(
         path: &str,
     ) -> Result<T, String> {
         match read_to_string(path).await {
@@ -61,5 +63,30 @@ impl JsonLoader {
             }
         }
         Ok(())
+    }
+
+    pub fn load_csv(path: &str) -> Result<Vec<Value>, String> {
+        let file = File::open(path).map_err(|err| format!("Failed to open file: {err}"))?;
+        let mut csv_reader = csv::Reader::from_reader(file);
+
+        let headers = csv_reader.headers()
+            .map_err(|err| format!("Failed to read headers: {err}"))?
+            .clone();
+
+        let mut records = Vec::new();
+        for result in csv_reader.records() {
+            let record = result.map_err(|err| format!("Failed to read record: {err}"))?;
+
+            let mut obj = serde_json::Map::new();
+            for (i, field) in record.iter().enumerate() {
+                if let Some(header) = headers.get(i) {
+                    obj.insert(header.to_string(), Value::String(field.to_string()));
+                }
+            }
+
+            records.push(Value::Object(obj));
+        }
+
+        Ok(records)
     }
 }

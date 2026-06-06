@@ -1,10 +1,11 @@
 pub mod web_scraper;
 pub mod api;
 pub mod utils;
+pub mod ai;
 
 use crate::api::server;
 use crate::utils::logger::setup_logging;
-use crate::utils::web_client::WebClient;
+use crate::utils::web_client::{WebClient, WebClientType};
 use crate::web_scraper::manager::ProductManager;
 use dotenv::dotenv;
 use futures::StreamExt;
@@ -19,6 +20,10 @@ async fn main() {
     println!("Starting...");
     dotenv().ok();
     setup_logging();
+
+    // ai::run().await.unwrap();
+    // return;
+
     WebClient::init().await;
     database::connect().await;
     ProductManager::schedule().await;

@@ -22,27 +22,31 @@ static CONFIG: SiteConfig = SiteConfig {
     desc_sel: Some(Lazy::new(|| Selector::parse("").unwrap())),
     page_desc_sel: None,
     sections: &[
-        (Section::Laptop, "https://www.mytek.tn/informatique/ordinateurs-portables/pc-portable.html"),
-        (Section::GamingLaptop, "https://www.mytek.tn/informatique/ordinateurs-portables/pc-gamer.html"),
-        (Section::ProLaptop, "https://www.mytek.tn/informatique/ordinateurs-portables/pc-portable-pro.html"),
-        (Section::ProLaptop, "https://www.mytek.tn/informatique/ordinateurs-portables/mac.html"),
-        (Section::ProLaptop, "https://www.mytek.tn/informatique/ordinateurs-portables/ultrabook.html"),
         (Section::PC, "https://www.mytek.tn/informatique/ordinateur-de-bureau/pc-de-bureau.html"),
         (Section::GamingPC, "https://www.mytek.tn/informatique/ordinateur-de-bureau/ordinateur-gamer.html"),
+        (Section::GamingPC, "https://www.mytek.tn/gaming/composant-pc-gamer/pack-gaming.html"),
+        (Section::AllInOnePC, "https://www.mytek.tn/informatique/ordinateur-de-bureau/imac.html"),
         (Section::AllInOnePC, "https://www.mytek.tn/informatique/ordinateur-de-bureau/pc-tout-en-un.html"),
+        (Section::Laptop, "https://www.mytek.tn/informatique/ordinateurs-portables/pc-portable.html"),
+        (Section::Laptop, "https://www.mytek.tn/informatique/ordinateurs-portables/pc-portable-pro.html"),
+        (Section::Laptop, "https://www.mytek.tn/informatique/ordinateurs-portables/ultrabook.html"),
+        (Section::GamingLaptop, "https://www.mytek.tn/informatique/ordinateurs-portables/pc-gamer.html"),
+        (Section::MacBook, "https://www.mytek.tn/informatique/ordinateurs-portables/mac.html"),
         (Section::Monitor, "https://www.mytek.tn/informatique/ordinateur-de-bureau/ecran.html"),
         (Section::Monitor, "https://www.mytek.tn/gaming/peripheriques-et-accessoires-gamers/ecran-gamer.html"),
-        (Section::Storage, "https://www.mytek.tn/informatique/stockage/disque-dur.html"),
+        (Section::Mouse, "https://www.mytek.tn/gaming/peripheriques-et-accessoires-gamers/souris-gamer.html"),
+        (Section::Keyboard, "https://www.mytek.tn/gaming/peripheriques-et-accessoires-gamers/clavier-gamer.html"),
         (Section::CPU, "https://www.mytek.tn/informatique/composants-informatique/processeur.html"),
         (Section::GPU, "https://www.mytek.tn/informatique/composants-informatique/carte-graphique.html"),
-        (Section::RAM, "https://www.mytek.tn/gaming/composant-pc-gamer/barrette-memoire-gamer.html"),
-        (Section::RAM, "https://www.mytek.tn/informatique/composants-informatique/barrettes-memoire.html"),
-        (Section::MotherBoard, "https://www.mytek.tn/informatique/composants-informatique/carte-mere.html"),
+        (Section::Memory, "https://www.mytek.tn/gaming/composant-pc-gamer/barrette-memoire-gamer.html"),
+        (Section::Memory, "https://www.mytek.tn/informatique/composants-informatique/barrettes-memoire.html"),
+        (Section::Motherboard, "https://www.mytek.tn/informatique/composants-informatique/carte-mere.html"),
+        (Section::Storage, "https://www.mytek.tn/informatique/stockage/disque-dur.html"),
         (Section::Cooler, "https://www.mytek.tn/gaming/composant-pc-gamer/refroidisseur-processeur-gamer.html"),
         (Section::Case, "https://www.mytek.tn/informatique/composants-informatique/boitier.html"),
         (Section::Case, "https://www.mytek.tn/gaming/composant-pc-gamer/boitier-pc-gamer.html"),
-        (Section::PSU, "https://www.mytek.tn/gaming/composant-pc-gamer/alimentation-pc-gamer.html"),
-        (Section::PSU, "https://www.mytek.tn/informatique/composants-informatique/bloc-d-alimentation.html"),
+        (Section::PowerSupply, "https://www.mytek.tn/gaming/composant-pc-gamer/alimentation-pc-gamer.html"),
+        (Section::PowerSupply, "https://www.mytek.tn/informatique/composants-informatique/bloc-d-alimentation.html"),
     ]
 };
 
@@ -68,7 +72,7 @@ impl Site for Mytek {
         let image = element.select_attr("data-image", "image")
             .map(|s| format!("https://www.mytek.tn/media/catalog/product{s}"))?;
 
-        let description = match section.requires_description() {
+        let description = match section.config().requires_description {
             true => Some(element.select_attr("data-description", "description")?),
             false => None
         };

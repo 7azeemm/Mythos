@@ -23,6 +23,8 @@ static CONFIG: SiteConfig = SiteConfig {
         (Section::GamingLaptop, "https://batam.com.tn/gaming/pc-gaming/pc-portable-gamer.html"),
         (Section::PC, "https://batam.com.tn/informatique/ordinateur-de-bureau/ordinateur-de-bureau.html"),
         (Section::Monitor, "https://batam.com.tn/informatique/ordinateur-de-bureau/ecran-pc.html"),
+        (Section::Keyboard, "https://batam.com.tn/gaming/peripheriques-et-accessoires-gaming/clavier-gamer.html"),
+        (Section::Mouse, "https://batam.com.tn/gaming/peripheriques-et-accessoires-gaming/souris-et-tapis-gamer.html")
     ]
 };
 

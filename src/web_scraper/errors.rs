@@ -88,9 +88,8 @@ pub struct ParseError {
     pub timestamp: DateTime<Utc>,
 }
 
-#[derive(Debug, Clone, Hash, Serialize, Deserialize)]
+#[derive(Debug, Clone, Hash, Serialize, Deserialize, PartialEq)]
 pub enum ParseErrorKind {
-    IncompleteData(String),
     NoSectionMatched,
     NotInDataset
 }
@@ -150,6 +149,7 @@ impl KnownEvents {
     }
 
     pub fn update_error(&self, error: UpdateError) {
+        print!("UpdateError: {:?}: {}", error.error, error.message);
         let mut update = self.update.lock().unwrap();
         let fingerprint = update_error_fingerprint(&error);
         self.should_notify::<UpdateError>(&mut update, fingerprint, error);
@@ -170,7 +170,7 @@ impl KnownEvents {
                 }, error.clone()));
 
                 // Notify
-                println!("Notification: {:#?}", error);
+                // println!("Notification: {:#?}", error);
             }
         }
     }

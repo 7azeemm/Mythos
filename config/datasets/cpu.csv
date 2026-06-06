@@ -1,0 +1,388 @@
+name,core_count,thread_count,base_clock,boost_clock,tdp,l1_cache,l2_cache,l3_cache,socket,memory_support,integrated_gpu
+AMD Ryzen 3 1200,4,4,3.1,3.4,65,384,2,8,AMD Socket AM4,DDR4,
+AMD Ryzen 3 3100,4,8,3.6,3.9,65,256,2,16,AMD Socket AM4,DDR4,
+AMD Ryzen 3 3200G,4,4,3.6,4,65,384,2,4,AMD Socket AM4,DDR4,Radeon Vega 8
+AMD Ryzen 3 3300X,4,8,3.8,4.3,65,256,2,16,AMD Socket AM4,DDR4,
+AMD Ryzen 3 4100,4,8,3.8,4,65,256,2,8,AMD Socket AM4,DDR4,
+AMD Ryzen 3 5300G,,,,,,,,,,,Radeon Vega 6
+AMD Ryzen 3 PRO 4350G,,,,,,,,,,,Radeon Vega 6
+AMD Ryzen 5 1600,,,,,,,,,,,
+AMD Ryzen 5 1600 AF,6,12,3.2,3.6,65,576,3,16,AMD Socket AM4,DDR4,
+AMD Ryzen 5 220,,,,,,,,,,,Radeon 740M
+AMD Ryzen 5 2600X,6,12,3.6,4.25,95,576,3,16,AMD Socket AM4,DDR4,
+AMD Ryzen 5 3400G,4,8,3.7,4.2,65,384,2,4,AMD Socket AM4,DDR4,Radeon Vega 11
+AMD Ryzen 5 3400GE,4,8,3.3,4,35,384,2,4,AMD Socket AM4,DDR4,Radeon Vega 11
+AMD Ryzen 5 3500X,6,6,3.6,4.1,65,384,3,32,AMD Socket AM4,DDR4,
+AMD Ryzen 5 3600,6,12,3.6,4.2,65,384,3,32,AMD Socket AM4,DDR4,
+AMD Ryzen 5 3600X,6,12,3.8,4.4,95,384,3,32,AMD Socket AM4,DDR4,
+AMD Ryzen 5 4500,6,12,3.6,4.1,65,384,3,8,AMD Socket AM4,DDR4,
+AMD Ryzen 5 4600G,6,12,3.7,4.2,65,384,3,8,AMD Socket AM4,DDR4,
+AMD Ryzen 5 5500,6,12,3.6,4.2,65,384,3,16,AMD Socket AM4,DDR4,
+AMD Ryzen 5 5500GT,6,12,3.6,4.4,65,384,3,16,AMD Socket AM4,DDR4,Radeon Vega 7
+AMD Ryzen 5 5600,6,12,3.5,4.4,65,384,3,32,AMD Socket AM4,DDR4,
+AMD Ryzen 5 5600G,6,12,3.9,4.4,65,384,3,16,AMD Socket AM4,DDR4,Radeon Vega 7
+AMD Ryzen 5 5600GT,6,12,3.6,4.6,65,384,3,16,AMD Socket AM4,DDR4,Radeon Vega 7
+AMD Ryzen 5 5600X,6,12,3.7,4.6,65,384,3,32,AMD Socket AM4,DDR4,
+AMD Ryzen 5 7400F,6,12,3.7,4.7,65,384,6,32,AMD Socket AM5,DDR5,
+AMD Ryzen 5 7500F,6,12,3.7,5,65,384,6,32,AMD Socket AM5,DDR5,
+AMD Ryzen 5 7500X3D,6,12,4,4.5,65,384,6,96,AMD Socket AM5,DDR5,
+AMD Ryzen 5 7600,6,12,3.8,5.1,65,384,6,32,AMD Socket AM5,DDR5,Radeon Graphics
+AMD Ryzen 5 7600X,6,12,4.7,5.3,105,384,6,32,AMD Socket AM5,DDR5,Radeon Graphics
+AMD Ryzen 5 8400F,6,12,4.2,4.7,65,384,6,16,AMD Socket AM5,DDR5,
+AMD Ryzen 5 8500G,6,12,3.5,5,65,384,6,16,AMD Socket AM5,DDR5,Radeon 740M
+AMD Ryzen 5 8600G,6,12,4.3,5,65,448,6,16,AMD Socket AM5,DDR5,Radeon 760M
+AMD Ryzen 5 9600,6,12,3.8,5.2,65,480,6,32,AMD Socket AM5,DDR5,Radeon Graphics
+AMD Ryzen 5 9600X,6,12,3.9,5.4,65,480,6,32,AMD Socket AM5,DDR5,Radeon Graphics
+AMD Ryzen 5 PRO 220,,,,,,,,,,,Radeon 740M
+AMD Ryzen 5 PRO 5650G,6,12,3.9,4.4,65,384,3,16,AMD Socket AM4,DDR4,Radeon Vega 7
+AMD Ryzen 5 PRO 5650GE,6,12,3.4,4.4,35,384,3,16,AMD Socket AM4,DDR4,Radeon Vega 7
+AMD Ryzen 5 PRO 5655G,6,12,3.9,4.4,65,384,3,16,AMD Socket AM4,DDR4,Radeon Vega 7
+AMD Ryzen 7 170,,,,,,,,,,,Radeon 680M
+AMD Ryzen 7 260,,,,,,,,,,,Radeon 780M
+AMD Ryzen 7 3700X,8,16,3.6,4.4,65,512,4,32,AMD Socket AM4,DDR4,
+AMD Ryzen 7 3800X,8,16,3.9,4.5,105,512,4,32,AMD Socket AM4,DDR4,
+AMD Ryzen 7 5700,8,16,3.7,4.6,65,512,4,16,AMD Socket AM4,DDR4,
+AMD Ryzen 7 5700G,8,16,3.8,4.6,65,512,4,16,AMD Socket AM4,DDR4,Radeon Graphics 512SP
+AMD Ryzen 7 5700X,8,16,3.4,4.6,65,512,4,32,AMD Socket AM4,DDR4,
+AMD Ryzen 7 5800X,8,16,3.8,4.7,105,512,4,32,AMD Socket AM4,DDR4,
+AMD Ryzen 7 7700,8,16,3.8,5.3,65,512,8,32,AMD Socket AM5,DDR5,Radeon Graphics
+AMD Ryzen 7 7700X,8,16,4.5,5.4,105,512,8,32,AMD Socket AM5,DDR5,Radeon Graphics
+AMD Ryzen 7 7800X3D,8,16,4.2,5,120,512,8,96,AMD Socket AM5,DDR5,Radeon Graphics
+AMD Ryzen 7 8700F,8,16,4.1,5,65,512,8,16,AMD Socket AM5,DDR5,
+AMD Ryzen 7 8700G,8,16,4.2,5.1,65,512,8,16,AMD Socket AM5,DDR5,Radeon 780M
+AMD Ryzen 7 9700X,8,16,3.8,5.5,65,640,8,32,AMD Socket AM5,DDR5,Radeon Graphics
+AMD Ryzen 7 9800X3D,8,16,4.7,5.2,120,640,8,96,AMD Socket AM5,DDR5,Radeon Graphics
+AMD Ryzen 7 PRO 5750G,8,16,3.8,4.6,65,512,4,16,AMD Socket AM4,DDR4,Radeon Vega 8
+AMD Ryzen 9 270,,,,,,,,,,,Radeon 780M
+AMD Ryzen 9 3900X,12,24,3.8,4.6,105,768,6,64,AMD Socket AM4,DDR4,
+AMD Ryzen 9 5900X,12,24,3.7,4.8,105,768,6,64,AMD Socket AM4,DDR4,
+AMD Ryzen 9 5950X,16,32,3.4,4.9,105,1024,8,64,AMD Socket AM4,DDR4,
+AMD Ryzen 9 7900,12,24,3.7,5.4,65,768,12,64,AMD Socket AM5,DDR5,Radeon Graphics
+AMD Ryzen 9 7900X,12,24,4.7,5.6,170,768,12,64,AMD Socket AM5,DDR5,Radeon Graphics
+AMD Ryzen 9 7900X3D,12,24,4.4,5.6,120,768,12,128,AMD Socket AM5,DDR5,Radeon Graphics
+AMD Ryzen 9 7950X,16,32,4.5,5.7,170,1024,16,64,AMD Socket AM5,DDR5,Radeon Graphics
+AMD Ryzen 9 7950X3D,16,32,4.2,5.7,120,1024,16,128,AMD Socket AM5,DDR5,Radeon Graphics
+AMD Ryzen 9 9900X,12,24,4.4,5.6,120,960,12,64,AMD Socket AM5,DDR5,Radeon Graphics
+AMD Ryzen 9 9900X3D,12,24,4.4,5.5,120,960,12,128,AMD Socket AM5,DDR5,Radeon Graphics
+AMD Ryzen 9 9950X,16,32,4.3,5.7,170,1280,16,64,AMD Socket AM5,DDR5,Radeon Graphics
+AMD Ryzen 9 9950X3D,16,32,4.3,5.7,170,1280,16,128,AMD Socket AM5,DDR5,Radeon Graphics
+AMD Ryzen AI 5 330,,,,,,,,,,,Radeon 820M
+AMD Ryzen AI 5 340,,,,,,,,,,,Radeon 840M
+AMD Ryzen AI 7 350,,,,,,,,,,,Radeon 860M
+AMD Ryzen AI 9 365,,,,,,,,,,,Radeon 880M
+AMD Ryzen AI 9 HX 370,,,,,,,,,,,Radeon 890M
+AMD Ryzen AI MAX 390,,,,,,,,,,,Radeon 8050S
+AMD Ryzen AI MAX+ 395,,,,,,,,,,,Radeon 8060S
+AMD Ryzen Threadripper 2950X,16,32,3.5,4.4,180,1536,8,32,AMD Socket SP3r2,DDR4,
+,,,,,,,,,,,
+Intel Core i3-10100,4,8,3.6,4.3,65,256,1,6,Intel Socket 1200,DDR4,UHD Graphics 630
+Intel Core i3-10100F,4,8,3.6,4.3,65,256,1,6,Intel Socket 1200,DDR4,
+Intel Core i3-10105,4,8,3.7,4.4,65,256,1,6,Intel Socket 1200,DDR4,UHD Graphics 630
+Intel Core i3-10105F,4,8,3.7,4.4,65,256,1,6,Intel Socket 1200,DDR4,
+Intel Core i3-10320,4,8,3.8,4.6,91,256,1,8,Intel Socket 1200,DDR4,UHD Graphics 630
+Intel Core i3-12100,4,8,3.3,4.3,60,320,5,12,Intel Socket 1700,"DDR4, DDR5",UHD Graphics 730
+Intel Core i3-12100F,4,8,3.3,4.3,58,320,5,12,Intel Socket 1700,"DDR4, DDR5",
+Intel Core i3-12300,,,,,,,,,,,
+Intel Core i3-13100,,,,,,,,,,,
+Intel Core i3-13100F,4,8,3.4,4.5,58,320,5,12,Intel Socket 1700,"DDR4, DDR5",
+Intel Core i3-14100,4,8,3.5,4.7,58,320,5,12,Intel Socket 1700,"DDR4, DDR5",UHD Graphics 730
+Intel Core i3-14100F,4,8,3.5,4.7,58,320,5,12,Intel Socket 1700,"DDR4, DDR5",
+Intel Core i5-10400,6,12,2.9,4.3,65,384,1.5,12,Intel Socket 1200,DDR4,UHD Graphics 630
+Intel Core i5-10400F,6,12,2.9,4.3,65,384,1.5,12,Intel Socket 1200,DDR4,
+Intel Core i5-10500,6,12,3.1,4.5,65,384,1.5,12,Intel Socket 1200,DDR4,UHD Graphics 630
+Intel Core i5-10600,,,,,,,,,,,
+Intel Core i5-10600K,6,12,4.1,4.8,125,384,1.5,12,Intel Socket 1200,DDR4,UHD Graphics 630
+Intel Core i5-10600KF,6,12,4.1,4.8,95,384,1.5,12,Intel Socket 1200,DDR4,
+Intel Core i5-11400,6,12,2.6,4.4,65,480,3,12,Intel Socket 1200,DDR4,UHD Graphics 730
+Intel Core i5-11400F,6,12,2.6,4.4,65,480,3,12,Intel Socket 1200,DDR4,
+Intel Core i5-11500,6,12,2.7,4.6,65,480,3,12,Intel Socket 1200,DDR4,UHD Graphics 750
+Intel Core i5-11600,,,,,,,,,,,
+Intel Core i5-11600K,6,12,3.9,4.9,125,480,3,12,Intel Socket 1200,DDR4,UHD Graphics 750
+Intel Core i5-12100,,,,,,,,,,,
+Intel Core i5-12100F,,,,,,,,,,,
+Intel Core i5-12100T,,,,,,,,,,,
+Intel Core i5-12400,6,12,2.5,4.4,65,480,7.5,18,Intel Socket 1700,"DDR4, DDR5",UHD Graphics 730
+Intel Core i5-12400F,6,12,2.5,4.4,65,480,7.5,18,Intel Socket 1700,"DDR4, DDR5",
+Intel Core i5-12500,6,12,3,4.6,65,480,7.5,18,Intel Socket 1700,"DDR4, DDR5",UHD Graphics 770
+Intel Core i5-12600,,,,,,,,,,,
+Intel Core i5-12600K,10,16,3.7,4.9,125,800,12.5,20,Intel Socket 1700,"DDR4, DDR5",UHD Graphics 770
+Intel Core i5-12600KF,10,16,3.7,4.9,125,800,12.5,20,Intel Socket 1700,"DDR4, DDR5",
+Intel Core i5-13400,10,16,2.5,4.6,65,800,12.5,20,Intel Socket 1700,"DDR4, DDR5",UHD Graphics 730
+Intel Core i5-13400F,10,16,2.5,4.6,65,800,12.5,20,Intel Socket 1700,"DDR4, DDR5",
+Intel Core i5-13420,,,,,,,,,,,
+Intel Core i5-13500,14,20,2.5,4.8,65,1120,17.5,24,Intel Socket 1700,"DDR4, DDR5",UHD Graphics 770
+Intel Core i5-13600K,14,20,3.5,5.1,125,1120,28,24,Intel Socket 1700,"DDR4, DDR5",UHD Graphics 770
+Intel Core i5-13600KF,14,20,3.5,5.1,125,1120,28,24,Intel Socket 1700,"DDR4, DDR5",
+Intel Core i5-14400,10,16,2.5,4.7,65,800,12.5,20,Intel Socket 1700,"DDR4, DDR5",UHD Graphics 730
+Intel Core i5-14400F,10,16,2.5,4.7,65,800,12.5,20,Intel Socket 1700,"DDR4, DDR5",
+Intel Core i5-14500,14,20,2.6,5,65,1120,17.5,24,Intel Socket 1700,"DDR4, DDR5",UHD Graphics 770
+Intel Core i5-14600,,,,,,,,,,,
+Intel Core i5-14600K,14,20,3.5,5.3,125,1120,28,24,Intel Socket 1700,"DDR4, DDR5",UHD Graphics 770
+Intel Core i5-14600KF,14,20,3.5,5.3,125,1120,28,24,Intel Socket 1700,"DDR4, DDR5",
+Intel Core i7-10700,8,16,2.9,4.8,65,512,2,16,Intel Socket 1200,DDR4,UHD Graphics 630
+Intel Core i7-10700F,8,16,2.9,4.8,65,512,2,16,Intel Socket 1200,DDR4,
+Intel Core i7-11700,8,16,2.5,4.9,65,640,4,16,Intel Socket 1200,DDR4,UHD Graphics 750
+Intel Core i7-11700F,8,16,2.5,4.9,65,640,4,16,Intel Socket 1200,DDR4,
+Intel Core i7-11700K,8,16,3.6,5,125,640,4,16,Intel Socket 1200,DDR4,UHD Graphics 750
+Intel Core i7-12700,12,20,2.1,4.9,65,960,15,25,Intel Socket 1700,"DDR4, DDR5",UHD Graphics 770
+Intel Core i7-12700F,12,20,2.1,4.9,65,960,15,25,Intel Socket 1700,"DDR4, DDR5",
+Intel Core i7-12700K,12,20,3.6,5,125,960,15,25,Intel Socket 1700,"DDR4, DDR5",UHD Graphics 770
+Intel Core i7-12700KF,12,20,3.6,5,125,960,15,25,Intel Socket 1700,"DDR4, DDR5",
+Intel Core i7-13700,16,24,2.1,5.2,65,1280,32,30,Intel Socket 1700,"DDR4, DDR5",UHD Graphics 770
+Intel Core i7-13700F,16,24,2.1,5.2,65,1280,32,30,Intel Socket 1700,"DDR4, DDR5",
+Intel Core i7-13700K,16,24,3.4,5.4,125,1280,32,30,Intel Socket 1700,"DDR4, DDR5",UHD Graphics 770
+Intel Core i7-13700KF,16,24,3.4,5.4,125,1280,32,30,Intel Socket 1700,"DDR4, DDR5",
+Intel Core i7-14700,20,28,2.1,5.4,65,1600,40,33,Intel Socket 1700,"DDR4, DDR5",UHD Graphics 770
+Intel Core i7-14700F,20,28,2.1,5.4,65,1600,40,33,Intel Socket 1700,"DDR4, DDR5",
+Intel Core i7-14700K,20,28,3.4,5.6,125,1600,40,33,Intel Socket 1700,"DDR4, DDR5",UHD Graphics 770
+Intel Core i7-14700KF,20,28,3.4,5.6,125,1600,40,33,Intel Socket 1700,"DDR4, DDR5",
+Intel Core i9-10900,10,20,2.8,5.2,65,640,2.5,20,Intel Socket 1200,DDR4,UHD Graphics 630
+Intel Core i9-10900F,10,20,2.8,5.2,65,640,2.5,20,Intel Socket 1200,DDR4,
+Intel Core i9-10900KF,10,20,3.7,5.3,125,640,2.5,20,Intel Socket 1200,DDR4,
+Intel Core i9-11900,,,,,,,,,,,
+Intel Core i9-11900K,8,16,3.5,5.3,125,640,4,16,Intel Socket 1200,DDR4,UHD Graphics 750
+Intel Core i9-12900F,16,24,2.4,5.1,65,1280,20,30,Intel Socket 1700,"DDR4, DDR5",
+Intel Core i9-12900K,16,24,3.2,5.2,125,1280,20,30,Intel Socket 1700,"DDR4, DDR5",UHD Graphics 770
+Intel Core i9-12900KF,16,24,3.2,5.2,125,1280,20,30,Intel Socket 1700,"DDR4, DDR5",
+Intel Core i9-13900F,24,32,2,5.6,65,1920,48,36,Intel Socket 1700,"DDR4, DDR5",
+Intel Core i9-13900K,24,32,3,5.8,125,1920,48,36,Intel Socket 1700,"DDR4, DDR5",UHD Graphics 770
+Intel Core i9-13900KF,24,32,3,5.8,125,1920,48,36,Intel Socket 1700,"DDR4, DDR5",
+Intel Core i9-14900,24,32,2,5.8,65,1920,48,36,Intel Socket 1700,"DDR4, DDR5",UHD Graphics 770
+Intel Core i9-14900K,24,32,3.2,6,125,1920,48,36,Intel Socket 1700,"DDR4, DDR5",UHD Graphics 770
+Intel Core i9-14900KF,24,32,3.2,6,125,1920,48,36,Intel Socket 1700,"DDR4, DDR5",
+Intel Core Ultra 5 225,,,,,,,,,,,
+Intel Core Ultra 5 225F,10,10,3.3,4.9,65,1920,30,20,Intel Socket 1851,DDR5,
+Intel Core Ultra 5 235,,,,,,,,,,,
+Intel Core Ultra 5 245,,,,,,,,,,,
+Intel Core Ultra 5 245K,14,14,4.2,5.2,125,2688,42,24,Intel Socket 1851,DDR5,Arc Xe-LPG Graphics 64EU
+Intel Core Ultra 5 245KF,14,14,4.2,5.2,125,2688,42,24,Intel Socket 1851,DDR5,
+Intel Core Ultra 7 265,,,,,,,,,,,
+Intel Core Ultra 7 265K,20,20,3.9,5.5,125,3840,60,30,Intel Socket 1851,DDR5,Arc Xe-LPG Graphics 64EU
+Intel Core Ultra 7 265KF,20,20,3.9,5.5,125,3840,60,30,Intel Socket 1851,DDR5,
+Intel Core Ultra 9 285,,,,,,,,,,,
+Intel Core Ultra 9 285K,24,24,3.7,5.7,125,4608,72,36,Intel Socket 1851,DDR5,Arc Xe-LPG Graphics 64EU
+,,,,,,,,,,,
+Intel Core 3 100U,,,,,,,,,,,
+Intel Core i3-1000NG4,,,,,,,,,,,
+Intel Core i3-1005G1,,,,,,,,,,,
+Intel Core i3-10110U,,,,,,,,,,,
+Intel Core i3-1110G4,,,,,,,,,,,
+Intel Core i3-1115G4,,,,,,,,,,,
+Intel Core i3-1115G4,,,,,,,,,,,
+Intel Core i3-1215U,,,,,,,,,,,
+Intel Core i3-1220P,,,,,,,,,,,
+Intel Core i3-1305U,,,,,,,,,,,
+Intel Core i3-1315U,,,,,,,,,,,
+Intel Core i3-2100,,,,,,,,,,,
+Intel Core i3-2310M,,,,,,,,,,,
+Intel Core i3-4005U,,,,,,,,,,,
+Intel Core i3-4130,,,,,,,,,,,
+Intel Core i3-4150,,,,,,,,,,,
+Intel Core i3-550,,,,,,,,,,,
+Intel Core i3-6100,,,,,,,,,,,
+Intel Core i3-6006U,,,,,,,,,,,
+Intel Core i3-7020U,,,,,,,,,,,
+Intel Core i3-7100,,,,,,,,,,,
+Intel Core i3-7100U,,,,,,,,,,,
+Intel Core i3-8100,,,,,,,,,,,
+Intel Core i3-8109U,,,,,,,,,,,
+Intel Core i3-8145U,,,,,,,,,,,
+Intel Core i3-9100T,,,,,,,,,,,
+Intel Core i3-N300,,,,,,,,,,,
+Intel Core i3-N305,,,,,,,,,,,
+Intel Core i5-10210U,,,,,,,,,,,
+Intel Core i5-10300H,,,,,,,,,,,
+Intel Core i5-1030NG7,,,,,,,,,,,
+Intel Core i5-1035G1,,,,,,,,,,,
+Intel Core i5-1035G7,,,,,,,,,,,
+Intel Core i5-11300H,,,,,,,,,,,
+Intel Core i5-11320H,,,,,,,,,,,
+Intel Core i5-1135G7,,,,,,,,,,,
+Intel Core i5-1145G7,,,,,,,,,,,
+Intel Core i5-1155G7,,,,,,,,,,,
+Intel Core i5-1215U,,,,,,,,,,,
+Intel Core i5-1235U,,,,,,,,,,,
+Intel Core i5-1240P,,,,,,,,,,,
+Intel Core i5-12450H,,,,,,,,,,,
+Intel Core i5-1250P,,,,,,,,,,,
+Intel Core i5-12600H,,,,,,,,,,,
+Intel Core i5-12600HX,,,,,,,,,,,
+Intel Core i5-1334U,,,,,,,,,,,
+Intel Core i5-1335U,,,,,,,,,,,
+Intel Core i5-1335U,,,,,,,,,,,
+Intel Core i5-1340P,,,,,,,,,,,
+Intel Core i5-13420H,,,,,,,,,,,
+Intel Core i5-13450HX,,,,,,,,,,,
+Intel Core i5-14450HX,,,,,,,,,,,
+Intel Core i5-2400,,,,,,,,,,,
+Intel Core i5-3470,,,,,,,,,,,
+Intel Core i5-4210U,,,,,,,,,,,
+Intel Core i5-4430,,,,,,,,,,,
+Intel Core i5-6200U,,,,,,,,,,,
+Intel Core i5-6400,,,,,,,,,,,
+Intel Core i5-6600,,,,,,,,,,,
+Intel Core i5-7200U,,,,,,,,,,,
+Intel Core i5-7400,,,,,,,,,,,
+Intel Core i5-7500,,,,,,,,,,,
+Intel Core i5-8250U,,,,,,,,,,,
+Intel Core i5-8257U,,,,,,,,,,,
+Intel Core i5-8400,,,,,,,,,,,
+Intel Core i5-8400T,,,,,,,,,,,
+Intel Core i5-8500,,,,,,,,,,,
+Intel Core i7-10510U,,,,,,,,,,,
+Intel Core i7-1060NG7,,,,,,,,,,,
+Intel Core i7-1065G7,,,,,,,,,,,
+Intel Core i7-10750H,,,,,,,,,,,
+Intel Core i7-11370H,,,,,,,,,,,
+Intel Core i7-1165G7,,,,,,,,,,,
+Intel Core i7-11800H,,,,,,,,,,,
+Intel Core i7-1185G7,,,,,,,,,,,
+Intel Core i7-1250U,,,,,,,,,,,
+Intel Core i7-1255U,,,,,,,,,,,
+Intel Core i7-1260P,,,,,,,,,,,
+Intel Core i7-12650H,,,,,,,,,,,
+Intel Core i7-1265U,,,,,,,,,,,
+Intel Core i7-1270P,,,,,,,,,,,
+Intel Core i7-1280P,,,,,,,,,,,
+Intel Core i7-1355U,,,,,,,,,,,
+Intel Core i7-1360P,,,,,,,,,,,
+Intel Core i7-13620H,,,,,,,,,,,
+Intel Core i7-13650HX,,,,,,,,,,,
+Intel Core i7-1365U,,,,,,,,,,,
+Intel Core i7-14650HX,,,,,,,,,,,
+Intel Core i7-4510U,,,,,,,,,,,
+Intel Core i7-4720HQ,,,,,,,,,,,
+Intel Core i7-7600U,,,,,,,,,,,
+Intel Core i7-7700,,,,,,,,,,,
+Intel Core i7-8400,,,,,,,,,,,
+Intel Core i7-8550U,,,,,,,,,,,
+Intel Core i7-8565U,,,,,,,,,,,
+Intel Core i7-8700,,,,,,,,,,,
+Intel Core i7‑8750H,,,,,,,,,,,
+Intel Core i9-12900H,,,,,,,,,,,
+Intel Core i9-13900H,,,,,,,,,,,
+Intel Core 5 120U,,,,,,,,,,,
+Intel Core 5 210H,,,,,,,,,,,
+Intel Core 7 150U,,,,,,,,,,,
+Intel Core 7 240H,,,,,,,,,,,
+Intel Core 9 270H,,,,,,,,,,,
+Intel Core Ultra 5 125H,,,,,,,,,,,
+Intel Core Ultra 5 125U,,,,,,,,,,,
+Intel Core Ultra 5 135U,,,,,,,,,,,
+Intel Core Ultra 5 225U,,,,,,,,,,,
+Intel Core Ultra 5 226V,,,,,,,,,,,
+Intel Core Ultra 5 235U,,,,,,,,,,,
+Intel Core Ultra 7 155H,,,,,,,,,,,
+Intel Core Ultra 7 155U,,,,,,,,,,,
+Intel Core Ultra 7 164U,,,,,,,,,,,
+Intel Core Ultra 7 165U,,,,,,,,,,,
+Intel Core Ultra 7 255H,,,,,,,,,,,
+Intel Core Ultra 7 255U,,,,,,,,,,,
+Intel Core Ultra 7 256V,,,,,,,,,,,
+Intel Core Ultra 7 258V,,,,,,,,,,,
+Intel Core Ultra 7 266V,,,,,,,,,,,
+Intel Core Ultra 7 268V,,,,,,,,,,,
+Intel Core Ultra 9 185H,,,,,,,,,,,
+Intel Core Ultra 9 275HX,,,,,,,,,,,
+Intel Core Ultra 9 285H,,,,,,,,,,,
+Intel Core Ultra 9 288V,,,,,,,,,,,
+,,,,,,,,,,,
+AMD Ryzen 3 3250U,,,,,,,,,,,
+AMD Ryzen 3 5300U,,,,,,,,,,,
+AMD Ryzen 3 7320U,,,,,,,,,,,
+AMD Ryzen 5 3500U,,,,,,,,,,,
+AMD Ryzen 5 4600H,,,,,,,,,,,
+AMD Ryzen 5 5625U,,,,,,,,,,,
+AMD Ryzen 5 6600H,,,,,,,,,,,
+AMD Ryzen 5 7430U,,,,,,,,,,,
+AMD Ryzen 5 7520U,,,,,,,,,,,
+AMD Ryzen 5 7530U,,,,,,,,,,,
+AMD Ryzen 5 7533HS,,,,,,,,,,,
+AMD Ryzen 5 7535HS,,,,,,,,,,,
+AMD Ryzen 5 7640HS,,,,,,,,,,,
+AMD Ryzen 5 8645HS,,,,,,,,,,,
+AMD Ryzen 5 PRO 7535U,,,,,,,,,,,
+AMD Ryzen 7 4800H,,,,,,,,,,,
+AMD Ryzen 7 5800H,,,,,,,,,,,
+AMD Ryzen 7 5800HS,,,,,,,,,,,
+AMD Ryzen 7 5825U,,,,,,,,,,,
+AMD Ryzen 7 6800H,,,,,,,,,,,
+AMD Ryzen 7 6800HS,,,,,,,,,,,
+AMD Ryzen 7 7435HS,,,,,,,,,,,
+AMD Ryzen 7 7445H,,,,,,,,,,,
+AMD Ryzen 7 7445HS,,,,,,,,,,,
+AMD Ryzen 7 7730U,,,,,,,,,,,
+AMD Ryzen 7 7735H,,,,,,,,,,,
+AMD Ryzen 7 7735HS,,,,,,,,,,,
+AMD Ryzen 7 7735U,,,,,,,,,,,
+AMD Ryzen 7 7745HX,,,,,,,,,,,
+AMD Ryzen 7 7840HS,,,,,,,,,,,
+AMD Ryzen 7 8840HS,,,,,,,,,,,
+AMD Ryzen 7 8845HS,,,,,,,,,,,
+AMD Ryzen 7 PRO 6850U,,,,,,,,,,,
+AMD Ryzen 9 5900HX,,,,,,,,,,,
+AMD Ryzen 9 6900HX,,,,,,,,,,,
+AMD Ryzen 9 7845HX,,,,,,,,,,,
+AMD Ryzen 9 7940HS,,,,,,,,,,,
+AMD Ryzen 9 7945HX,,,,,,,,,,,
+AMD Ryzen 9 8940HX,,,,,,,,,,,
+AMD Ryzen 9 8945H,,,,,,,,,,,
+AMD Ryzen 9 8945HS,,,,,,,,,,,
+,,,,,,,,,,,
+AMD Athlon,,,,,,,,,,,
+AMD Athlon Gold,,,,,,,,,,,
+AMD Athlon Silver,,,,,,,,,,,
+AMD Athlon Silver 10,,,,,,,,,,,
+AMD Athlon Silver 3050U,,,,,,,,,,,
+AMD Athlon Silver 7120U,,,,,,,,,,,
+AMD Athlon Silver 3050U,,,,,,,,,,,
+AMD A4-6210,,,,,,,,,,,
+,,,,,,,,,,,
+Intel Atom,,,,,,,,,,,
+Intel Celeron,,,,,,,,,,,
+Intel Celeron G5900,,,,,,,,,,,
+Intel Celeron G5905,,,,,,,,,,,
+Intel Celeron N3350,,,,,,,,,,,
+Intel Celeron N4020,,,,,,,,,,,
+Intel Celeron J4025,,,,,,,,,,,
+Intel Celeron J4005,,,,,,,,,,,
+Intel Celeron N4500,,,,,,,,,,,
+Intel Celeron N5095,,,,,,,,,,,
+Intel Celeron N4000,,,,,,,,,,,
+Intel Celeron G6900,,,,,,,,,,,
+Intel Celeron 5205U,,,,,,,,,,,
+Intel Pentium,,,,,,,,,,,
+Intel Pentium G4400,,,,,,,,,,,
+Intel Pentium G4560,,,,,,,,,,,
+Intel Pentium J2900,,,,,,,,,,,
+Intel Pentium 4415U,,,,,,,,,,,
+Intel Pentium Gold,,,,,,,,,,,
+Intel Pentium Gold G5400,,,,,,,,,,,
+Intel Pentium Gold G6400,,,,,,,,,,,
+Intel Pentium Gold G6405,,,,,,,,,,,
+Intel Pentium Gold G7400,,,,,,,,,,,
+Intel Pentium Gold 8505,,,,,,,,,,,
+Intel Pentium Silver,,,,,,,,,,,
+Intel Pentium Silver N6000,,,,,,,,,,,
+Intel Pentium Silver J5040,,,,,,,,,,,
+Intel Pentium G3250,,,,,,,,,,,
+Intel Pentium E6500,,,,,,,,,,,
+Intel Processor N100,,,,,,,,,,,
+Intel Processor N150,,,,,,,,,,,
+Intel Processor N95,,,,,,,,,,,
+Intel Xeon,,,,,,,,,,,
+Intel Xeon E5,,,,,,,,,,,
+Intel Xeon E-2104,,,,,,,,,,,
+Intel Xeon E-2124,,,,,,,,,,,
+Intel Xeon E-2224,,,,,,,,,,,
+Intel Xeon W-2104,,,,,,,,,,,
+SnapDragon,,,,,,,,,,,
+SnapDragon Purwa SE,,,,,,,,,,,
+SnapDragon X,,,,,,,,,,,
+,,,,,,,,,,,
+Apple M1,,,,,,,,,,,
+Apple M2,,,,,,,,,,,
+Apple M3,,,,,,,,,,,
+Apple M4,,,,,,,,,,,
+Apple M5,,,,,,,,,,,
+Apple A18 Pro,,,,,,,,,,,

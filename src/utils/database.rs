@@ -1,7 +1,8 @@
 use std::time::Duration;
 use once_cell::sync::OnceCell;
-use sqlx::PgPool;
+use sqlx::{ConnectOptions, PgPool};
 use sqlx::postgres::{PgConnectOptions, PgPoolOptions};
+use tracing::log::LevelFilter;
 
 static DB_POOL: OnceCell<PgPool> = OnceCell::new();
 
@@ -9,6 +10,7 @@ pub async fn connect() {
     let connect_opts = std::env::var("DATABASE_URL").expect("DATABASE_URL is not set")
         .parse::<PgConnectOptions>()
         .expect("Invalid DB URL")
+        .log_slow_statements(LevelFilter::Warn, Duration::from_secs(2))
         .options([("statement_timeout", "10s")]);
 
     let pool = PgPoolOptions::new()

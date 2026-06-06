@@ -16,15 +16,18 @@ static CONFIG: SiteConfig = SiteConfig {
     price_sel_2: Some(Lazy::new(|| Selector::parse("span.price ins span bdi").unwrap())),
     status_sel: None,
     desc_sel: Some(Lazy::new(|| Selector::parse("div.woocommerce-product-details__short-description").unwrap())),
-    page_desc_sel: None,
+    page_desc_sel: Some(Lazy::new(|| Selector::parse("div.woocommerce-product-details__short-description").unwrap())),
     sections: &[
         (Section::PC, "https://tdiscount.tn/categorie-produit/informatique/ordinateur-de-bureau/"),
         (Section::Laptop, "https://tdiscount.tn/categorie-produit/informatique/pc-portable/"),
         (Section::GamingLaptop, "https://tdiscount.tn/categorie-produit/gaming/pc-gamer/"),
         (Section::GamingLaptop, "https://tdiscount.tn/categorie-produit/gaming/pc-portable-gamer/"),
-        // (Section::RAM, "https://tdiscount.tn/categorie-produit/informatique/composants-informatique/"),
-        // (Section::GPU, "https://tdiscount.tn/categorie-produit/gaming/composant-pc-gamer/"),
         (Section::Monitor, "https://tdiscount.tn/categorie-produit/informatique/ecran-pc/"),
+        (Section::Mouse, "https://tdiscount.tn/categorie-produit/informatique/accessoires-informatique/"),
+        (Section::Mouse, "https://tdiscount.tn/categorie-produit/gaming/accessoires-pc-gamer/"),
+        (Section::Memory, "https://tdiscount.tn/categorie-produit/informatique/composants-informatique/"),
+        (Section::GPU, "https://tdiscount.tn/categorie-produit/gaming/composant-pc-gamer/"),
+        (Section::Storage, "https://tdiscount.tn/categorie-produit/informatique/stockage/"),
     ]
 };
 

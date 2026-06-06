@@ -10,21 +10,18 @@ use std::str::FromStr;
 
 #[derive(Debug, Clone, Serialize, Deserialize, FromRow)]
 pub struct Product {
-    #[serde(skip)]
-    pub id: String,
-    #[serde(skip)]
-    pub name: String,
     pub url: String,
+    #[serde(default)]
+    pub name: String,
     pub title: String,
     pub site: String,
-    pub original_section: Section,
-    pub sections: Vec<Section>,
+    pub section: Section,
     pub description: Option<String>,
     pub image: String,
     pub status: ProductStatus,
     pub price: i32,
     pub old_price: Option<i32>,
-    #[serde(skip)]
+    #[serde(default)]
     pub specs: Value,
     pub history: Value,
     #[sqlx(default)]
@@ -39,20 +36,12 @@ impl Product {
                description: Option<String>, image: String, status: ProductStatus,
                price: i32, old_price: Option<i32>) -> Result<Self, String> {
 
-        let original_section = section;
-        let sections = match section.parent() {
-            Some(parent) => vec![parent, section],
-            None => vec![section]
-        };
-
         Ok(Self {
-            id: "".to_string(),
-            name: "".to_string(),
             url,
+            name: title.clone(),
             title,
             site: site.to_string(),
-            original_section,
-            sections,
+            section,
             description,
             image,
             status,
@@ -95,7 +84,7 @@ impl FromStr for ProductStatus {
             (Self::InStock, vec!["instock", "en stock", "in stock", "ajouter"]),
             (Self::OutOfStock, vec!["outofstock", "hors stock", "epuisé", "rupture de stock"]),
             (Self::OnArrive, vec!["onarrive", "en arrivage"]),
-            (Self::OnRequest, vec!["onrequest", "sur commande"]),
+            (Self::OnRequest, vec!["onrequest", "sur commande", "surcommande"]),
         ];
 
         for (status, keys) in statuses {

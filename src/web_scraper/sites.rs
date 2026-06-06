@@ -1,6 +1,5 @@
 use crate::utils::web_client::{WebClient, WebClientType};
 use crate::web_scraper::errors::{PageReport, ScrapeError, ScrapeErrorKind, SiteReport};
-use crate::web_scraper::manager::{add_product_description, get_product_description};
 use crate::web_scraper::product::{Product, ProductStatus};
 use crate::web_scraper::sections::Section;
 use crate::web_scraper::sites::affariyet::Affariyet;
@@ -18,29 +17,30 @@ use crate::web_scraper::sites::media_vision::MediaVision;
 use crate::web_scraper::sites::megapc::MegaPC;
 use crate::web_scraper::sites::mytek::Mytek;
 use crate::web_scraper::sites::sbs_informatique::SBSInformatique;
-use crate::web_scraper::sites::scoop::Scoop;
 use crate::web_scraper::sites::scoop_gaming::ScoopGaming;
 use crate::web_scraper::sites::sig_shop::SigShop;
 use crate::web_scraper::sites::skymil_shop::SkyMilShop;
 use crate::web_scraper::sites::spacenet::SpaceNet;
 use crate::web_scraper::sites::tdiscount::TDiscount;
-use crate::web_scraper::sites::technopro::TechnoPro;
+use crate::web_scraper::sites::oxtek::OXTek;
 use crate::web_scraper::sites::techspace::TechSpace;
 use crate::web_scraper::sites::tunewtec::TunewTec;
 use crate::web_scraper::sites::tunisianet::Tunisianet;
 use crate::web_scraper::sites::utils::{extract_basics, extract_prices, validate_url, ElementRefExt};
 use crate::web_scraper::sites::wiki_tn::WikiTN;
 use crate::web_scraper::sites::zstore::ZStore;
-use chrono::Utc;
+use chrono::{DateTime, Utc};
 use once_cell::sync::Lazy;
 use scraper::{ElementRef, Html, Selector};
-use serde::Serialize;
+use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use std::error::Error;
 use std::str::FromStr;
 use std::time::{Duration, Instant};
+use serde_json::Value;
 use tokio::sync::RwLock;
 use tokio::time::sleep;
+use crate::utils::file_loader::FileLoader;
 
 mod utils;
 pub mod tunisianet;
@@ -63,17 +63,17 @@ pub mod affariyet;
 pub mod batam;
 pub mod tunewtec;
 pub mod techspace;
-pub mod technopro;
+pub mod oxtek;
 pub mod bestbuytunisie;
 pub mod tdiscount;
 pub mod zstore;
 pub mod sbs_informatique;
-pub mod scoop;
 pub mod scoop_gaming;
 
 const MAX_RETRIES: i32 = 3;
 
 pub static PAGE_CACHE: Lazy<RwLock<HashMap<String, Vec<Product>>>> = Lazy::new(|| RwLock::new(HashMap::new()));
+pub static DESCRIPTION_CACHE: Lazy<RwLock<HashMap<String, ProductDescription>>> = Lazy::new(|| RwLock::new(HashMap::new()));
 
 //clickup.tn
 //qsnet.tn
@@ -82,14 +82,14 @@ pub static PAGE_CACHE: Lazy<RwLock<HashMap<String, Vec<Product>>>> = Lazy::new(|
 //https://lofficielshop.tn/ ??
 //nexuspc.shop
 //leaderDeal
+//techland
 
 pub static SITES: Lazy<Vec<Box<dyn Site>>> = Lazy::new(|| vec![
     Box::new(Tunisianet), Box::new(SkyMilShop), Box::new(Mytek), Box::new(GamerShop), Box::new(MegaPC),
-    Box::new(SpaceNet), Box::new(ExpertGaming), Box::new(SigShop), Box::new(CarthagoInformatique),
+    Box::new(SpaceNet), Box::new(ExpertGaming), Box::new(SigShop), Box::new(CarthagoInformatique), Box::new(ScoopGaming),
     Box::new(WikiTN), Box::new(MediaVision), Box::new(InfoTec), Box::new(CyberInfo), Box::new(MBMInformatique),
     Box::new(JMB), Box::new(Jumbo), Box::new(Affariyet), Box::new(Batam), Box::new(TunewTec), Box::new(TechSpace),
-    Box::new(TechnoPro), Box::new(BestBuyTunisie), Box::new(TDiscount), Box::new(ZStore), Box::new(SBSInformatique),
-    Box::new(Scoop), Box::new(ScoopGaming),
+    Box::new(OXTek), Box::new(BestBuyTunisie), Box::new(TDiscount), Box::new(ZStore), Box::new(SBSInformatique),
 ]);
 
 pub struct SiteConfig {
@@ -118,8 +118,12 @@ pub trait Site: Send + Sync {
         let mut pages = Vec::new();
 
         // Loading from cache
-        if let Some(products) = PAGE_CACHE.read().await.get(url).cloned() {
+        if let Some(mut products) = PAGE_CACHE.read().await.get(url).cloned() {
             println!("Loaded {} products from cache", products.len());
+            for mut product in products.iter_mut() {
+                product.specs = Value::default();
+                product.name = product.title.clone();
+            }
             all_products.extend(products);
             return (SiteReport {
                 site: self.name().to_string(),
@@ -148,6 +152,7 @@ pub trait Site: Send + Sync {
 
         // Saving to cache
         PAGE_CACHE.write().await.insert(url.to_string(), all_products.clone());
+        FileLoader::save_to_file::<HashMap<String, Vec<Product>>>("pages_cache.json", &*PAGE_CACHE.read().await).await.unwrap();
 
         (SiteReport {
             site: self.name().to_string(),
@@ -191,14 +196,8 @@ pub trait Site: Send + Sync {
                     .collect::<Vec<ScrapeError>>());
 
                 for mut product in parsed_products {
-                    if section.requires_description() && product.description.is_none() {
-                        match self.fetch_description(&product.url).await {
-                            Err(err) if last_retry => errors.push(
-                                create_scrape_error(ScrapeErrorKind::ParseFailed(err), section, self.name(), &url)
-                            ),
-                            Ok(desc) => product.description = Some(desc),
-                            _ => {}
-                        }
+                    if let Err(err) = self.try_fetch_description(&mut product).await && last_retry {
+                        errors.push(create_scrape_error(ScrapeErrorKind::ParseFailed(err), section, self.name(), &url))
                     }
                     products.push(product)
                 }
@@ -251,8 +250,14 @@ pub trait Site: Send + Sync {
         let (title, url, image) = self.parse_basics(element)?;
         let (price, old_price) = extract_prices(element, &config.price_sel, &config.old_price_sel, &config.price_sel_2)?;
         let status = self.parse_status(element)?;
-        let description = match (section.requires_description(), &config.desc_sel) {
-            (true, Some(sel)) => Some(element.select_text(sel, "description")?),
+        let description = match (section.config().requires_description, &config.desc_sel) {
+            (true, Some(sel)) => {
+                let desc = element.select_text(sel, "description")?;
+                match desc.ends_with("..") {
+                    true => None,
+                    false => Some(desc)
+                }
+            },
             _ => None
         };
 
@@ -287,26 +292,65 @@ pub trait Site: Send + Sync {
         let button_text = last_page.get_text();
         Ok(button_text.parse::<i32>().map_err(|err| format!("button text: `{button_text}` ({err})"))?)
     }
+    
+    async fn try_fetch_description(&self, product: &mut Product) -> Result<(), String> {
+        if product.section.config().requires_description && product.description.is_none() {
+            match self.fetch_description(&product.url).await {
+                Err(err) => return Err(err),
+                Ok(desc) => product.description = Some(desc)
+            }
+        }
+        Ok(())
+    }
 
     async fn fetch_description(&self, url: &str) -> Result<String, String> {
-        if let Some(desc) = get_product_description(url).await {
-            return Ok(desc)
+        let cached_item = DESCRIPTION_CACHE.read().await.get(url).cloned();
+        if let Some(cached) = cached_item {
+            let duration = Utc::now().signed_duration_since(cached.timestamp);
+            if duration > chrono::Duration::days(30) {
+                DESCRIPTION_CACHE.write().await.remove(url);
+            } else {
+                return Ok(cached.description.clone());
+            }
         }
 
         let Some(sel) = &self.config().page_desc_sel else {
             return Err("Page Description Selector not found".to_string())
         };
 
-        let page_content = self.fetch(url).await
-            .map_err(|err| format!("Failed to fetch product description: {err}"))?;
+        let mut retries = 0;
+        const MAX_DESC_RETRIES: i32 = 3;
 
-        let desc = {
-            let doc = Html::parse_document(&page_content);
-            doc.select(&sel).next().ok_or("description not found")?.get_text()
-        };
+        loop {
+            retries += 1;
+            let last_retry = retries == MAX_DESC_RETRIES;
 
-        add_product_description(url.to_string(), desc.clone()).await;
-        Ok(desc)
+            let page_content = match self.fetch(url).await {
+                Ok(content) => content,
+                Err(err) if last_retry => return Err(format!("Failed to fetch product description after {} attempts: {}", MAX_DESC_RETRIES, err)),
+                Err(_) => {
+                    sleep(Duration::from_secs(1)).await;
+                    continue;
+                }
+            };
+
+            let desc = if let Some(elem) = Html::parse_document(&page_content).select(&sel).next() {
+                elem.get_text()
+            } else {
+                if last_retry {
+                    return Err("description not found".to_string());
+                }
+                sleep(Duration::from_secs(1)).await;
+                continue;
+            };
+
+            DESCRIPTION_CACHE.write().await.insert(url.to_string(), ProductDescription {
+                description: desc.clone(),
+                timestamp: Utc::now()
+            });
+
+            return Ok(desc);
+        }
     }
 
     async fn fetch(&self, url: &str) -> Result<String, String> {
@@ -331,4 +375,15 @@ fn create_scrape_error(error: ScrapeErrorKind, section: Section, site: &str, url
         url: url.to_string(),
         timestamp: Utc::now()
     }
+}
+
+pub fn get_site_from_str(site: &str) -> Option<&Box<dyn Site>> {
+    SITES.iter().filter(|s| s.name() == site).next()
+}
+
+//TODO: filter old descriptions on load and save the file (to avoid growing in size)
+#[derive(Clone, Deserialize, Serialize)]
+pub struct ProductDescription {
+    pub description: String,
+    pub timestamp: DateTime<Utc>
 }

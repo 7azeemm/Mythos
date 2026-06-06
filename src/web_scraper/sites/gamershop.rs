@@ -20,18 +20,21 @@ static CONFIG: SiteConfig = SiteConfig {
     sections: &[
         (Section::GamingPC, "https://gamershop.tn/203-pc-gamer-tunisie"),
         (Section::GamingLaptop, "https://gamershop.tn/204-pc-portable-gamer"),
+        (Section::Monitor, "https://gamershop.tn/913-ecran"),
+        (Section::Mouse, "https://gamershop.tn/219-souris-gamer"),
+        (Section::Keyboard, "https://gamershop.tn/221-clavier-gamer"),
+        (Section::AccessoriesCombo, "https://gamershop.tn/743-pack-ensemble"),
         (Section::CPU, "https://gamershop.tn/399-processeur-intel"),
         (Section::CPU, "https://gamershop.tn/910-processeur-amd"),
         (Section::GPU, "https://gamershop.tn/397-carte-graphique"),
-        (Section::RAM, "https://gamershop.tn/398-barrette-memoire"),
-        (Section::MotherBoard, "https://gamershop.tn/394-carte-mere-intel"),
-        (Section::MotherBoard, "https://gamershop.tn/911-carte-mere-amd"),
+        (Section::Memory, "https://gamershop.tn/398-barrette-memoire"),
+        (Section::Motherboard, "https://gamershop.tn/394-carte-mere-intel"),
+        (Section::Motherboard, "https://gamershop.tn/911-carte-mere-amd"),
         (Section::Storage, "https://gamershop.tn/395-disque-dur-ssd"),
         (Section::Case, "https://gamershop.tn/393-boitier"),
-        (Section::PSU, "https://gamershop.tn/724-bloc-d-alimentation"),
+        (Section::PowerSupply, "https://gamershop.tn/724-bloc-d-alimentation"),
         (Section::Cooler, "https://gamershop.tn/936-watercooling"),
         (Section::Cooler, "https://gamershop.tn/937-aircooling"),
-        (Section::Monitor, "https://gamershop.tn/913-ecran"),
     ]
 };
 
