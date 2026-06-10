@@ -15,7 +15,7 @@ impl FileLoader {
         Ok(serde_json::from_str(&content).map_err(|e| format!("Failed to load {path}: {e}"))?)
     }
 
-    pub async fn load_or_create<T: DeserializeOwned + Serialize + Default>(
+    pub async fn load_or_default<T: DeserializeOwned + Serialize + Default>(
         path: &str,
     ) -> Result<T, String> {
         match read_to_string(path).await {

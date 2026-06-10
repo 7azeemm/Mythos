@@ -69,18 +69,4 @@ impl IntoResponse for ApiError {
     }
 }
 
-impl From<sqlx::Error> for ApiError {
-    fn from(err: sqlx::Error) -> Self {
-        match err {
-            sqlx::Error::RowNotFound => {
-                ApiError::NotFound("Resource not found".to_string())
-            }
-            _ => {
-                tracing::error!("SQLx error: {:?}", err);
-                ApiError::DatabaseError(err.to_string())
-            }
-        }
-    }
-}
-
 pub type ApiResult<T> = Result<T, ApiError>;

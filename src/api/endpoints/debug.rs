@@ -1,18 +1,19 @@
 use crate::api::error::{ApiError, ApiResult};
-use crate::utils::database::get_db_pool;
+use crate::storage::{ProductStorage, PRODUCT_STORAGE};
 use crate::web_scraper::product::Product;
 use crate::web_scraper::sections::Section;
 use axum::{extract::Path, Json};
+use axum_extra::extract::Query;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use std::str::FromStr;
-use axum_extra::extract::Query;
-use serde_json::Value;
-use sqlx::{Postgres, QueryBuilder};
+use std::time::Instant;
 use strum::IntoEnumIterator;
+use crate::web_scraper::sites::mytek::Mytek;
+use crate::web_scraper::sites::Site;
 
-const PAGE_SIZE: i64 = 60;
-const OTHERS_LABEL: &str = "Others";
+const PAGE_SIZE: usize = 60;
+pub const OTHERS_LABEL: &str = "Others";
 
 #[derive(Serialize, Debug)]
 pub struct ProductListResponse {
@@ -23,13 +24,14 @@ pub struct ProductListResponse {
     pub page: usize,
 }
 
+//FIXME: sites are not sent
 #[derive(Serialize, Debug)]
 pub struct SectionResponse {
     pub filters: Vec<FilterOption>,
     pub render_specs: Vec<String>
 }
 
-#[derive(Serialize, Debug)]
+#[derive(Serialize, Debug, Clone)]
 pub struct FilterOption {
     pub option: String,
     pub values: Vec<String>
@@ -38,7 +40,7 @@ pub struct FilterOption {
 #[derive(Debug, Deserialize, Default)]
 #[serde(default)]
 pub struct PaginationQuery {
-    pub page: Option<i64>,
+    pub page: Option<usize>,
     pub groups: bool,
     pub search: Option<String>,
     pub min_price: Option<i64>,
@@ -53,246 +55,189 @@ pub async fn get_products(
     Path(section): Path<String>,
     Query(params): Query<PaginationQuery>,
 ) -> ApiResult<Json<ProductListResponse>> {
+    let start_time = Instant::now();
+    let section = Section::from_str(&section).map_err(|err| ApiError::InvalidQuery(err))?;
     let page = params.page.unwrap_or(1).max(1);
 
-    let order_direction = match params.sort.as_deref() {
-        Some("price_desc") => "DESC",
-        _ => "ASC",
-    };
+    let mut products = get_filtered_products(section, &params).await;
 
-    // Fetch ALL matching products
-    let mut builder = QueryBuilder::<Postgres>::new(
-        "SELECT * FROM products WHERE 1=1"
-    );
-    apply_filters(&mut builder, &section, &params);
-    builder.push(&format!(" ORDER BY price {}", order_direction));
+    // 2. Sort
+    match params.sort.as_deref() {
+        Some("price_desc") => products.sort_by(|a, b| b.price.cmp(&a.price)),
+        _ => products.sort_by(|a, b| a.price.cmp(&b.price))
+    }
 
-    let all_products: Vec<Product> = builder
-        .build_query_as()
-        .fetch_all(get_db_pool())
-        .await
-        .map_err(|e| ApiError::DatabaseError(format!("Fetch error: {}", e)))?;
+    let total = products.len();
 
-    let total = all_products.len();
+    let response = if !params.groups {
+        let total_pages = (total + PAGE_SIZE - 1) / PAGE_SIZE;
+        let offset = (page - 1) * PAGE_SIZE;
 
-    if !params.groups {
-        let total_pages = ((total as i64 + PAGE_SIZE - 1) / PAGE_SIZE) as usize;
-        let offset = ((page - 1) * PAGE_SIZE) as usize;
-        let products = all_products
+        let products: Vec<Product> = products
             .into_iter()
             .skip(offset)
-            .take(PAGE_SIZE as usize)
+            .take(PAGE_SIZE)
             .collect();
 
-        Ok(Json(ProductListResponse {
+        ProductListResponse {
             products,
             groups: Vec::new(),
-            page: page as usize,
+            page,
             total,
             total_pages,
-        }))
+        }
     } else {
-        // 1. Group products
-        let all_grouped_products = group_products(all_products);
+        let groups = {
+            let mut group_indices: HashMap<String, usize> = HashMap::new();
+            let mut groups: Vec<(String, Vec<Product>)> = Vec::new();
+
+            for product in products {
+                match group_indices.get(&product.name) {
+                    Some(&index) => {
+                        // Group already exists, push product to the existing group
+                        groups[index].1.push(product);
+                    }
+                    None => {
+                        // New group encountered, record its index and push to results
+                        group_indices.insert(product.name.clone(), groups.len());
+                        groups.push((product.name.clone(), vec![product]));
+                    }
+                }
+            }
+
+            groups
+        };
 
         let mut paginated_groups = Vec::new();
-        let mut current_page = 1_usize;
+        let mut current_page = 1;
         let mut current_page_size = 0;
-        let target_page = page as usize;
 
-        for (group_name, group_products) in all_grouped_products {
+        for (group_name, group_products) in groups {
             let group_size = group_products.len();
 
-            // 2. Add to response if we are on the requested page target
-            if current_page == target_page {
+            if current_page == page {
                 paginated_groups.push((group_name, group_products));
             }
 
-            // 3. Accumulate items and move to the next page if `PAGE_SIZE` limit is reached
             current_page_size += group_size;
-            if current_page_size >= PAGE_SIZE as usize {
+
+            if current_page_size >= PAGE_SIZE {
                 current_page += 1;
                 current_page_size = 0;
             }
         }
 
-        // 4. Calculate total pages
-        let total_pages = match current_page_size == 0 && current_page > 1 {
-            true => current_page - 1,
-            false => current_page
+        let total_pages = if current_page_size == 0 && current_page > 1 {
+            current_page - 1
+        } else {
+            current_page
         };
 
-        Ok(Json(ProductListResponse {
+        ProductListResponse {
             products: Vec::new(),
             groups: paginated_groups,
-            page: target_page,
+            page,
             total,
             total_pages,
-        }))
-    }
-}
-
-fn group_products(products: Vec<Product>) -> Vec<(String, Vec<Product>)> {
-    let mut group_indices: HashMap<String, usize> = HashMap::new();
-    let mut grouped_results: Vec<(String, Vec<Product>)> = Vec::new();
-
-    for product in products {
-        match group_indices.get(&product.name) {
-            Some(&index) => {
-                // Group already exists, push product to the existing group
-                grouped_results[index].1.push(product);
-            }
-            None => {
-                // New group encountered, record its index and push to results
-                group_indices.insert(product.name.clone(), grouped_results.len());
-                grouped_results.push((product.name.clone(), vec![product]));
-            }
         }
-    }
+    };
 
-    grouped_results
+    println!("Processed request in {:.2?}", start_time.elapsed());
+
+    Ok(Json(response))
 }
 
-pub async fn get_section(
-    Path(section): Path<String>,
-) -> ApiResult<Json<SectionResponse>> {
+async fn get_filtered_products(section: Section, params: &PaginationQuery) -> Vec<Product> {
+    let specs = params.specs.as_ref()
+        .map(|s| match serde_json::from_str::<HashMap<String, Vec<String>>>(s) {
+            Ok(specs) => Some(specs),
+            Err(err) => {
+                eprintln!("Failed to decode specs `{s}`: {err}");
+                None
+            }
+        }).flatten();
+
+    PRODUCT_STORAGE.read().await.products
+        .iter()
+        .filter_map(|(_, p)| {
+            // section filter
+            if p.section != section {
+                return None;
+            }
+
+            // search filter
+            if let Some(ref search) = params.search {
+                let s = search.to_lowercase();
+                let matches = p.title.to_lowercase().contains(&s)
+                    || p.description.as_ref().unwrap_or(&String::default()).to_lowercase().contains(&s);
+
+                if !matches {
+                    return None;
+                }
+            }
+
+            // site filter
+            if !params.site.is_empty() && !params.site.contains(&p.site.as_str().to_string()) {
+                return None;
+            }
+
+            // stock filter
+            if !params.stock.is_empty() && !params.stock.contains(&p.status.to_string()) {
+                return None;
+            }
+
+            // price filters
+            if let Some(min) = params.min_price {
+                if p.price < min as i32 {
+                    return None;
+                }
+            }
+
+            if let Some(max) = params.max_price {
+                if p.price > max as i32 {
+                    return None;
+                }
+            }
+
+            if let Some(specs) = &specs {
+                let product_specs = &p.specs;
+
+                for (spec_key, spec_vals) in specs {
+                    if spec_vals.is_empty() {
+                        continue;
+                    }
+
+                    let prod_vals = product_specs.get(spec_key).and_then(|v| v.as_str());
+
+                    let ok = spec_vals.iter().any(|v| {
+                        if v == OTHERS_LABEL {
+                            // match missing or empty
+                            prod_vals.map(|val| val.is_empty()).unwrap_or(true)
+                        } else {
+                            // normal match
+                            prod_vals.map(|val| val == v).unwrap_or(false)
+                        }
+                    });
+
+                    if !ok {
+                        return None;
+                    }
+                }
+            }
+
+            Some(p.clone())
+        })
+        .collect()
+}
+
+pub async fn get_section(Path(section): Path<String>) -> ApiResult<Json<SectionResponse>> {
     let section = Section::from_str(&section).map_err(|err| ApiError::InvalidQuery(err))?;
-
-    let mut builder = QueryBuilder::<Postgres>::new(
-        "SELECT * FROM products WHERE 1=1"
-    );
-    builder.push(" AND section = ");
-    builder.push_bind(&section);
-
-    let products: Vec<Product> = builder
-        .build_query_as::<Product>()
-        .fetch_all(get_db_pool())
-        .await
-        .map_err(|e| ApiError::DatabaseError(format!("Failed to fetch filters: {}", e)))?;
-
-    let filters = build_filters(&products, section);
-
     Ok(Json(SectionResponse {
-        filters,
+        filters: ProductStorage::get_filters(section).await,
         render_specs: section.config().render_specs.clone()
     }))
 }
 
 pub async fn get_sections() -> ApiResult<Json<Vec<String>>> {
     Ok(Json(Section::iter().map(|s| s.to_string()).collect::<Vec<String>>()))
-}
-
-fn build_filters(products: &[Product], section: Section) -> Vec<FilterOption> {
-    let filters = &section.config().filters;
-    let mut map = HashMap::new();
-
-    for product in products {
-        for filter in filters {
-            if let Some(value) = product.specs.get(filter).and_then(|o| o.as_str()) {
-                if !value.is_empty() {
-                    map
-                        .entry(filter)
-                        .or_insert_with(std::collections::HashSet::new)
-                        .insert(value.to_string());
-                }
-            }
-        }
-    }
-
-    let mut options = Vec::new();
-    for filter in filters {
-        if let Some(values) = map.get(filter) {
-            let mut values = values.iter().map(|s| s.clone()).collect::<Vec<String>>();
-            values.sort_by(|a, b| {
-                match (a.parse::<f64>(), b.parse::<f64>()) {
-                    (Ok(na), Ok(nb)) => na.partial_cmp(&nb).unwrap_or(std::cmp::Ordering::Equal),
-                    _ => a.cmp(b),
-                }
-            });
-            values.push(OTHERS_LABEL.to_string());
-            options.push(FilterOption {
-                option: filter.clone(),
-                values
-            });
-        }
-    }
-
-    options
-}
-
-fn apply_filters(builder: &mut QueryBuilder<Postgres>, section: &str, params: &PaginationQuery) {
-    builder.push(" AND section = ");
-    builder.push_bind(section);
-
-    if let Some(ref search) = params.search {
-        builder.push(" AND (title ILIKE ");
-        builder.push_bind(format!("%{}%", search));
-        builder.push(" OR name ILIKE ");
-        builder.push_bind(format!("%{}%", search));
-        builder.push(" OR description ILIKE ");
-        builder.push_bind(format!("%{}%", search));
-        builder.push(")");
-    }
-
-    if !params.site.is_empty() {
-        builder.push(" AND site IN (");
-        let mut separated = builder.separated(", ");
-        for site in &params.site {
-            separated.push_bind(site);
-        }
-        builder.push(")");
-    }
-
-    if !params.stock.is_empty() {
-        builder.push(" AND status IN (");
-        let mut separated = builder.separated(", ");
-        for stock in &params.stock {
-            separated.push_bind(stock);
-        }
-        builder.push(")");
-    }
-
-    // Price range filters
-    if let Some(min) = params.min_price {
-        builder.push(" AND price >= ");
-        builder.push_bind(min as i32);
-    }
-
-    if let Some(max) = params.max_price {
-        builder.push(" AND price <= ");
-        builder.push_bind(max as i32);
-    }
-
-    if let Some(specs) = params.specs.clone().and_then(|s| Value::from_str(&s).ok()) {
-        if let Ok(specs) = serde_json::from_value::<HashMap<String, Vec<String>>>(specs) {
-            for (spec_key, spec_vals) in specs {
-                if spec_vals.is_empty() {
-                    continue;
-                }
-
-                builder.push(" AND (");
-
-                for (i, spec_val) in spec_vals.iter().enumerate() {
-                    if i > 0 {
-                        builder.push(" OR ");
-                    }
-
-                    if spec_val == OTHERS_LABEL {
-                        builder.push("(specs IS NULL OR specs->>'");
-                        builder.push(&spec_key);
-                        builder.push("' IS NULL OR specs->>'");
-                        builder.push(&spec_key);
-                        builder.push("' = '')");
-                    } else {
-                        builder.push("specs->>'");
-                        builder.push(&spec_key);
-                        builder.push("' = ");
-                        builder.push_bind(spec_val);
-                    }
-                }
-
-                builder.push(")");
-            }
-        }
-    }
 }

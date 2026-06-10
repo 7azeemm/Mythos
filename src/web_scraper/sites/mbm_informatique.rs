@@ -1,7 +1,7 @@
 use crate::utils::web_client::WebClientType;
 use crate::web_scraper::product::ProductStatus;
 use crate::web_scraper::sections::Section;
-use crate::web_scraper::sites::utils::ElementRefExt;
+use crate::web_scraper::utils::ElementRefExt;
 use crate::web_scraper::sites::{Site, SiteConfig};
 use once_cell::sync::Lazy;
 use scraper::{ElementRef, Html, Selector};

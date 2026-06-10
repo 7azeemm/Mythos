@@ -6,9 +6,6 @@ use crate::web_scraper::parsers::{GenericSectionParser, SectionParser};
 use once_cell::sync::OnceCell;
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
-use sqlx::encode::IsNull;
-use sqlx::error::BoxDynError;
-use sqlx::{Database, Postgres};
 use std::collections::HashMap;
 use std::error::Error;
 use std::path::Path;
@@ -137,14 +134,13 @@ pub struct ChipsetEntry {
 }
 
 impl SectionConfig {
-    pub async fn load() -> Result<(), Box<dyn Error>> {
+    pub async fn load() {
         let mut parsers: HashMap<Section, Arc<dyn SectionParser>> = HashMap::new();
-        let configs = FileLoader::load_or_create::<Vec<SectionConfig>>("config/sections.json").await?;
 
-        for config in configs {
-            let section = Section::from_str(&config.id)?;
+        for config in FileLoader::load_or_default::<Vec<SectionConfig>>("config/sections.json").await.unwrap() {
+            let section = Section::from_str(&config.id).unwrap();
             let config = Arc::new(config);
-            let (dataset, chipsets) = config.load_datasets().await?;
+            let (dataset, chipsets) = config.load_datasets().await.unwrap();
 
             let parser: Arc<dyn SectionParser> = match section {
                 Section::GPU => Arc::new(GPUParser { config, dataset, chipsets }),
@@ -159,8 +155,6 @@ impl SectionConfig {
         }
 
         SECTION_PARSERS.set(parsers).ok();
-
-        Ok(())
     }
 
     async fn load_datasets(&self) -> Result<(Vec<DatasetEntry>, Vec<ChipsetEntry>), String> {
@@ -224,30 +218,5 @@ impl SectionConfig {
         chipset_entries.sort_by(|a, b| b.name.cmp(&a.name));
 
         Ok((dataset_entries, chipset_entries))
-    }
-}
-
-impl sqlx::Type<Postgres> for Section {
-    fn type_info() -> sqlx::postgres::PgTypeInfo {
-        <&str as sqlx::Type<Postgres>>::type_info()
-    }
-}
-
-impl<'q> sqlx::Encode<'q, Postgres> for Section {
-    fn encode_by_ref(&self, buf: &mut <Postgres as Database>::ArgumentBuffer) -> Result<IsNull, BoxDynError> {
-        <&str as sqlx::Encode<'_, Postgres>>::encode_by_ref(&&self.to_string().as_str(), buf)
-    }
-}
-
-impl<'r> sqlx::Decode<'r, Postgres> for Section {
-    fn decode(value: <Postgres as Database>::ValueRef<'r>) -> Result<Self, BoxDynError> {
-        let s = <&str as sqlx::Decode<'r, Postgres>>::decode(value)?;
-        Section::from_str(s).map_err(|e| e.into())
-    }
-}
-
-impl sqlx::postgres::PgHasArrayType for Section {
-    fn array_type_info() -> sqlx::postgres::PgTypeInfo {
-        <&str as sqlx::postgres::PgHasArrayType>::array_type_info()
     }
 }

@@ -26,7 +26,7 @@ use crate::web_scraper::sites::oxtek::OXTek;
 use crate::web_scraper::sites::techspace::TechSpace;
 use crate::web_scraper::sites::tunewtec::TunewTec;
 use crate::web_scraper::sites::tunisianet::Tunisianet;
-use crate::web_scraper::sites::utils::{extract_basics, extract_prices, validate_url, ElementRefExt};
+use crate::web_scraper::utils::{extract_basics, extract_prices, validate_url, ElementRefExt};
 use crate::web_scraper::sites::wiki_tn::WikiTN;
 use crate::web_scraper::sites::zstore::ZStore;
 use chrono::{DateTime, Utc};
@@ -42,7 +42,6 @@ use tokio::sync::RwLock;
 use tokio::time::sleep;
 use crate::utils::file_loader::FileLoader;
 
-mod utils;
 pub mod tunisianet;
 pub mod skymil_shop;
 pub mod mytek;
@@ -119,18 +118,20 @@ pub trait Site: Send + Sync {
 
         // Loading from cache
         if let Some(mut products) = PAGE_CACHE.read().await.get(url).cloned() {
-            println!("Loaded {} products from cache", products.len());
-            for mut product in products.iter_mut() {
-                product.specs = Value::default();
-                product.name = product.title.clone();
+            if !products.is_empty() {
+                println!("Loaded {} products from cache", products.len());
+                for mut product in products.iter_mut() {
+                    product.specs = Value::default();
+                    product.name = product.title.clone();
+                }
+                all_products.extend(products);
+                return (SiteReport {
+                    site: self.name().to_string(),
+                    page_count: pages.len(),
+                    total_products: all_products.len(),
+                    pages: Vec::new()
+                }, all_products)
             }
-            all_products.extend(products);
-            return (SiteReport {
-                site: self.name().to_string(),
-                page_count: pages.len(),
-                total_products: all_products.len(),
-                pages: Vec::new()
-            }, all_products)
         }
 
         let (page_stats, products, page_count) = self.scrape_page(url, 1, section).await;

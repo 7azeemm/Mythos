@@ -1,26 +1,25 @@
+use crate::storage::ProductStorage;
 use crate::utils::file_loader::FileLoader;
 use crate::web_scraper::errors::{CycleReport, KnownEvents, ParseError, ParseErrorKind, SectionReport};
 use crate::web_scraper::parsers::SectionParser;
 use crate::web_scraper::product::Product;
-use crate::web_scraper::sections::{Section, SectionConfig, SECTION_PARSERS};
-use crate::web_scraper::sites::{get_site_from_str, ProductDescription, Site, DESCRIPTION_CACHE, PAGE_CACHE, SITES};
-use crate::web_scraper::updater::ProductUpdater;
+use crate::web_scraper::sections::Section;
+use crate::web_scraper::sites::{ProductDescription, Site, DESCRIPTION_CACHE, PAGE_CACHE, SITES};
 use chrono::Utc;
 use futures::future::join_all;
 use std::collections::{HashMap, HashSet};
 use std::error::Error;
 use std::sync::{Arc, OnceLock};
 use std::time::{Duration, Instant};
-use serde_json::Value;
 use strum::IntoEnumIterator;
 use tokio::sync::Mutex;
 use tokio::time::sleep;
-use crate::web_scraper::sites::megapc::MegaPC;
+use crate::web_scraper::sites::mytek::Mytek;
 
 static PRODUCT_MANAGER: OnceLock<Arc<ProductManager>> = OnceLock::new();
 
 pub struct ProductManager {
-    report: Mutex<CycleReport>,
+    pub report: Mutex<CycleReport>,
     known_events: Mutex<KnownEvents>
 }
 
@@ -31,26 +30,23 @@ impl ProductManager {
 
     pub async fn schedule() {
         tokio::spawn(async move {
-            *PAGE_CACHE.write().await = FileLoader::load_or_create::<HashMap<String, Vec<Product>>>("pages_cache.json").await.unwrap();
-            *DESCRIPTION_CACHE.write().await = FileLoader::load_or_create::<HashMap<String, ProductDescription>>("descriptions.json").await.unwrap();
+            *PAGE_CACHE.write().await = FileLoader::load_or_default::<HashMap<String, Vec<Product>>>("pages_cache.json").await.unwrap();
+            *DESCRIPTION_CACHE.write().await = FileLoader::load_or_default::<HashMap<String, ProductDescription>>("descriptions.json").await.unwrap();
             
-            // {
-            //     let mut page_cache = PAGE_CACHE.write().await;
-            //     let sections = vec![Section::Laptop, Section::GamingLaptop, Section::MacBook, Section::Mouse, Section::Keyboard, Section::AccessoriesCombo];
-            //     let mut urls = Vec::new();
-            //     for (url, products) in page_cache.iter_mut() {
-            //         if products.iter().any(|p| sections.contains(&p.section)) {
-            //             urls.push(url.clone());
-            //         }
-            //     }
-            //     page_cache.retain(|url, _| !urls.contains(url));
-            //     page_cache.retain(|_, products| !products.is_empty());
-            //     FileLoader::save_to_file::<HashMap<String, Vec<Product>>>("pages_cache.json", &page_cache).await.unwrap();
-            //     println!("Done");
-            //     return;
-            // }
+            {
+                let mut page_cache = PAGE_CACHE.write().await;
+                let sections = vec![Section::GamingLaptop];
+                let mut urls = Vec::new();
+                for (url, products) in page_cache.iter_mut() {
+                    if products.iter().any(|p| sections.contains(&p.section)) {
+                        urls.push(url.clone());
+                    }
+                }
+                page_cache.retain(|url, _| !urls.contains(url));
+                page_cache.retain(|_, products| !products.is_empty());
+                FileLoader::save_to_file::<HashMap<String, Vec<Product>>>("pages_cache.json", &page_cache).await.unwrap();
+            }
 
-            SectionConfig::load().await.expect("Failed to load section configs");
             let manager = Arc::new(ProductManager::new().await.expect("Failed to create Product Manager"));
             PRODUCT_MANAGER.set(manager.clone()).map_err(|e| "Failed to set ProductManager".to_string()).unwrap();
 
@@ -88,83 +84,65 @@ impl ProductManager {
     }
 
     async fn run(&self) {
-        // let specific_sites = Some(vec![MegaPC {}.name()]);
-        let sections = vec![Section::Laptop, Section::GamingLaptop];
-        // let sections = Section::list();
         let start_time = Instant::now();
         self.report.lock().await.started_at = Utc::now();
 
-        let products = self.fetch_sites(sections.clone(), &None).await;
-        // let products = self.fetch_sites(sections).await;
+        let sites = &[];
+        let sections = &[Section::Laptop, Section::GamingLaptop, Section::MacBook, Section::Mouse, Section::Keyboard, Section::AccessoriesCombo, Section::Monitor];
+        // let sections = &[Section::Laptop, Section::GamingLaptop];
 
-        let update_start_time = Instant::now();
-        let mut products = {
-            let mut report = self.report.lock().await;
-            ProductUpdater::archive_missing_products(&mut *report, &vec![], &None, &None).await;
-            // ProductUpdater::sync(&mut *report, products).await
-            products
-        };
+        let products = self.fetch_sites(sections, sites).await;
+        let mut products = ProductStorage::update(products, sections, sites).await;
+        self.parse(&mut products).await;
+        ProductStorage::insert(products).await;
 
-        println!("---");
-
-        let parse_start_time = Instant::now();
-
-        for mut product in &mut products {
-            self.parse(&mut product).await;
-        }
-
-        println!("Parsed {} products in {:.2?}", products.len(), parse_start_time.elapsed());
-        println!("---");
+        println!("Update Cycle took {:.2?}", start_time.elapsed());
 
         let mut report = self.report.lock().await;
-        for e in report.parse.iter() {
-            if sections.contains(&e.product.section) {
-                if e.error != ParseErrorKind::NoSectionMatched {
-                    if e.error == ParseErrorKind::NotInDataset {
-                        // println!("NotInDataset: {}", e.product.name);
-                    } else {
-                        // println!("{:#?}", e);
-                    }
-                } else {
-                    // println!("{:#?}", e);
-                }
-            }
+        println!("ADDED:");
+        for added in &report.added_items {
+            println!("{}: {} for {}dt", added.site, added.title, added.price);
         }
 
-        ProductUpdater::insert_products(&mut *report, products).await;
-
-        for error in report.update.errors.iter() {
-            self.known_events.lock().await.update_error(error.clone());
-        }
-        report.update.duration = update_start_time.elapsed();
-
-        report.completed_at = Utc::now();
-        report.duration = start_time.elapsed();
-
-        println!("Done");
+        // for e in report.parse.iter() {
+            // if sections.contains(&e.product.section) {
+            //     if e.error != ParseErrorKind::NoSectionMatched {
+            //         if e.error == ParseErrorKind::NotInDataset {
+            //             // println!("NotInDataset: {}", e.product.name);
+            //         } else {
+            //             // println!("{:#?}", e);
+            //         }
+            //     } else {
+            //         // println!("{:#?}", e);
+            //     }
+            // }
+        // }
+        //
+        // for error in report.update.errors.iter() {
+        //     self.known_events.lock().await.update_error(error.clone());
+        // }
+        // report.update.duration = update_start_time.elapsed();
+        //
+        // report.completed_at = Utc::now();
+        // report.duration = start_time.elapsed();
     }
 
-    async fn fetch_sites(&self, sections: Vec<Section>, specific_sites: &Option<Vec<&'static str>>) -> Vec<Product> {
+    async fn fetch_sites(&self, sections: &[Section], sites: &[&'static str]) -> Vec<Product> {
         let start_time = Instant::now();
         let mut all_products = Vec::new();
 
         // 1. Fetch Sites
         for section in sections {
-            let sites: Vec<_> = SITES.iter().filter(|site|
-                specific_sites.as_ref().map_or(true, |sites_list| sites_list.contains(&site.name()))
-            ).collect();
-
+            let sites: Vec<_> = SITES.iter().filter(|s| sites.is_empty() || sites.contains(&s.name())).collect();
             println!("Started scrapping `{:?}` section from {} sites", section, sites.len());
+
             let start_time = Instant::now();
             let mut tasks = Vec::new();
 
             for site in sites {
-                for (_, url) in site.config().sections.iter().filter(|(s, _)| *s == section) {
-                    if specific_sites.is_some() {
-                        PAGE_CACHE.write().await.remove(*url);
-                    }
+                for (_, url) in site.config().sections.iter().filter(|(s, _)| s == section) {
                     tasks.push(async move {
-                        site.scrape(&url, section).await
+                        site.scrape(&url, *section).await
                     });
                 }
             }
@@ -184,7 +162,7 @@ impl ProductManager {
             }
 
             self.report.lock().await.scrape.push(SectionReport {
-                section,
+                section: *section,
                 total_products,
                 sites,
                 duration: start_time.elapsed()
@@ -195,12 +173,12 @@ impl ProductManager {
         let old_count = all_products.len();
         let mut map: HashMap<String, Product> = HashMap::with_capacity(all_products.len());
         for product in all_products {
-            match map.get_mut(&product.url) {
+            match map.get_mut(&product.id) {
                 Some(existing) => if !product.section.is_low_priority() && existing.section.is_low_priority() {
                     *existing = product;
                 }
                 None => {
-                    map.insert(product.url.clone(), product);
+                    map.insert(product.id.clone(), product);
                 }
             }
         }
@@ -212,7 +190,15 @@ impl ProductManager {
         all_products
     }
 
-    async fn parse(&self, product: &mut Product) {
+    async fn parse(&self, products: &mut Vec<Product>) {
+        let start_time = Instant::now();
+        for mut product in products.iter_mut() {
+            self.parse_product(&mut product).await;
+        }
+        println!("Parsed {} products in {:.2?}", products.len(), start_time.elapsed());
+    }
+
+    async fn parse_product(&self, product: &mut Product) {
         if Section::Trash.parser().matches(&product.title, &product.description, false) {
             product.section = Section::Trash;
             return;
@@ -236,7 +222,6 @@ impl ProductManager {
 
             let parser = section.parser();
             if parser.matches(&product.title, &product.description, false) {
-                // println!("MOVED FROM {} TO {}: {}", product.section, section, product.title);
                 product.section = section;
                 if let Err(err) = parser.parse(product) {
                     self.add_parse_error(err, product.clone()).await;
@@ -244,8 +229,6 @@ impl ProductManager {
                 return;
             }
         }
-
-        // println!("NO MATCH: {}", product.title);
 
         product.section = Section::Trash;
         self.add_parse_error(ParseErrorKind::NoSectionMatched, product.clone()).await;

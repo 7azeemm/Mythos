@@ -1,10 +1,10 @@
 use crate::utils::regex_cache::RegexCache;
-use crate::utils::str_utils::remove_words;
 use crate::web_scraper::parsers::{DatasetEntry, SectionConfig, SectionParser};
 use crate::web_scraper::product::Product;
 use crate::web_scraper::sections::{ChipsetEntry, Section};
 use serde_json::Value;
 use std::sync::Arc;
+use crate::web_scraper::utils::remove_words;
 
 static KNOWN_SIZES: &[i32] = &[
     1, 2, 3, 4, 5, 6, 8, 9, 10, 11, 12, 16, 18, 20, 24, 32, 40, 48, 64, 96, 120, 128, 240, 250, 256, 265, 320,

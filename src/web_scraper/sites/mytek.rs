@@ -1,7 +1,7 @@
 use crate::utils::web_client::WebClientType;
 use crate::web_scraper::product::{Product, ProductStatus};
 use crate::web_scraper::sections::Section;
-use crate::web_scraper::sites::utils::{parse_price, ElementRefExt};
+use crate::web_scraper::utils::{parse_price, ElementRefExt};
 use crate::web_scraper::sites::{Site, SiteConfig};
 use once_cell::sync::Lazy;
 use scraper::{ElementRef, Selector};
@@ -64,9 +64,9 @@ impl Site for Mytek {
         let price = parse_price(&element.select_attr("data-price", "price")?)?;
         let final_price = parse_price(&element.select_attr("data-final-price", "final-price")?)?;
 
-        let old_price = match price == final_price {
-            false => Some(price),
-            true => None,
+        let (price, old_price) = match price == final_price {
+            true => (price, None),
+            false => (final_price, Some(price)),
         };
 
         let image = element.select_attr("data-image", "image")
@@ -81,5 +81,9 @@ impl Site for Mytek {
             self.name(), url, title, section, description, image,
             ProductStatus::from_str(&status)?, price, old_price
         )?)
+    }
+
+    fn format_url(&self, url: &str, page: i32) -> String {
+        format!("{url}?p={page}")
     }
 }

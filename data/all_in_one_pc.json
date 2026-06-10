@@ -1,0 +1,28 @@
+{
+  "3449299769569971724": {
+    "id": "3449299769569971724",
+    "url": "https://sig-shop.tn/produit/pc-de-bureau-all-in-one-apple-imac-m1-8go-256go-ssd-vert/",
+    "name": "Pc de Bureau ALL IN ONE APPLE IMAC M1 8GO 256GO SSD – VERT",
+    "title": "Pc de Bureau ALL IN ONE APPLE IMAC M1 8GO 256GO SSD – VERT",
+    "site": "SigShop",
+    "section": "AllInOnePC",
+    "description": "Écran 24 Retina 4.5K – Processeur: Apple M1 (CPU 8 coeurs / GPU 8 coeurs / Neural Engine 16 coeurs) – Système d’exploitation: Mac OS Big Sur – Mémoire RAM: 8 Go – Disque Dur: 256 Go SSD – Carte graphique: Graphique Intégrée avec Wi-Fi, Bluetooth, 2x USB 3.1 Type C, 2x Thunderbolt 4/USB-C, 1x RJ45, 1 X Casque (Jack 3.5mm Femelle) – Dimensions: 547 x 461 x 147 mm – Couleur: Vert – Garantie: 1 an",
+    "image": "https://sig-shop.tn/wp-content/uploads/2023/03/Pc-de-Bureau-ALL-IN-ONE-APPLE-IMAC-M1-8GO-256GO-SSD-–-VERT-SIGSHOP-300x300.jpg",
+    "status": "InStock",
+    "price": 6089,
+    "old_price": null,
+    "specs": {
+      "resolution": "5K",
+      "display": "5K",
+      "cpu": "Apple M1",
+      "memory_size": "8GB",
+      "memory": "8GB",
+      "storage_size": "256GB",
+      "storage": "256GB SSD"
+    },
+    "history": null,
+    "updated_at": null,
+    "removed_at": null,
+    "added_at": "2026-06-06T15:32:40.032099600Z"
+  }
+}

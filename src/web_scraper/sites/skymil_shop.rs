@@ -1,6 +1,6 @@
 use crate::utils::web_client::WebClientType;
 use crate::web_scraper::sections::Section;
-use crate::web_scraper::sites::utils::{extract_basics, validate_url};
+use crate::web_scraper::utils::{extract_basics, validate_url};
 use crate::web_scraper::sites::{Site, SiteConfig};
 use once_cell::sync::Lazy;
 use scraper::{ElementRef, Selector};

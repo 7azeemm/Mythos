@@ -2,14 +2,15 @@ use crate::web_scraper::sections::Section;
 use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
-use sqlx::encode::IsNull;
-use sqlx::error::BoxDynError;
-use sqlx::{Database, Decode, Encode, FromRow, Postgres, Type};
 use std::fmt::Display;
+use std::hash::{DefaultHasher, Hash, Hasher};
 use std::str::FromStr;
+use crate::web_scraper::sites::mytek::Mytek;
+use crate::web_scraper::sites::Site;
 
-#[derive(Debug, Clone, Serialize, Deserialize, FromRow)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Product {
+    pub id: String,
     pub url: String,
     #[serde(default)]
     pub name: String,
@@ -24,9 +25,7 @@ pub struct Product {
     #[serde(default)]
     pub specs: Value,
     pub history: Value,
-    #[sqlx(default)]
     pub updated_at: Option<DateTime<Utc>>,
-    #[sqlx(default)]
     pub removed_at: Option<DateTime<Utc>>,
     pub added_at: DateTime<Utc>,
 }
@@ -36,7 +35,14 @@ impl Product {
                description: Option<String>, image: String, status: ProductStatus,
                price: i32, old_price: Option<i32>) -> Result<Self, String> {
 
+        let normalized_url = url.trim_end_matches("/").trim_end_matches(".html").to_lowercase();
+        let str = format!("{}:{normalized_url}", site.to_lowercase());
+        let mut hasher = DefaultHasher::new();
+        str.hash(&mut hasher);
+        let id = hasher.finish().to_string();
+        
         Ok(Self {
+            id,
             url,
             name: title.clone(),
             title,
@@ -96,30 +102,5 @@ impl FromStr for ProductStatus {
         }
 
         Err(format!("Unknown Product Status: {}", s))
-    }
-}
-
-impl sqlx::Type<Postgres> for ProductStatus {
-    fn type_info() -> sqlx::postgres::PgTypeInfo {
-        <&str as sqlx::Type<Postgres>>::type_info()
-    }
-}
-
-impl<'q> sqlx::Encode<'q, Postgres> for ProductStatus {
-    fn encode_by_ref(&self, buf: &mut <Postgres as Database>::ArgumentBuffer) -> Result<IsNull, BoxDynError> {
-        <&str as sqlx::Encode<'_, Postgres>>::encode_by_ref(&self.to_string().as_str(), buf)
-    }
-}
-
-impl<'r> sqlx::Decode<'r, Postgres> for ProductStatus {
-    fn decode(value: <Postgres as Database>::ValueRef<'r>) -> Result<Self, BoxDynError> {
-        let s = <String as sqlx::Decode<'r, Postgres>>::decode(value)?;
-        ProductStatus::from_str(&s).map_err(|e| e.into())
-    }
-}
-
-impl sqlx::postgres::PgHasArrayType for ProductStatus {
-    fn array_type_info() -> sqlx::postgres::PgTypeInfo {
-        <&str as sqlx::postgres::PgHasArrayType>::array_type_info()
     }
 }
