@@ -3,6 +3,7 @@ pub mod api;
 pub mod utils;
 pub mod storage;
 
+use std::collections::HashMap;
 use crate::api::server;
 use crate::storage::ProductStorage;
 use crate::utils::logger::setup_logging;
@@ -13,15 +14,32 @@ use dotenv::dotenv;
 use futures::StreamExt;
 use serde::{Deserialize, Serialize};
 use std::error::Error;
+use std::fmt::format;
+use serde_json::Value;
+use crate::utils::file_loader::FileLoader;
+use crate::utils::serde_ext::JsonExt;
 
 #[tokio::main]
 async fn main() {
     unsafe { std::env::set_var("RUST_LOG", "info,playwright_rs=off"); }
-    
+
     println!("Starting...");
     dotenv().ok();
     setup_logging();
     WebClient::init().await;
+
+    // let data = FileLoader::load_csv("config/datasets/GPU-chipsets.csv").await.unwrap();
+    // let mut map = HashMap::new();
+    // for record in data {
+    //     let mut name = record.get_str("name").unwrap().to_string();
+    //     if let Some(memory) = record.get_str("memory_size") {
+    //         if !memory.is_empty() {
+    //             name.push_str(&format!(" {memory}GB"));
+    //         }
+    //     }
+    //     map.insert(name, record);
+    // }
+    // FileLoader::save_to_file("config/datasets/GPU-chipsets.json", &map).await.unwrap();
 
     SectionConfig::load().await;
     ProductStorage::load().await;

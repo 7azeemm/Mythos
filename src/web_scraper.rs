@@ -4,4 +4,5 @@ pub mod sites;
 pub mod parsers;
 pub mod sections;
 pub mod errors;
-mod utils;
+pub mod utils;
+pub mod dataset;

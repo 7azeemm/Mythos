@@ -1,11 +1,11 @@
 use crate::utils::web_client::WebClientType;
 use crate::web_scraper::product::ProductStatus;
 use crate::web_scraper::sections::Section;
-use crate::web_scraper::utils::ElementRefExt;
 use crate::web_scraper::sites::{Site, SiteConfig};
 use once_cell::sync::Lazy;
 use scraper::{ElementRef, Html, Selector};
 use std::error::Error;
+use crate::utils::scraper_ext::ElementRefExt;
 
 const PRODUCTS_PER_PAGE: i32 = 12;
 
@@ -22,24 +22,34 @@ static CONFIG: SiteConfig = SiteConfig {
     status_sel: Some(Lazy::new(|| Selector::parse("div.tvproduct-cart-btn form button").unwrap())),
     desc_sel: Some(Lazy::new(|| Selector::parse("div.tv-product-desc").unwrap())),
     page_desc_sel: Some(Lazy::new(|| Selector::parse("div.tvproduct-page-decs").unwrap())),
+    empty_page_sel: Some(Lazy::new(|| Selector::parse("section.page-not-found").unwrap())),
     sections: &[
+        (Section::PC, "https://www.sbsinformatique.com/pcs-de-bureau-tunisie"),
         (Section::GamingPC, "https://www.sbsinformatique.com/pc-gamer-tunisie"),
         (Section::GamingPC, "https://www.sbsinformatique.com/stations-pro-tunisie"),
-        (Section::PC, "https://www.sbsinformatique.com/pcs-de-bureau-tunisie"),
-        (Section::GamingLaptop, "https://www.sbsinformatique.com/pc-portable-tunisie"),
+        (Section::Laptop, "https://www.sbsinformatique.com/pc-portable-tunisie"),
         (Section::Monitor, "https://www.sbsinformatique.com/moniteurs-tunisie"),
-        (Section::Mouse, "https://www.sbsinformatique.com/souris-gamer-tunisie"),
-        (Section::Keyboard, "https://www.sbsinformatique.com/claviers-gamer-tunisie"),
-        (Section::AccessoriesCombo, "https://www.sbsinformatique.com/packs-gaming-tunisie"),
         (Section::CPU, "https://www.sbsinformatique.com/processeur-tunisie"),
         (Section::GPU, "https://www.sbsinformatique.com/cartes-graphiques-tunisie"),
         (Section::Memory, "https://www.sbsinformatique.com/barrettes-memoires-tunisie"),
-        (Section::Motherboard, "https://www.sbsinformatique.com/carte-mere-tunisie"),
         (Section::Storage, "https://www.sbsinformatique.com/stockage-hdd-ssd-tunisie"),
-        (Section::Case, "https://www.sbsinformatique.com/boitiers-pc-tunisie"),
-        (Section::PowerSupply, "https://www.sbsinformatique.com/alimentations-tunisie"),
+        (Section::Motherboard, "https://www.sbsinformatique.com/carte-mere-tunisie"),
         (Section::Cooler, "https://www.sbsinformatique.com/refroidissement-boitier-tunisie"),
         (Section::Cooler, "https://www.sbsinformatique.com/refroidissement-cpu-tunisie"),
+        (Section::PowerSupply, "https://www.sbsinformatique.com/alimentations-tunisie"),
+        (Section::Case, "https://www.sbsinformatique.com/boitiers-pc-tunisie"),
+        (Section::Mouse, "https://www.sbsinformatique.com/souris-gamer-tunisie"),
+        (Section::Keyboard, "https://www.sbsinformatique.com/claviers-gamer-tunisie"),
+        (Section::MousePad, "https://www.sbsinformatique.com/tapis-gamer-tunisie"),
+        (Section::Headphones, "https://www.sbsinformatique.com/casques-gamer-tunisie"),
+        (Section::Headphones, "https://www.sbsinformatique.com/casque-ecouteur-tunisie"),
+        (Section::GamingChair, "https://www.sbsinformatique.com/chaise-gaming-tunisie"),
+        (Section::AccessoriesCombo, "https://www.sbsinformatique.com/packs-gaming-tunisie"),
+        (Section::Controller, "https://www.sbsinformatique.com/manettes-volants-tunisie"),
+        (Section::Smartphone, "https://www.sbsinformatique.com/smartphone-tunisie"),
+        (Section::Tablet, "https://www.sbsinformatique.com/tablette-tunisie"),
+        (Section::Smartwatch, "https://www.sbsinformatique.com/montre-connectee-tunisie"),
+        (Section::Television, "https://www.sbsinformatique.com/televiseurs-tunisie"),
     ]
 };
 

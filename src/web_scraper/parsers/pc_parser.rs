@@ -1,10 +1,12 @@
 use crate::utils::regex_cache::RegexCache;
-use crate::web_scraper::parsers::{DatasetEntry, SectionConfig, SectionParser};
+use crate::utils::serde_ext::JsonExt;
+use crate::web_scraper::dataset::{Dataset, FilterNode, SearchResult};
+use crate::web_scraper::parsers::monitor_parser::extract_display_specs;
+use crate::web_scraper::parsers::{words_match, SectionConfig, SectionParser};
 use crate::web_scraper::product::Product;
-use crate::web_scraper::sections::{ChipsetEntry, Section};
+use crate::web_scraper::sections::Section;
 use serde_json::Value;
 use std::sync::Arc;
-use crate::web_scraper::utils::remove_words;
 
 static KNOWN_SIZES: &[i32] = &[
     1, 2, 3, 4, 5, 6, 8, 9, 10, 11, 12, 16, 18, 20, 24, 32, 40, 48, 64, 96, 120, 128, 240, 250, 256, 265, 320,
@@ -13,7 +15,7 @@ static KNOWN_SIZES: &[i32] = &[
 
 pub struct PCParser {
     pub config: Arc<SectionConfig>,
-    pub dataset: Vec<DatasetEntry>
+    pub dataset: Dataset
 }
 
 impl SectionParser for PCParser {
@@ -21,27 +23,22 @@ impl SectionParser for PCParser {
         self.config.clone()
     }
 
-    fn dataset(&self) -> &Vec<DatasetEntry> {
+    fn dataset(&self) -> &Dataset {
         &self.dataset
     }
 
-    fn parse_specs(&self, product: &mut Product) {
+    fn parse_specs(&self, product: &mut Product, cleaned_title: &str) {
         let desc = product.description.clone().unwrap_or_default();
-        let text: String = format!("{} | {desc}", product.title).to_uppercase()
-            .replace("GRAPHIQUE", "GRAPHICS")
-            .replace("GRAPHIC ", "GRAPHICS ")
-            .replace("ᵉ", "E")
-            .replace("‑", "-");
-        let text = remove_words(&text, &["™", "®", "(TM)", "–", "PROCESSOR "]);
+        let text: String = format!("{} | {desc}", cleaned_title).to_uppercase();
+        let text = product.section.config().title_cleaner.replace_words(&text, true);
         let text = text.split_whitespace().collect::<Vec<_>>().join(" ");
 
-        let (cpu, cpu_entry) = extract_cpu(&text);
-        let (gpu, gpu_chipset) = extract_gpu(&text, &cpu_entry);
+        let cpu = extract_cpu(&text);
+        let gpu = extract_gpu(self.config.id, &text, &cpu.as_ref().map(|s| s.data.clone()).flatten());
 
-        let gpu_has_memory = gpu_chipset.as_ref()
-            .map(|g| g.data.get("memory_size")
-                .and_then(|s| s.as_str()).map(|s| !s.is_empty()).unwrap_or(false)
-            ).unwrap_or(false);
+        let gpu_has_memory = gpu.as_ref()
+            .map(|s| s.data.get_str("memory_size").map(|s| !s.is_empty()))
+            .flatten().unwrap_or(false);
 
         let mut memory: Option<i32> = None;
         let mut storage: Option<i32> = None;
@@ -54,7 +51,7 @@ impl SectionParser for PCParser {
             .partition(|(size, unit)| unit == "TB" || *size > 128 || (*size == 128 && product.title.contains("+128")));
         title_sizes.sort_by_key(|(size, _)| *size);
 
-        // Find Storage Size in Title (Addictive)
+        // Find Storage Size in Title (Additive)
         for (mut size, unit) in storage_sizes {
             if unit == "TB" {
                 size = size * 1024;
@@ -157,45 +154,43 @@ impl SectionParser for PCParser {
             }
         }
 
-        let specs = &mut product.specs;
-
         // Extract Display
         if vec![Section::Laptop, Section::GamingLaptop, Section::MacBook, Section::AllInOnePC].contains(&product.section) {
-            extract_monitor_specs(&text, specs, product.section != Section::AllInOnePC);
+            extract_display_specs(product, &text, product.section != Section::AllInOnePC);
         }
 
         if let Some(cpu) = cpu {
-            specs["cpu"] = Value::String(cpu);
+            product.filter_ids.insert("cpu".to_string(), cpu.id);
+            product.components.insert("cpu".to_string(), cpu.label);
         }
 
         if let Some(gpu) = gpu {
-            specs["gpu_chipset"] = Value::String(gpu.clone());
-
-            if let Some(gpu_memory) = gpu_memory {
-                let memory = format!("{gpu_memory}GB");
-                specs["gpu"] = Value::String(format!("{gpu} {memory}"));
-                specs["gpu_memory"] = Value::String(memory);
+            product.filter_ids.insert("gpu".to_string(), gpu.id);
+            if let Some(memory) = gpu_memory {
+                let memory = format!("{memory}GB");
+                product.components.insert("gpu".to_string(), format!("{} {memory}", gpu.label));
+                product.filter_ids.insert("gpu_memory".to_string(), memory);
             } else {
-                specs["gpu"] = Value::String(gpu);
+                product.components.insert("gpu".to_string(), gpu.label);
             }
         }
 
         if let Some(memory) = memory {
             let memory_size = format!("{memory}GB");
-            specs["memory_size"] = Value::String(memory_size.clone());
+            product.filter_ids.insert("memory_size".to_string(), memory_size.clone());
 
             let mut found_type = false;
             for memory_type in vec!["DDR3", "DDR4", "DDR5"] {
                 if text.contains(memory_type) {
-                    specs["memory_type"] = Value::String(memory_type.to_string());
-                    specs["memory"] = Value::String(format!("{memory_size} {memory_type}"));
+                    product.filter_ids.insert("memory_type".to_string(), memory_type.to_string());
+                    product.components.insert("memory".to_string(), format!("{memory_size} {memory_type}"));
                     found_type = true;
                     break;
                 }
             }
 
             if !found_type {
-                specs["memory"] = Value::String(memory_size);
+                product.components.insert("memory".to_string(), memory_size);
             }
         }
 
@@ -204,75 +199,88 @@ impl SectionParser for PCParser {
                 true => format!("{:.1}TB", storage as f64 / 1024.0).replace(".0T", "T"),
                 false => format!("{storage}GB")
             };
-            specs["storage_size"] = Value::String(storage_size.clone());
 
-            if text.contains("NVME") {
-                specs["storage"] = Value::String(format!("{storage_size} NVME"));
+            product.filter_ids.insert("storage_size".to_string(), storage_size.clone());
+            product.components.insert("storage".to_string(), if text.contains("NVME") {
+                format!("{storage_size} NVME")
             } else if text.contains("SSD") {
-                specs["storage"] = Value::String(format!("{storage_size} SSD"));
+                format!("{storage_size} SSD")
             } else if text.contains("HDD") {
-                specs["storage"] = Value::String(format!("{storage_size} HDD"));
+                format!("{storage_size} HDD")
             } else {
-                specs["storage"] = Value::String(storage_size);
-            }
-        }
-    }
-
-    fn post_processing(&self, product: &mut Product) {
-        if product.section == Section::GamingLaptop {
-            if product.name != product.title {
-                product.specs["model"] = Value::String(product.name.clone());
-            }
+                storage_size
+            });
         }
     }
 }
 
-fn extract_cpu(text: &str) -> (Option<String>, Option<DatasetEntry>) {
+fn extract_cpu(text: &str) -> Option<SearchResult> {
     let section = Section::CPU;
     let text = section.config().title_cleaner.replace_words(&text, true);
+    let optionals = &["AMD", "Intel", "Core", "Gold", "Silver", "Processor", "Gemini Lake", "Jasper Lake"];
 
-    // Search in Dataset
-    for entry in section.parser().dataset() {
-        if text.contains(&entry.name.to_uppercase()) {
-            return (Some(entry.name.clone()), Some(entry.clone()));
+    let should_skip = |node: &FilterNode| -> bool {
+        // Skip if cpu found is from AMD and product description contains a reference to an intel cpu
+        node.label.contains("AMD") && text.contains("INTEL CORE")
+    };
+
+    // First Search
+    for node in &section.parser().dataset().nodes {
+        if text.contains(&node.label.to_uppercase()) {
+            if !should_skip(&node) && words_match::<String>(&text, &node.label.to_uppercase(), &[], true) {
+                return Some(SearchResult {
+                    id: node.id.clone(),
+                    label: node.label.clone(),
+                    data: node.data.clone()
+                })
+            }
         }
     }
 
-    // Search in Dataset (Cleaning Text)
-    let words_to_remove = &["AMD ", "INTEL ", "CORE ", "GOLD ", "SILVER ", "PROCESSOR ", " GEMINI LAKE", " JASPER LAKE"];
-    let cleaned_text = remove_words(&text, words_to_remove);
-    for entry in section.parser().dataset() {
-        let entry_name = remove_words(&entry.name.to_uppercase(), words_to_remove);
-        if cleaned_text.contains(&entry_name) {
-            return (Some(entry.name.clone()), Some(entry.clone()));
+    // Second Search with optionals and no equal word check
+    for node in &section.parser().dataset().nodes {
+        if !should_skip(&node) && words_match(&text, &node.label.to_uppercase(), optionals, false) {
+            return Some(SearchResult {
+                id: node.id.clone(),
+                label: node.label.clone(),
+                data: node.data.clone()
+            })
         }
     }
 
     // Search for Intel CPUS
     for cpu in vec!["i3", "i5", "i7", "i9", "Ultra 5", "Ultra 7", "Ultra 9", "Core 3", "Core 5", "Core 7", "Core 9"] {
         if RegexCache::matches(&format!("(?i){cpu}"), &text) {
-            let mut cpu = match cpu.contains("Core") {
+            let mut label = match cpu.contains("Core") {
                 true => format!("Intel {cpu}"),
                 false => format!("Intel Core {cpu}")
             };
 
-            if cpu.contains("i") {
+            if label.contains("i") {
                 let generation_pattern = r"(?i)\b([2-9]|1[0-4])\s*(?:th|é|e|è|éme|ème|eme|gén|gen)\s*(?:gen|gén|generation|génération)?\b";
                 if let Some(caps) = RegexCache::captures(&generation_pattern, &text) {
                     if let Some(generation) = caps.get(1).and_then(|v| v.as_str().parse::<i32>().ok()) {
-                        cpu.push_str(&format!(" {generation}th Generation"));
+                        label.push_str(&format!(" {generation}th Generation"));
                     }
                 }
             }
 
-            return (Some(cpu), None);
+            return Some(SearchResult {
+                id: "Others/Intel".to_string(),
+                label,
+                data: None
+            });
         }
     }
 
     // Search for AMD CPUS
     for cpu in vec!["Ryzen 3", "Ryzen 5", "Ryzen 7", "Ryzen 9", "Ryzen"] {
         if RegexCache::matches(&format!("(?i){cpu}"), &text) {
-            return (Some(format!("AMD {cpu}")), None);
+            return Some(SearchResult {
+                id: "Others/AMD".to_string(),
+                label: format!("AMD {cpu}"),
+                data: None
+            })
         }
     }
 
@@ -280,160 +288,112 @@ fn extract_cpu(text: &str) -> (Option<String>, Option<DatasetEntry>) {
     for cpu in vec!["Quad Core", "Quad-Core", "Dual Core", "Dual-Core", "Arm"] {
         if RegexCache::matches(&format!("(?i){cpu}"), &text) {
             let cpu = cpu.replace("-", " ");
-            return if text.contains("INTEL") {
-                (Some(format!("Intel {cpu} Processor")), None)
+            let (id, label) = if text.contains("INTEL") {
+                ("Others/Intel", format!("Intel {cpu} Processor"))
             } else if text.contains("AMD") {
-                (Some(format!("AMD {cpu} Processor")), None)
+                ("Others/AMD", format!("AMD {cpu} Processor"))
             } else {
-                (Some(format!("{cpu} Processor")), None)
+                ("Others/Arm", format!("{cpu} Processor"))
             };
+
+            return Some(SearchResult {
+                id: id.to_string(),
+                label,
+                data: None
+            })
         }
     }
 
-
-    if text.contains("INTEL ") {
-        (Some("Intel Processor".to_string()), None)
-    } else if text.contains("AMD ") {
-        (Some("AMD Processor".to_string()), None)
-    } else {
-        (None, None)
-    }
+    None
 }
 
-fn extract_gpu(text: &str, cpu_entry: &Option<DatasetEntry>) -> (Option<String>, Option<ChipsetEntry>) {
+fn extract_gpu(id: Section, text: &str, cpu_entry: &Option<Value>) -> Option<SearchResult> {
     let section = Section::GPU;
     let text = section.config().title_cleaner.replace_words(&text, true);
-    let mut has_dedicated_gpu = vec!["RTX", "RX", "ARC", "GTX", " GT"].into_iter().any(|w| text.contains(w));
+    let has_dedicated_gpu = vec!["RTX", "RX", "ARC", "GTX", "GT "].into_iter().any(|w| text.contains(w));
+    let optionals = &["GeForce", "Radeon", "Nvidia", "Intel", "Graphics"];
 
-    // Search in Dataset
-    for chipset in section.parser().chipsets() {
-        // Skip IGPU if product has Dedicated GPU
-        if has_dedicated_gpu && chipset.name.contains("Graphics") {
-            continue;
-        }
+    let remove_memory = |text: &str| -> String {
+        text.split_whitespace().filter(|w| !(w.len() <= 4 && w.contains("GB"))).collect::<Vec<_>>().join(" ")
+    };
 
-        if text.contains(&chipset.name.to_uppercase()) {
-            return (Some(chipset.name.clone()), Some(chipset.clone()));
-        }
-    }
+    let should_skip = |node: &FilterNode| -> bool {
+        // Skip if (chips is vendor card) or (chip is IGPU and product has dGPU)
+        node.data.get_bool("vendor_card") == Some(true) || (has_dedicated_gpu && node.label.contains("Graphics"))
+    };
 
-    // Search in Dataset (Cleaning Text)
-    let words_to_remove = &["GEFORCE ", "RADEON ", "NVIDIA ", "INTEL ", " GRAPHICS"];
-    let cleaned_text = remove_words(&text, words_to_remove);
-    for chipset in section.parser().chipsets() {
-        // Skip IGPU if product has Dedicated GPU
-        if has_dedicated_gpu && chipset.name.contains("Graphics") {
-            continue;
-        }
-
-        let chipset_name = remove_words(&chipset.name.to_uppercase(), words_to_remove);
-        if cleaned_text.contains(&chipset_name) {
-            return (Some(chipset.name.clone()), Some(chipset.clone()));
+    // First Search
+    for node in &section.parser().dataset().nodes {
+        if !should_skip(node) && words_match::<String>(&text, &node.label.to_uppercase(), &[], true) {
+            return Some(SearchResult {
+                id: node.id.clone(),
+                label: remove_memory(&node.label),
+                data: node.data.clone(),
+            })
         }
     }
 
-    // Extract IGPU from CPU Entry
-    if let Some(entry) = &cpu_entry {
-        if let Some(iGPU) = entry.data.get("integrated_gpu").and_then(|s| s.as_str()) {
-            if !iGPU.is_empty() {
-                return (Some(iGPU.to_string()), None);
+    // Second Search with optionals and no equal word check
+    for node in &section.parser().dataset().nodes {
+        if !should_skip(node) && words_match(&text, &node.label.to_uppercase(), optionals, false) {
+            return Some(SearchResult {
+                id: node.id.clone(),
+                label: remove_memory(&node.label),
+                data: node.data.clone(),
+            })
+        }
+    }
+
+    if id != Section::GamingLaptop {
+        // Extract IGPU from CPU Entry
+        if let Some(entry) = &cpu_entry {
+            if let Some(iGPU) = entry.get_str("integrated_gpu") {
+                if !iGPU.is_empty() {
+                    let id = if iGPU.contains("UHD ") {
+                        format!("Others/Intel UHD Graphics/{iGPU}")
+                    } else if iGPU.contains("Radeon ") {
+                        format!("Others/AMD/{iGPU}")
+                    } else {
+                        "Others".to_string()
+                    };
+                    return Some(SearchResult {
+                        id,
+                        label: iGPU.to_string(),
+                        data: None
+                    })
+                }
             }
         }
     }
 
-    if text.contains("INTEL ") {
+    // Fallback checks
+    let gpu = if text.contains("INTEL ") {
         if text.contains(" ARC ") {
-            (Some("Intel Arc Graphics".to_string()), None)
+            Some(("Others/Arc", "Intel Arc Graphics"))
         } else if text.contains("UHD GRAPHICS") {
-            (Some("Intel UHD Graphics".to_string()), None)
+            Some(("Others/Intel UHD Graphics/Others", "Intel UHD Graphics"))
         } else if text.contains("HD GRAPHICS") {
-            (Some("Intel HD Graphics".to_string()), None)
+            Some(("Others/Intel HD Graphics/Others", "Intel HD Graphics"))
+        } else if text.contains("GRAPHICS") {
+            Some(("Others/Intel Graphics", "Intel Graphics"))
         } else {
-            (Some("Intel Graphics".to_string()), None)
+            None
         }
-    } else if text.contains("AMD ") || text.contains("RYZEN ") {
-        (Some("AMD Radeon Graphics".to_string()), None)
+    } else if text.contains("AMD RADEON GRAPHICS") {
+        Some(("Others/AMD", "AMD Radeon Graphics"))
     } else {
-        (None, None)
-    }
-}
-
-fn extract_monitor_specs(text: &str, specs: &mut Value, laptop: bool) {
-    let mut specs_list = Vec::new();
-
-    let size_pattern = "(?i)\\b(\\d+(?:[.,]\\d+)?)\\s*(?:″|\"|inch|pouce)";
-    for caps in RegexCache::captures_iter(size_pattern, text) {
-        if let Some(size_str) = caps.get(1).map(|v| v.as_str()) {
-            if let Ok(size) = size_str.replace(",", ".").parse::<f32>() {
-                // filter impossible screen sizes
-                let range = if laptop { 10.0..=18.0 } else { 10.0..=120.0 };
-                if !range.contains(&size) {
-                    continue;
-                }
-
-                let size = format!("{}\"", size_str.replace(".0", ""));
-                specs["display_size"] = Value::String(size.clone());
-                specs_list.push(size);
-                break;
-            }
-        }
-    }
-
-    let resolution_pattern = r"(?i)\b(FULL\s*HD|FHD|QHD|UHD|HD|2K|2[.,]5K|2[.,]8K|3K|4K|5K|WUXGA|WQXGA|WXGA|WQHD)\b";
-    for caps in RegexCache::captures_iter(resolution_pattern, text) {
-        if let Some(mat) = caps.get(0) {
-            let mut resolution = mat.as_str().trim().to_uppercase()
-                .replace(",", ".")
-                .replace("FULL HD", "FHD")
-                .replace("FULLHD", "FHD");
-
-            if resolution == "HD" || resolution == "UHD" {
-                let str = format!("{resolution} GRAPHICS");
-                if text.contains(&format!(" {str}")) {
-                    if let Some(pos) = text.find(&str) {
-                        if pos == mat.start() {
-                            continue
-                        }
-                    }
-                }
-            }
-
-            if text.as_bytes().get(mat.end()) == Some(&b'+') {
-                resolution.push('+');
-            }
-
-            specs["resolution"] = Value::String(resolution.clone());
-            specs_list.push(resolution);
-            break;
-        }
+        None
     };
 
-    let panel_pattern = r"(?i)\b(IPS|OLED)\b";
-    if let Some(caps) = RegexCache::captures(panel_pattern, text) {
-        if let Some(panel) = caps.get(1).and_then(|v| Some(v.as_str().to_string())) {
-            specs["panel_type"] = Value::String(panel.clone());
-            specs_list.push(panel);
-        }
-    };
-
-    let refresh_pattern = r"(?i)\b(\d+)\s*(hz|h z |hertz)\b";
-    let mut refresh_rate: Option<i32> = None;
-    for caps in RegexCache::captures_iter(refresh_pattern, text) {
-        if let Some(rate) = caps.get(1).and_then(|m| m.as_str().parse::<i32>().ok()) {
-            if rate >= 60 {
-                refresh_rate = Some(refresh_rate.map_or(rate, |b| b.max(rate)));
-            }
-        }
-    }
-    if let Some(refresh_rate) = refresh_rate {
-        let refresh_rate = format!("{refresh_rate}Hz");
-        specs["refresh_rate"] = Value::String(refresh_rate.clone());
-        specs_list.push(refresh_rate);
+    if let Some((id, label)) = gpu {
+        return Some(SearchResult {
+            id: id.to_string(),
+            label: label.to_string(),
+            data: None
+        })
     }
 
-    if !specs_list.is_empty() {
-        specs["display"] = Value::String(specs_list.join(" "));
-    }
+    None
 }
 
 fn get_sizes(text: String, title: bool) -> Vec<(i32, String)> {

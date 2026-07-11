@@ -1,6 +1,11 @@
+use crate::api::endpoints::products;
+use crate::api::filters::FilterGroup;
 use crate::utils::file_loader::FileLoader;
+use crate::utils::serde_ext::JsonExt;
+use crate::web_scraper::manager::ProductManager;
 use crate::web_scraper::product::Product;
 use crate::web_scraper::sections::Section;
+use crate::web_scraper::sites::Site;
 use chrono::Utc;
 use once_cell::sync::Lazy;
 use serde::Serialize;
@@ -10,16 +15,13 @@ use std::collections::HashSet;
 use std::time::Instant;
 use strum::IntoEnumIterator;
 use tokio::sync::RwLock;
-use crate::api::endpoints::debug;
-use crate::api::endpoints::debug::FilterOption;
-use crate::web_scraper::manager::ProductManager;
 
 pub static PRODUCT_STORAGE: Lazy<RwLock<ProductStorage>> = Lazy::new(|| RwLock::new(ProductStorage::default()));
 
 #[derive(Default)]
 pub struct ProductStorage {
     pub products: HashMap<String, Product>,
-    pub filters: HashMap<Section, Vec<FilterOption>>,
+    pub sites: HashMap<Section, Vec<String>>,
     pub removed_products: Vec<Product>
 }
 
@@ -30,10 +32,10 @@ impl ProductStorage {
         for section in Section::iter() {
             let section_id = section.to_string();
             let path = format!("data/{section_id}.json");
-            match FileLoader::load_or_default::<HashMap<String, Product>>(&path).await {
-                Ok(data) => storage.products.extend(data),
-                Err(err) => eprintln!("Failed to save `{section_id}` products: {err}")
-            }
+            // match FileLoader::load_or_default::<HashMap<String, Product>>(&path).await {
+            //     Ok(data) => storage.products.extend(data),
+            //     Err(err) => eprintln!("Failed to save `{section_id}` products: {err}")
+            // }
         }
         println!("Loaded Products in {:.2?}", start_time.elapsed());
     }
@@ -69,18 +71,14 @@ impl ProductStorage {
 
         let sections = Self::save().await;
         for section in sections {
-            Self::builder_filter(section).await;
+            Self::builder_cache(section).await;
         }
     }
 
-    pub async fn get_product(id: String) -> Option<Product> {
-        PRODUCT_STORAGE.read().await.products.get(&id).cloned()
+    pub async fn get_sites(section: Section) -> Vec<String> {
+        PRODUCT_STORAGE.read().await.sites.get(&section).cloned().unwrap_or_default()
     }
-
-    pub async fn get_filters(section: Section) -> Vec<FilterOption> {
-        PRODUCT_STORAGE.read().await.filters.get(&section).cloned().unwrap_or_default()
-    }
-
+    
     pub async fn update(products: Vec<Product>, sections: &[Section], sites: &[&'static str]) -> Vec<Product> {
         let start_time = Instant::now();
         let now = Utc::now();
@@ -173,40 +171,43 @@ impl ProductStorage {
         added_products
     }
 
-    async fn builder_filter(section: Section) {
-        let filters = &section.config().filters;
-        let mut map = HashMap::new();
+    async fn builder_cache(section: Section) {
+        // let filters = &section.config().filters;
+        let mut sites = HashSet::new();
+        // let mut map = HashMap::new();
 
         for product in PRODUCT_STORAGE.read().await.products.values().filter(|p| section == p.section) {
-            for filter in filters {
-                if let Some(value) = product.specs.get(filter).and_then(|o| o.as_str()) {
-                    if !value.is_empty() {
-                        map.entry(filter)
-                            .or_insert_with(HashSet::new)
-                            .insert(value.to_string());
-                    }
-                }
-            }
+            sites.insert(product.site.clone());
+            // for filter in filters {
+            //     if let Some(value) = product.specs.get_str(filter) {
+            //         if !value.is_empty() {
+            //             map.entry(filter)
+            //                 .or_insert_with(HashSet::new)
+            //                 .insert(value.to_string());
+            //         }
+            //     }
+            // }
         }
 
-        let mut list = Vec::new();
-        for filter in filters {
-            if let Some(values) = map.get(filter) {
-                let mut values = values.iter().map(|s| s.clone()).collect::<Vec<String>>();
-                values.sort_by(|a, b| {
-                    match (a.parse::<f64>(), b.parse::<f64>()) {
-                        (Ok(na), Ok(nb)) => na.partial_cmp(&nb).unwrap_or(std::cmp::Ordering::Equal),
-                        _ => a.cmp(b),
-                    }
-                });
-                values.push(debug::OTHERS_LABEL.to_string());
-                list.push(FilterOption {
-                    option: filter.clone(),
-                    values
-                });
-            }
-        }
+        // let mut list = Vec::new();
+        // for filter in filters {
+        //     if let Some(values) = map.get(filter) {
+        //         let mut values = values.iter().map(|s| s.clone()).collect::<Vec<String>>();
+        //         values.sort_by(|a, b| {
+        //             match (a.parse::<f64>(), b.parse::<f64>()) {
+        //                 (Ok(na), Ok(nb)) => na.partial_cmp(&nb).unwrap_or(std::cmp::Ordering::Equal),
+        //                 _ => a.cmp(b),
+        //             }
+        //         });
+        //         values.push(products::OTHERS_LABEL.to_string());
+        //         list.push(FilterOption {
+        //             option: filter.clone(),
+        //             values
+        //         });
+        //     }
+        // }
 
-        PRODUCT_STORAGE.write().await.filters.insert(section, list);
+        // PRODUCT_STORAGE.write().await.filters.insert(section, list);
+        PRODUCT_STORAGE.write().await.sites.insert(section, sites.into_iter().collect());
     }
 }

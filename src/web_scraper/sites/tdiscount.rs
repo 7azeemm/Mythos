@@ -17,17 +17,23 @@ static CONFIG: SiteConfig = SiteConfig {
     status_sel: None,
     desc_sel: Some(Lazy::new(|| Selector::parse("div.woocommerce-product-details__short-description").unwrap())),
     page_desc_sel: Some(Lazy::new(|| Selector::parse("div.woocommerce-product-details__short-description").unwrap())),
+    empty_page_sel: None,
     sections: &[
         (Section::PC, "https://tdiscount.tn/categorie-produit/informatique/ordinateur-de-bureau/"),
         (Section::Laptop, "https://tdiscount.tn/categorie-produit/informatique/pc-portable/"),
         (Section::GamingLaptop, "https://tdiscount.tn/categorie-produit/gaming/pc-gamer/"),
         (Section::GamingLaptop, "https://tdiscount.tn/categorie-produit/gaming/pc-portable-gamer/"),
         (Section::Monitor, "https://tdiscount.tn/categorie-produit/informatique/ecran-pc/"),
+        (Section::GPU, "https://tdiscount.tn/categorie-produit/gaming/composant-pc-gamer/"),
+        (Section::Memory, "https://tdiscount.tn/categorie-produit/informatique/composants-informatique/"),
+        (Section::Storage, "https://tdiscount.tn/categorie-produit/informatique/stockage/"),
         (Section::Mouse, "https://tdiscount.tn/categorie-produit/informatique/accessoires-informatique/"),
         (Section::Mouse, "https://tdiscount.tn/categorie-produit/gaming/accessoires-pc-gamer/"),
-        (Section::Memory, "https://tdiscount.tn/categorie-produit/informatique/composants-informatique/"),
-        (Section::GPU, "https://tdiscount.tn/categorie-produit/gaming/composant-pc-gamer/"),
-        (Section::Storage, "https://tdiscount.tn/categorie-produit/informatique/stockage/"),
+        (Section::Controller, "https://tdiscount.tn/categorie-produit/gaming/jeu-video-console/"),
+        (Section::Smartphone, "https://tdiscount.tn/categorie-produit/telephonie-tablette/smartphone-tunisie/"),
+        (Section::Tablet, "https://tdiscount.tn/categorie-produit/telephonie-tablette/tablette/"),
+        (Section::Smartwatch, "https://tdiscount.tn/categorie-produit/telephonie-tablette/montre-connectee/"),
+        (Section::Television, "https://tdiscount.tn/categorie-produit/tv-image-son/televiseur/")
     ]
 };
 

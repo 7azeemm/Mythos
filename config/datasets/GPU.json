@@ -1,0 +1,3051 @@
+{
+  "optionals": ["GeForce", "Radeon", "Dual", "GAMING", "OC"],
+  "Arc": {
+    "Arc 130T": [
+      {
+        "name": "Arc 130T"
+      }
+    ],
+    "Arc 130V": [
+      {
+        "name": "Arc 130V"
+      }
+    ],
+    "Arc 140T": [
+      {
+        "name": "Arc 140T"
+      }
+    ],
+    "Arc 140V": [
+      {
+        "name": "Arc 140V"
+      }
+    ],
+    "Arc A370M": [
+      {
+        "name": "Arc A370M 4GB",
+        "memory_size": "4"
+      }
+    ],
+    "Arc B570": [
+      {
+        "name": "ASRock Arc B570 10GB Challenger"
+      },
+      {
+        "name": "Arc B570 10GB",
+        "memory_size": "10",
+        "transistors": "19.6",
+        "bus_interface": "PCIe 4.0 x8",
+        "base_clock": "2500",
+        "boost_clock": "2500",
+        "memory_type": "GDDR6",
+        "memory_bus": "160",
+        "memory_bandwidth": "380",
+        "cores": "2304",
+        "tensor_cores": "144",
+        "rt_cores": "18",
+        "t_flops": "11.250",
+        "tdp": "150"
+      }
+    ],
+    "Arc B580": [
+      {
+        "name": "ASRock Arc B580 12GB Steel Legend"
+      },
+      {
+        "name": "Arc B580 12GB",
+        "memory_size": "12",
+        "transistors": "19.6",
+        "bus_interface": "PCIe 4.0 x8",
+        "base_clock": "2670",
+        "boost_clock": "2670",
+        "memory_type": "GDDR6",
+        "memory_bus": "192",
+        "memory_bandwidth": "456",
+        "cores": "2560",
+        "tensor_cores": "160",
+        "rt_cores": "20",
+        "t_flops": "13.670",
+        "tdp": "190"
+      }
+    ]
+  },
+  "GT ": {
+    "GeForce GT 1030": [
+      {
+        "name": "MSI GeForce GT 1030 2GB OC"
+      },
+      {
+        "name": "PNY GeForce GT 1030 2GB"
+      },
+      {
+        "name": "GeForce GT 1030 2GB",
+        "memory_size": "2",
+        "transistors": "1.8",
+        "bus_interface": "PCIe 3.0 x4",
+        "base_clock": "1228",
+        "boost_clock": "1468",
+        "memory_type": "GDDR5",
+        "memory_bus": "64",
+        "memory_bandwidth": "48.06",
+        "cores": "384",
+        "tensor_cores": "0",
+        "rt_cores": "0",
+        "t_flops": "1.127",
+        "tdp": "30"
+      }
+    ],
+    "GeForce GT 610": [
+      {
+        "name": "AXLE GeForce GT 610 2GB"
+      },
+      {
+        "name": "Arktek GeForce GT 610 2GB"
+      },
+      {
+        "name": "XStorm GeForce GT 610 2GB"
+      },
+      {
+        "name": "GeForce GT 610 2GB",
+        "memory_size": "2",
+        "transistors": "0.6",
+        "bus_interface": "PCIe 2.0 x16",
+        "base_clock": "701",
+        "memory_type": "DDR3",
+        "memory_bus": "64",
+        "memory_bandwidth": "8",
+        "cores": "48",
+        "tensor_cores": "0",
+        "rt_cores": "0",
+        "t_flops": "0.134",
+        "tdp": "29"
+      },
+      {
+        "name": "GeForce GT 610 1GB",
+        "memory_size": "1",
+        "transistors": "0.3",
+        "bus_interface": "PCIe 2.0 x16",
+        "base_clock": "810",
+        "memory_type": "DDR3",
+        "memory_bus": "64",
+        "memory_bandwidth": "14",
+        "cores": "48",
+        "tensor_cores": "0",
+        "rt_cores": "0",
+        "t_flops": "0.155",
+        "tdp": "29"
+      }
+    ],
+    "GeForce GT 630": [
+      {
+        "name": "GeForce GT 630 2GB",
+        "memory_size": "2",
+        "transistors": "1.0",
+        "bus_interface": "PCIe 2.0 x8",
+        "base_clock": "902",
+        "memory_type": "DDR3",
+        "memory_bus": "64",
+        "memory_bandwidth": "14.4",
+        "cores": "384",
+        "tensor_cores": "0",
+        "rt_cores": "0",
+        "t_flops": "0.692",
+        "tdp": "25"
+      },
+      {
+        "name": "GeForce GT 630 1GB",
+        "memory_size": "1",
+        "transistors": "0.6",
+        "bus_interface": "PCIe 2.0 x16",
+        "base_clock": "810",
+        "memory_type": "DDR3",
+        "memory_bus": "128",
+        "memory_bandwidth": "28.8",
+        "cores": "96",
+        "tensor_cores": "0",
+        "rt_cores": "0",
+        "t_flops": "0.311",
+        "tdp": "65"
+      }
+    ],
+    "GeForce GT 710": [
+      {
+        "name": "Gigabyte GeForce GT 710 2GB"
+      },
+      {
+        "name": "MSI GeForce GT 710 2GB"
+      },
+      {
+        "name": "Palit GeForce GT 710 2GB"
+      },
+      {
+        "name": "GeForce GT 710 2GB",
+        "memory_size": "2",
+        "transistors": "1.0",
+        "bus_interface": "PCIe 2.0 x8",
+        "base_clock": "954",
+        "memory_type": "DDR3",
+        "memory_bus": "64",
+        "memory_bandwidth": "14.4",
+        "cores": "192",
+        "tensor_cores": "0",
+        "rt_cores": "0",
+        "t_flops": "0.366",
+        "tdp": "19"
+      }
+    ],
+    "GeForce GT 730": [
+      {
+        "name": "AXLE GeForce GT 730 4GB"
+      },
+      {
+        "name": "Arktek GeForce GT 730 2GB"
+      },
+      {
+        "name": "Arktek GeForce GT 730 4GB"
+      },
+      {
+        "name": "MSI GeForce GT 730 4GB"
+      },
+      {
+        "name": "WINNFOX GeForce GT 730 4GB"
+      },
+      {
+        "name": "GeForce GT 730 2GB",
+        "memory_size": "2",
+        "transistors": "0.6",
+        "bus_interface": "PCIe 2.0 x16",
+        "base_clock": "700",
+        "memory_type": "DDR3",
+        "memory_bus": "128",
+        "memory_bandwidth": "25.6",
+        "cores": "96",
+        "tensor_cores": "0",
+        "rt_cores": "0",
+        "t_flops": "0.268",
+        "tdp": "49"
+      },
+      {
+        "name": "GeForce GT 730 4GB",
+        "memory_size": "4",
+        "transistors": "0.6",
+        "bus_interface": "PCIe 2.0 x16",
+        "base_clock": "700",
+        "memory_type": "DDR3",
+        "memory_bus": "128",
+        "memory_bandwidth": "17",
+        "cores": "96",
+        "tensor_cores": "0",
+        "rt_cores": "0",
+        "t_flops": "0.268",
+        "tdp": "49"
+      }
+    ]
+  },
+  "GTX": {
+    "GeForce GTX 1050": [
+      {
+        "name": "ASUS ROG Strix GeForce GTX 1050 2GB GAMING OC"
+      },
+      {
+        "name": "GeForce GTX 1050 2GB",
+        "memory_size": "2",
+        "transistors": "3.3",
+        "bus_interface": "PCIe 3.0 x16",
+        "base_clock": "1354",
+        "boost_clock": "1455",
+        "memory_type": "GDDR5",
+        "memory_bus": "128",
+        "memory_bandwidth": "112.1",
+        "cores": "640",
+        "tensor_cores": "0",
+        "rt_cores": "0",
+        "t_flops": "1.862",
+        "tdp": "75"
+      }
+    ],
+    "GeForce GTX 1050 Ti": [
+      {
+        "name": "ASUS ROG Strix GeForce GTX 1050 Ti 4GB GAMING OC"
+      },
+      {
+        "name": "GeForce GTX 1050 Ti 4GB",
+        "memory_size": "4",
+        "transistors": "3.3",
+        "bus_interface": "PCIe 3.0 x16",
+        "base_clock": "1291",
+        "boost_clock": "1392",
+        "memory_type": "GDDR5",
+        "memory_bus": "128",
+        "memory_bandwidth": "112.1",
+        "cores": "768",
+        "tensor_cores": "0",
+        "rt_cores": "0",
+        "t_flops": "2.138",
+        "tdp": "75"
+      }
+    ],
+    "GeForce GTX 1060": [
+      {
+        "name": "EVGA GeForce GTX 1060 3GB GAMING"
+      },
+      {
+        "name": "GeForce GTX 1060 3GB",
+        "memory_size": "3",
+        "transistors": "4.4",
+        "bus_interface": "PCIe 3.0 x16",
+        "base_clock": "1506",
+        "boost_clock": "1708",
+        "memory_type": "GDDR5",
+        "memory_bus": "192",
+        "memory_bandwidth": "192.2",
+        "cores": "1152",
+        "tensor_cores": "0",
+        "rt_cores": "0",
+        "t_flops": "3.945",
+        "tdp": "120"
+      }
+    ],
+    "GeForce GTX 1070": [
+      {
+        "name": "ASUS Turbo GeForce GTX 1070 8GB"
+      },
+      {
+        "name": "GeForce GTX 1070 8GB",
+        "memory_size": "8",
+        "transistors": "7.2",
+        "bus_interface": "PCIe 3.0 x16",
+        "base_clock": "1506",
+        "boost_clock": "1683",
+        "memory_type": "GDDR5",
+        "memory_bus": "256",
+        "memory_bandwidth": "256.3",
+        "cores": "1920",
+        "tensor_cores": "0",
+        "rt_cores": "0",
+        "t_flops": "6.463",
+        "tdp": "150"
+      }
+    ],
+    "GeForce GTX 1070 Ti": [
+      {
+        "name": "ASUS Turbo GeForce GTX 1070 Ti 8GB"
+      },
+      {
+        "name": "GeForce GTX 1070 Ti 8GB",
+        "memory_size": "8",
+        "transistors": "7.2",
+        "bus_interface": "PCIe 3.0 x16",
+        "base_clock": "1506",
+        "boost_clock": "1683",
+        "memory_type": "GDDR5",
+        "memory_bus": "256",
+        "memory_bandwidth": "256.3",
+        "cores": "2432",
+        "tensor_cores": "0",
+        "rt_cores": "0",
+        "t_flops": "8.186",
+        "tdp": "180"
+      }
+    ],
+    "GeForce GTX 1080": [
+      {
+        "name": "GeForce GTX 1080 8GB",
+        "memory_size": "8",
+        "transistors": "7.2",
+        "bus_interface": "PCIe 3.0 x16",
+        "base_clock": "1607",
+        "boost_clock": "1733",
+        "memory_type": "GDDR5X",
+        "memory_bus": "256",
+        "memory_bandwidth": "320.3",
+        "cores": "2560",
+        "tensor_cores": "0",
+        "rt_cores": "0",
+        "t_flops": "8.873",
+        "tdp": "180"
+      }
+    ],
+    "GeForce GTX 1080 Ti": [
+      {
+        "name": "GeForce GTX 1080 Ti 11GB",
+        "memory_size": "11",
+        "transistors": "11.8",
+        "bus_interface": "PCIe 3.0 x16",
+        "base_clock": "1481",
+        "boost_clock": "1582",
+        "memory_type": "GDDR5X",
+        "memory_bus": "352",
+        "memory_bandwidth": "484.4",
+        "cores": "3584",
+        "tensor_cores": "0",
+        "rt_cores": "0",
+        "t_flops": "11.340",
+        "tdp": "250"
+      }
+    ],
+    "GeForce GTX 1650": [
+      {
+        "name": "Gigabyte GeForce GTX 1650 4GB ITX OC"
+      },
+      {
+        "name": "MSI GeForce GTX 1650 4GB VENTUS XS"
+      },
+      {
+        "name": "PNY GeForce GTX 1650 4GB"
+      },
+      {
+        "name": "PNY GeForce GTX 1650 4GB OC"
+      },
+      {
+        "name": "ZOTAC GAMING GeForce GTX 1650 4GB"
+      },
+      {
+        "name": "GeForce GTX 1650 4GB",
+        "memory_size": "4",
+        "transistors": "4.7",
+        "bus_interface": "PCIe 3.0 x16",
+        "base_clock": "1410",
+        "boost_clock": "1590",
+        "memory_type": "GDDR6",
+        "memory_bus": "128",
+        "memory_bandwidth": "192",
+        "cores": "896",
+        "tensor_cores": "0",
+        "rt_cores": "0",
+        "t_flops": "2.849",
+        "tdp": "75"
+      }
+    ],
+    "GeForce GTX 1660": [
+      {
+        "name": "Gigabyte GeForce GTX 1660 6GB OC"
+      },
+      {
+        "name": "GeForce GTX 1660 6GB",
+        "memory_size": "6",
+        "transistors": "6.6",
+        "bus_interface": "PCIe 3.0 x16",
+        "base_clock": "1530",
+        "boost_clock": "1785",
+        "memory_type": "GDDR5",
+        "memory_bus": "192",
+        "memory_bandwidth": "192.1",
+        "cores": "1408",
+        "tensor_cores": "0",
+        "rt_cores": "0",
+        "t_flops": "5.027",
+        "tdp": "120"
+      }
+    ],
+    "GeForce GTX 1660 SUPER": [
+      {
+        "name": "ASUS TUF Gaming GeForce GTX 1660 SUPER 6GB"
+      },
+      {
+        "name": "Gigabyte GeForce GTX 1660 SUPER 6GB OC"
+      },
+      {
+        "name": "GeForce GTX 1660 SUPER 6GB",
+        "memory_size": "6",
+        "transistors": "6.6",
+        "bus_interface": "PCIe 3.0 x16",
+        "base_clock": "1530",
+        "boost_clock": "1785",
+        "memory_type": "GDDR6",
+        "memory_bus": "192",
+        "memory_bandwidth": "336",
+        "cores": "1408",
+        "tensor_cores": "0",
+        "rt_cores": "0",
+        "t_flops": "5.027",
+        "tdp": "125"
+      }
+    ],
+    "GeForce GTX 1660 Ti": [
+      {
+        "name": "Arktek GeForce GTX 1660 Ti 6GB"
+      },
+      {
+        "name": "Gigabyte GeForce GTX 1660 Ti 6GB OC"
+      },
+      {
+        "name": "GeForce GTX 1660 Ti 6GB",
+        "memory_size": "6",
+        "transistors": "6.6",
+        "bus_interface": "PCIe 3.0 x16",
+        "base_clock": "1500",
+        "boost_clock": "1770",
+        "memory_type": "GDDR6",
+        "memory_bus": "192",
+        "memory_bandwidth": "288",
+        "cores": "1536",
+        "tensor_cores": "0",
+        "rt_cores": "0",
+        "t_flops": "5.437",
+        "tdp": "120"
+      }
+    ],
+    "GeForce GTX 750 Ti": [
+      {
+        "name": "GeForce GTX 750 Ti 2GB",
+        "memory_size": "2",
+        "transistors": "1.8",
+        "bus_interface": "PCIe 3.0 x16",
+        "base_clock": "1020",
+        "boost_clock": "1085",
+        "memory_type": "GDDR5",
+        "memory_bus": "128",
+        "memory_bandwidth": "86",
+        "cores": "640",
+        "tensor_cores": "0",
+        "rt_cores": "0",
+        "t_flops": "1.388",
+        "tdp": "60"
+      }
+    ],
+    "GeForce GTX 950": [
+      {
+        "name": "GeForce GTX 950 2GB",
+        "memory_size": "2",
+        "transistors": "2.9",
+        "bus_interface": "PCIe 3.0 x16",
+        "base_clock": "1024",
+        "boost_clock": "1188",
+        "memory_type": "GDDR5",
+        "memory_bus": "128",
+        "memory_bandwidth": "105.8",
+        "cores": "768",
+        "tensor_cores": "0",
+        "rt_cores": "0",
+        "t_flops": "1.825",
+        "tdp": "90"
+      }
+    ]
+  },
+  "RTX": {
+    "GeForce RTX 2050": [
+      {
+        "name": "GeForce RTX 2050 4GB",
+        "memory_size": "4",
+        "transistors": "8.7",
+        "bus_interface": "PCIe 3.0 x8",
+        "base_clock": "735",
+        "boost_clock": "1245",
+        "memory_type": "GDDR6",
+        "memory_bus": "64",
+        "memory_bandwidth": "112",
+        "cores": "2048",
+        "tensor_cores": "64",
+        "rt_cores": "32",
+        "t_flops": "5.100",
+        "tdp": "30"
+      }
+    ],
+    "GeForce RTX 2060": [
+      {
+        "name": "PNY GeForce RTX 2060 12GB"
+      },
+      {
+        "name": "PNY GeForce RTX 2060 12GB REVEL Dual Fan"
+      },
+      {
+        "name": "ZOTAC GAMING GeForce RTX 2060 6GB"
+      },
+      {
+        "name": "GeForce RTX 2060 12GB",
+        "memory_size": "12",
+        "transistors": "10.8",
+        "bus_interface": "PCIe 3.0 x16",
+        "base_clock": "1470",
+        "boost_clock": "1650",
+        "memory_type": "GDDR6",
+        "memory_bus": "192",
+        "memory_bandwidth": "336",
+        "cores": "2176",
+        "tensor_cores": "272",
+        "rt_cores": "34",
+        "t_flops": "7.181",
+        "tdp": "184"
+      },
+      {
+        "name": "GeForce RTX 2060 6GB",
+        "memory_size": "6",
+        "transistors": "10.8",
+        "bus_interface": "PCIe 3.0 x16",
+        "base_clock": "1365",
+        "boost_clock": "1680",
+        "memory_type": "GDDR6",
+        "memory_bus": "192",
+        "memory_bandwidth": "336",
+        "cores": "1920",
+        "tensor_cores": "240",
+        "rt_cores": "30",
+        "t_flops": "6.451",
+        "tdp": "160"
+      }
+    ],
+    "GeForce RTX 2060 SUPER": [
+      {
+        "name": "ASUS ROG Strix GeForce RTX 2060 SUPER 8GB EVO GAMING"
+      },
+      {
+        "name": "Gigabyte GeForce RTX 2060 SUPER 8GB WINDFORCE OC"
+      },
+      {
+        "name": "GeForce RTX 2060 SUPER 8GB",
+        "memory_size": "8",
+        "transistors": "10.8",
+        "bus_interface": "PCIe 3.0 x16",
+        "base_clock": "1470",
+        "boost_clock": "1650",
+        "memory_type": "GDDR6",
+        "memory_bus": "256",
+        "memory_bandwidth": "448",
+        "cores": "2176",
+        "tensor_cores": "272",
+        "rt_cores": "34",
+        "t_flops": "7.181",
+        "tdp": "175"
+      }
+    ],
+    "GeForce RTX 2070": [
+      {
+        "name": "GeForce RTX 2070 8GB",
+        "memory_size": "8",
+        "transistors": "10.8",
+        "bus_interface": "PCIe 3.0 x16",
+        "base_clock": "1410",
+        "boost_clock": "1620",
+        "memory_type": "GDDR6",
+        "memory_bus": "256",
+        "memory_bandwidth": "448",
+        "cores": "2304",
+        "tensor_cores": "288",
+        "rt_cores": "36",
+        "t_flops": "7.465",
+        "tdp": "175"
+      }
+    ],
+    "GeForce RTX 2070 SUPER": [
+      {
+        "name": "GeForce RTX 2070 SUPER 8GB",
+        "memory_size": "8",
+        "transistors": "13.6",
+        "bus_interface": "PCIe 3.0 x16",
+        "base_clock": "1605",
+        "boost_clock": "1770",
+        "memory_type": "GDDR6",
+        "memory_bus": "256",
+        "memory_bandwidth": "448",
+        "cores": "2560",
+        "tensor_cores": "320",
+        "rt_cores": "40",
+        "t_flops": "9.062",
+        "tdp": "215"
+      }
+    ],
+    "GeForce RTX 2080": [
+      {
+        "name": "GeForce RTX 2080 8GB",
+        "memory_size": "8",
+        "transistors": "13.6",
+        "bus_interface": "PCIe 3.0 x16",
+        "base_clock": "1515",
+        "boost_clock": "1710",
+        "memory_type": "GDDR6",
+        "memory_bus": "256",
+        "memory_bandwidth": "448",
+        "cores": "2944",
+        "tensor_cores": "368",
+        "rt_cores": "46",
+        "t_flops": "10.070",
+        "tdp": "215"
+      }
+    ],
+    "GeForce RTX 2080 SUPER": [
+      {
+        "name": "GeForce RTX 2080 SUPER 8GB",
+        "memory_size": "8",
+        "transistors": "13.6",
+        "bus_interface": "PCIe 3.0 x16",
+        "base_clock": "1650",
+        "boost_clock": "1815",
+        "memory_type": "GDDR6",
+        "memory_bus": "256",
+        "memory_bandwidth": "495.9",
+        "cores": "3072",
+        "tensor_cores": "384",
+        "rt_cores": "48",
+        "t_flops": "11.150",
+        "tdp": "250"
+      }
+    ],
+    "GeForce RTX 2080 Ti": [
+      {
+        "name": "GeForce RTX 2080 Ti 11GB",
+        "memory_size": "11",
+        "transistors": "18.6",
+        "bus_interface": "PCIe 3.0 x16",
+        "base_clock": "1350",
+        "boost_clock": "1545",
+        "memory_type": "GDDR6",
+        "memory_bus": "352",
+        "memory_bandwidth": "616",
+        "cores": "4352",
+        "tensor_cores": "544",
+        "rt_cores": "68",
+        "t_flops": "13.450",
+        "tdp": "250"
+      }
+    ],
+    "GeForce RTX 3050": [
+      {
+        "name": "ASUS Dual GeForce RTX 3050 6GB"
+      },
+      {
+        "name": "Gigabyte GeForce RTX 3050 6GB EAGLE"
+      },
+      {
+        "name": "Gigabyte GeForce RTX 3050 6GB EAGLE OC"
+      },
+      {
+        "name": "Gigabyte GeForce RTX 3050 6GB OC"
+      },
+      {
+        "name": "Gigabyte GeForce RTX 3050 8GB EAGLE"
+      },
+      {
+        "name": "INNO3D GeForce RTX 3050 6GB Twin V2 X2"
+      },
+      {
+        "name": "INNO3D GeForce RTX 3050 8GB Twin X2"
+      },
+      {
+        "name": "MANLI GeForce RTX 3050 8GB Dual Fan"
+      },
+      {
+        "name": "MSI GeForce RTX 3050 6GB"
+      },
+      {
+        "name": "MSI GeForce RTX 3050 6GB 2X OC"
+      },
+      {
+        "name": "MSI GeForce RTX 3050 6GB E OC"
+      },
+      {
+        "name": "MSI GeForce RTX 3050 6GB OC"
+      },
+      {
+        "name": "MSI GeForce RTX 3050 6GB VENTUS 2X OC"
+      },
+      {
+        "name": "MSI GeForce RTX 3050 6GB VENTUS E 2X OC"
+      },
+      {
+        "name": "MSI GeForce RTX 3050 8GB VENTUS 2X OC"
+      },
+      {
+        "name": "MSI GeForce RTX 3050 8GB VENTUS XS 2X"
+      },
+      {
+        "name": "MSI GeForce RTX 3050 8GB VENTUS XS 2X OC"
+      },
+      {
+        "name": "MSI GeForce RTX 3050 8GB VENTUS XS 2X OC White"
+      },
+      {
+        "name": "PNY GeForce RTX 3050 6GB"
+      },
+      {
+        "name": "PNY GeForce RTX 3050 6GB Dual Fan"
+      },
+      {
+        "name": "ZOTAC GAMING GeForce RTX 3050 6GB LP"
+      },
+      {
+        "name": "ZOTAC GAMING GeForce RTX 3050 6GB SOLO"
+      },
+      {
+        "name": "ZOTAC GAMING GeForce RTX 3050 6GB Twin Edge OC"
+      },
+      {
+        "name": "GeForce RTX 3050 8GB",
+        "memory_size": "8",
+        "transistors": "12.0",
+        "bus_interface": "PCIe 4.0 x8",
+        "base_clock": "1552",
+        "boost_clock": "1777",
+        "memory_type": "GDDR6",
+        "memory_bus": "128",
+        "memory_bandwidth": "224",
+        "cores": "2560",
+        "tensor_cores": "80",
+        "rt_cores": "20",
+        "t_flops": "9.098",
+        "tdp": "130"
+      },
+      {
+        "name": "GeForce RTX 3050 6GB",
+        "memory_size": "6",
+        "transistors": "8.7",
+        "bus_interface": "PCIe 4.0 x8",
+        "base_clock": "1042",
+        "boost_clock": "1470",
+        "memory_type": "GDDR6",
+        "memory_bus": "96",
+        "memory_bandwidth": "168",
+        "cores": "2304",
+        "tensor_cores": "72",
+        "rt_cores": "18",
+        "t_flops": "6.774",
+        "tdp": "70"
+      }
+    ],
+    "GeForce RTX 3050 Ti": [
+      {
+        "name": "GeForce RTX 3050 Ti 4GB",
+        "memory_size": "4"
+      }
+    ],
+    "GeForce RTX 3060": [
+      {
+        "name": "ASUS Dual GeForce RTX 3060 12GB V2"
+      },
+      {
+        "name": "Gigabyte GeForce RTX 3060 12GB"
+      },
+      {
+        "name": "Gigabyte GeForce RTX 3060 12GB EAGLE OC"
+      },
+      {
+        "name": "Gigabyte GeForce RTX 3060 12GB OC"
+      },
+      {
+        "name": "Gigabyte GeForce RTX 3060 12GB WINDFORCE OC"
+      },
+      {
+        "name": "MANLI GeForce RTX 3060 12GB Dual Fan"
+      },
+      {
+        "name": "MSI GeForce RTX 3060 12GB VENTUS 2X OC"
+      },
+      {
+        "name": "Palit GeForce RTX 3060 12GB Dual OC"
+      },
+      {
+        "name": "ZOTAC GAMING GeForce RTX 3060 12GB Twin Edge"
+      },
+      {
+        "name": "ZOTAC GAMING GeForce RTX 3060 12GB Twin Edge OC"
+      },
+      {
+        "name": "GeForce RTX 3060 12GB",
+        "memory_size": "12",
+        "transistors": "12.0",
+        "bus_interface": "PCIe 4.0 x16",
+        "base_clock": "1320",
+        "boost_clock": "1777",
+        "memory_type": "GDDR6",
+        "memory_bus": "192",
+        "memory_bandwidth": "360",
+        "cores": "3584",
+        "tensor_cores": "112",
+        "rt_cores": "28",
+        "t_flops": "12.740",
+        "tdp": "170"
+      },
+      {
+        "name": "GeForce RTX 3060 8GB",
+        "memory_size": "8",
+        "transistors": "12.0",
+        "bus_interface": "PCIe 4.0 x16",
+        "base_clock": "1320",
+        "boost_clock": "1777",
+        "memory_type": "GDDR6",
+        "memory_bus": "128",
+        "memory_bandwidth": "240",
+        "cores": "3584",
+        "tensor_cores": "112",
+        "rt_cores": "28",
+        "t_flops": "12.740",
+        "tdp": "170"
+      }
+    ],
+    "GeForce RTX 3060 Ti": [
+      {
+        "name": "GeForce RTX 3060 Ti 8GB",
+        "memory_size": "8",
+        "transistors": "17.4",
+        "bus_interface": "PCIe 4.0 x16",
+        "base_clock": "1410",
+        "boost_clock": "1665",
+        "memory_type": "GDDR6",
+        "memory_bus": "256",
+        "memory_bandwidth": "448",
+        "cores": "4864",
+        "tensor_cores": "152",
+        "rt_cores": "38",
+        "t_flops": "16.200",
+        "tdp": "200"
+      }
+    ],
+    "GeForce RTX 3070": [
+      {
+        "name": "ASUS TUF Gaming GeForce RTX 3070 8GB V2"
+      },
+      {
+        "name": "Palit GeForce RTX 3070 8GB Game Rock"
+      },
+      {
+        "name": "GeForce RTX 3070 8GB",
+        "memory_size": "8",
+        "transistors": "17.4",
+        "bus_interface": "PCIe 4.0 x16",
+        "base_clock": "1500",
+        "boost_clock": "1725",
+        "memory_type": "GDDR6",
+        "memory_bus": "256",
+        "memory_bandwidth": "448",
+        "cores": "5888",
+        "tensor_cores": "184",
+        "rt_cores": "46",
+        "t_flops": "20.310",
+        "tdp": "220"
+      }
+    ],
+    "GeForce RTX 3070 Ti": [
+      {
+        "name": "ASUS TUF Gaming GeForce RTX 3070 Ti 8GB"
+      },
+      {
+        "name": "ZOTAC GAMING GeForce RTX 3070 Ti 8GB TRINITY"
+      },
+      {
+        "name": "GeForce RTX 3070 Ti 16GB",
+        "memory_size": "16",
+        "transistors": "17.4",
+        "bus_interface": "PCIe 4.0 x16",
+        "base_clock": "1575",
+        "boost_clock": "1770",
+        "memory_type": "GDDR6X",
+        "memory_bus": "256",
+        "memory_bandwidth": "608.3",
+        "cores": "6144",
+        "tensor_cores": "192",
+        "rt_cores": "48",
+        "t_flops": "21.750",
+        "tdp": "290"
+      },
+      {
+        "name": "GeForce RTX 3070 Ti 8GB",
+        "memory_size": "8",
+        "transistors": "17.4",
+        "bus_interface": "PCIe 4.0 x16",
+        "base_clock": "1575",
+        "boost_clock": "1770",
+        "memory_type": "GDDR6X",
+        "memory_bus": "256",
+        "memory_bandwidth": "608.3",
+        "cores": "6144",
+        "tensor_cores": "192",
+        "rt_cores": "48",
+        "t_flops": "21.750",
+        "tdp": "290"
+      }
+    ],
+    "GeForce RTX 3080": [
+      {
+        "name": "MSI GeForce RTX 3080 12GB VENTUS Plus 3X OC"
+      },
+      {
+        "name": "MSI GeForce RTX 3080 12GB VENTUS Plus OC"
+      },
+      {
+        "name": "GeForce RTX 3080 10GB",
+        "memory_size": "10",
+        "transistors": "28.3",
+        "bus_interface": "PCIe 4.0 x16",
+        "base_clock": "1440",
+        "boost_clock": "1710",
+        "memory_type": "GDDR6X",
+        "memory_bus": "320",
+        "memory_bandwidth": "760.3",
+        "cores": "8704",
+        "tensor_cores": "272",
+        "rt_cores": "68",
+        "t_flops": "29.770",
+        "tdp": "320"
+      },
+      {
+        "name": "GeForce RTX 3080 12GB",
+        "memory_size": "12",
+        "transistors": "28.3",
+        "bus_interface": "PCIe 4.0 x16",
+        "base_clock": "1260",
+        "boost_clock": "1710",
+        "memory_type": "GDDR6X",
+        "memory_bus": "384",
+        "memory_bandwidth": "912.4",
+        "cores": "8960",
+        "tensor_cores": "280",
+        "rt_cores": "70",
+        "t_flops": "30.640",
+        "tdp": "350"
+      }
+    ],
+    "GeForce RTX 3080 Ti": [
+      {
+        "name": "Gigabyte GeForce RTX 3080 Ti 12GB VISION OC"
+      },
+      {
+        "name": "GeForce RTX 3080 Ti 20GB",
+        "memory_size": "20",
+        "transistors": "28.3",
+        "bus_interface": "PCIe 4.0 x16",
+        "base_clock": "1335",
+        "boost_clock": "1665",
+        "memory_type": "GDDR6X",
+        "memory_bus": "320",
+        "memory_bandwidth": "760.3",
+        "cores": "10240",
+        "tensor_cores": "320",
+        "rt_cores": "80",
+        "t_flops": "34.100",
+        "tdp": "350"
+      },
+      {
+        "name": "GeForce RTX 3080 Ti 12GB",
+        "memory_size": "12",
+        "transistors": "28.3",
+        "bus_interface": "PCIe 4.0 x16",
+        "base_clock": "1365",
+        "boost_clock": "1665",
+        "memory_type": "GDDR6X",
+        "memory_bus": "384",
+        "memory_bandwidth": "912.4",
+        "cores": "10240",
+        "tensor_cores": "320",
+        "rt_cores": "80",
+        "t_flops": "34.100",
+        "tdp": "350"
+      }
+    ],
+    "GeForce RTX 3090": [
+      {
+        "name": "MSI GeForce RTX 3090 24GB"
+      },
+      {
+        "name": "GeForce RTX 3090 24GB",
+        "memory_size": "24",
+        "transistors": "28.3",
+        "bus_interface": "PCIe 4.0 x16",
+        "base_clock": "1395",
+        "boost_clock": "1695",
+        "memory_type": "GDDR6X",
+        "memory_bus": "384",
+        "memory_bandwidth": "936.2",
+        "cores": "10496",
+        "tensor_cores": "328",
+        "rt_cores": "82",
+        "t_flops": "35.580",
+        "tdp": "350"
+      }
+    ],
+    "GeForce RTX 3090 Ti": [
+      {
+        "name": "GeForce RTX 3090 Ti 24GB",
+        "memory_size": "24",
+        "transistors": "28.3",
+        "bus_interface": "PCIe 4.0 x16",
+        "base_clock": "1560",
+        "boost_clock": "1860",
+        "memory_type": "GDDR6X",
+        "memory_bus": "384",
+        "memory_bandwidth": "1010",
+        "cores": "10752",
+        "tensor_cores": "336",
+        "rt_cores": "84",
+        "t_flops": "40.000",
+        "tdp": "450"
+      }
+    ],
+    "GeForce RTX 4050": [
+      {
+        "name": "GeForce RTX 4050 6GB",
+        "memory_size": "6",
+        "transistors": "18.9",
+        "bus_interface": "PCIe 4.0 x8",
+        "base_clock": "1455",
+        "boost_clock": "1755",
+        "memory_type": "GDDR6",
+        "memory_bus": "96",
+        "memory_bandwidth": "192",
+        "cores": "2560",
+        "tensor_cores": "80",
+        "rt_cores": "20",
+        "t_flops": "8.986",
+        "tdp": "50"
+      }
+    ],
+    "GeForce RTX 4060": [
+      {
+        "name": "ASUS Dual GeForce RTX 4060 8GB"
+      },
+      {
+        "name": "ASUS Dual GeForce RTX 4060 8GB V2"
+      },
+      {
+        "name": "Gigabyte GeForce RTX 4060 8GB"
+      },
+      {
+        "name": "Gigabyte GeForce RTX 4060 8GB Aero 3X OC"
+      },
+      {
+        "name": "Gigabyte GeForce RTX 4060 8GB EAGLE ICE OC"
+      },
+      {
+        "name": "Gigabyte GeForce RTX 4060 8GB EAGLE OC"
+      },
+      {
+        "name": "Gigabyte GeForce RTX 4060 8GB GAMING OC"
+      },
+      {
+        "name": "Gigabyte GeForce RTX 4060 8GB OC"
+      },
+      {
+        "name": "Gigabyte GeForce RTX 4060 8GB WINDFORCE OC"
+      },
+      {
+        "name": "MANLI GeForce RTX 4060 8GB"
+      },
+      {
+        "name": "MSI GeForce RTX 4060 8GB GAMING X"
+      },
+      {
+        "name": "MSI GeForce RTX 4060 8GB VENTUS 2X OC"
+      },
+      {
+        "name": "MSI GeForce RTX 4060 8GB VENTUS 2X OC White"
+      },
+      {
+        "name": "ZOTAC GAMING GeForce RTX 4060 8GB Twin Edge"
+      },
+      {
+        "name": "GeForce RTX 4060 8GB",
+        "memory_size": "8",
+        "transistors": "18.9",
+        "bus_interface": "PCIe 4.0 x8",
+        "base_clock": "1830",
+        "boost_clock": "2460",
+        "memory_type": "GDDR6",
+        "memory_bus": "128",
+        "memory_bandwidth": "272",
+        "cores": "3072",
+        "tensor_cores": "96",
+        "rt_cores": "24",
+        "t_flops": "15.110",
+        "tdp": "115"
+      }
+    ],
+    "GeForce RTX 4060 Ti": [
+      {
+        "name": "ASUS Dual GeForce RTX 4060 Ti 16GB"
+      },
+      {
+        "name": "Gigabyte GeForce RTX 4060 Ti 16GB Aero OC"
+      },
+      {
+        "name": "Gigabyte GeForce RTX 4060 Ti 16GB GAMING OC"
+      },
+      {
+        "name": "Gigabyte GeForce RTX 4060 Ti 16GB WINDFORCE OC"
+      },
+      {
+        "name": "Gigabyte GeForce RTX 4060 Ti 8GB WINDFORCE OC"
+      },
+      {
+        "name": "MSI GeForce RTX 4060 Ti 16GB GAMING X Slim"
+      },
+      {
+        "name": "MSI GeForce RTX 4060 Ti 16GB GAMING X Slim White"
+      },
+      {
+        "name": "MSI GeForce RTX 4060 Ti 16GB VENTUS 2X"
+      },
+      {
+        "name": "MSI GeForce RTX 4060 Ti 16GB VENTUS 2X OC"
+      },
+      {
+        "name": "MSI GeForce RTX 4060 Ti 16GB VENTUS 3X OC"
+      },
+      {
+        "name": "MSI GeForce RTX 4060 Ti 8GB GAMING X"
+      },
+      {
+        "name": "MSI GeForce RTX 4060 Ti 8GB GAMING X Slim"
+      },
+      {
+        "name": "MSI GeForce RTX 4060 Ti 8GB VENTUS 2X OC"
+      },
+      {
+        "name": "ZOTAC GAMING GeForce RTX 4060 Ti 16GB Twin Edge"
+      },
+      {
+        "name": "ZOTAC GAMING GeForce RTX 4060 Ti 8GB Twin Edge"
+      },
+      {
+        "name": "GeForce RTX 4060 Ti 8GB",
+        "memory_size": "8",
+        "transistors": "22.9",
+        "bus_interface": "PCIe 4.0 x8",
+        "base_clock": "2310",
+        "boost_clock": "2535",
+        "memory_type": "GDDR6",
+        "memory_bus": "128",
+        "memory_bandwidth": "288",
+        "cores": "4352",
+        "tensor_cores": "136",
+        "rt_cores": "34",
+        "t_flops": "22.060",
+        "tdp": "160"
+      },
+      {
+        "name": "GeForce RTX 4060 Ti 16GB",
+        "memory_size": "16",
+        "transistors": "22.9",
+        "bus_interface": "PCIe 4.0 x8",
+        "base_clock": "2310",
+        "boost_clock": "2535",
+        "memory_type": "GDDR6",
+        "memory_bus": "128",
+        "memory_bandwidth": "288",
+        "cores": "4352",
+        "tensor_cores": "136",
+        "rt_cores": "34",
+        "t_flops": "22.060",
+        "tdp": "165"
+      }
+    ],
+    "GeForce RTX 4070": [
+      {
+        "name": "ASUS Dual GeForce RTX 4070 12GB OC"
+      },
+      {
+        "name": "Gigabyte GeForce RTX 4070 12GB Aero V2 OC"
+      },
+      {
+        "name": "Gigabyte GeForce RTX 4070 12GB GAMING OC"
+      },
+      {
+        "name": "Gigabyte GeForce RTX 4070 12GB WINDFORCE 3X"
+      },
+      {
+        "name": "Gigabyte GeForce RTX 4070 12GB WINDFORCE OC"
+      },
+      {
+        "name": "MSI GeForce RTX 4070 12GB GAMING X Slim"
+      },
+      {
+        "name": "MSI GeForce RTX 4070 12GB GAMING X Slim White"
+      },
+      {
+        "name": "MSI GeForce RTX 4070 12GB VENTUS 2X OC White"
+      },
+      {
+        "name": "MSI GeForce RTX 4070 12GB VENTUS E 2X OC"
+      },
+      {
+        "name": "GeForce RTX 4070 12GB",
+        "memory_size": "12",
+        "transistors": "35.8",
+        "bus_interface": "PCIe 4.0 x16",
+        "base_clock": "1920",
+        "boost_clock": "2475",
+        "memory_type": "GDDR6",
+        "memory_bus": "192",
+        "memory_bandwidth": "480",
+        "cores": "5888",
+        "tensor_cores": "184",
+        "rt_cores": "46",
+        "t_flops": "29.150",
+        "tdp": "200"
+      }
+    ],
+    "GeForce RTX 4070 SUPER": [
+      {
+        "name": "Gigabyte GeForce RTX 4070 SUPER 12GB EAGLE OC"
+      },
+      {
+        "name": "Gigabyte GeForce RTX 4070 SUPER 12GB WINDFORCE OC"
+      },
+      {
+        "name": "MSI GeForce RTX 4070 SUPER 12GB GAMING X Slim"
+      },
+      {
+        "name": "MSI GeForce RTX 4070 SUPER 12GB GAMING X Slim White"
+      },
+      {
+        "name": "MSI GeForce RTX 4070 SUPER 12GB VENTUS 2X OC"
+      },
+      {
+        "name": "MSI GeForce RTX 4070 SUPER 12GB VENTUS 2X OC White"
+      },
+      {
+        "name": "MSI GeForce RTX 4070 SUPER 12GB VENTUS 3X OC"
+      },
+      {
+        "name": "GeForce RTX 4070 SUPER 12GB",
+        "memory_size": "12",
+        "transistors": "35.8",
+        "bus_interface": "PCIe 4.0 x16",
+        "base_clock": "1980",
+        "boost_clock": "2475",
+        "memory_type": "GDDR6X",
+        "memory_bus": "192",
+        "memory_bandwidth": "504.2",
+        "cores": "7168",
+        "tensor_cores": "224",
+        "rt_cores": "56",
+        "t_flops": "35.480",
+        "tdp": "220"
+      }
+    ],
+    "GeForce RTX 4070 Ti": [
+      {
+        "name": "Gigabyte GeForce RTX 4070 Ti 12GB GAMING"
+      },
+      {
+        "name": "Gigabyte GeForce RTX 4070 Ti 12GB GAMING OC"
+      },
+      {
+        "name": "MSI GeForce RTX 4070 Ti 12GB GAMING X Slim White"
+      },
+      {
+        "name": "MSI GeForce RTX 4070 Ti 12GB VENTUS 2X OC"
+      },
+      {
+        "name": "MSI GeForce RTX 4070 Ti 12GB VENTUS 3X OC"
+      },
+      {
+        "name": "MSI GeForce RTX 4070 Ti 12GB VENTUS E 3X OC"
+      },
+      {
+        "name": "GeForce RTX 4070 Ti 12GB",
+        "memory_size": "12",
+        "transistors": "35.8",
+        "bus_interface": "PCIe 4.0 x16",
+        "base_clock": "2310",
+        "boost_clock": "2610",
+        "memory_type": "GDDR6X",
+        "memory_bus": "192",
+        "memory_bandwidth": "504.2",
+        "cores": "7680",
+        "tensor_cores": "240",
+        "rt_cores": "60",
+        "t_flops": "40.090",
+        "tdp": "285"
+      }
+    ],
+    "GeForce RTX 4070 Ti SUPER": [
+      {
+        "name": "Gigabyte GeForce RTX 4070 Ti SUPER 16GB"
+      },
+      {
+        "name": "Gigabyte GeForce RTX 4070 Ti SUPER 16GB EAGLE OC"
+      },
+      {
+        "name": "Gigabyte GeForce RTX 4070 Ti SUPER 16GB GAMING OC"
+      },
+      {
+        "name": "Gigabyte GeForce RTX 4070 Ti SUPER 16GB WINDFORCE OC"
+      },
+      {
+        "name": "MSI GeForce RTX 4070 Ti SUPER 16GB GAMING X Slim"
+      },
+      {
+        "name": "MSI GeForce RTX 4070 Ti SUPER 16GB VENTUS 2X OC"
+      },
+      {
+        "name": "MSI GeForce RTX 4070 Ti SUPER 16GB VENTUS 3X OC"
+      },
+      {
+        "name": "GeForce RTX 4070 Ti SUPER 16GB",
+        "memory_size": "16",
+        "transistors": "45.9",
+        "bus_interface": "PCIe 4.0 x16",
+        "base_clock": "2340",
+        "boost_clock": "2610",
+        "memory_type": "GDDR6X",
+        "memory_bus": "256",
+        "memory_bandwidth": "672.3",
+        "cores": "8448",
+        "tensor_cores": "264",
+        "rt_cores": "66",
+        "t_flops": "44.100",
+        "tdp": "285"
+      }
+    ],
+    "GeForce RTX 4080": [
+      {
+        "name": "ASUS ROG Strix GeForce RTX 4080 16GB"
+      },
+      {
+        "name": "Gigabyte GeForce RTX 4080 16GB GAMING OC"
+      },
+      {
+        "name": "MSI GeForce RTX 4080 16GB VENTUS 3X OC"
+      },
+      {
+        "name": "ZOTAC GeForce RTX 4080 16GB TRINITY"
+      },
+      {
+        "name": "GeForce RTX 4080 16GB",
+        "memory_size": "16",
+        "transistors": "45.9",
+        "bus_interface": "PCIe 4.0 x16",
+        "base_clock": "2205",
+        "boost_clock": "2505",
+        "memory_type": "GDDR6X",
+        "memory_bus": "256",
+        "memory_bandwidth": "716.8",
+        "cores": "9728",
+        "tensor_cores": "304",
+        "rt_cores": "76",
+        "t_flops": "48.740",
+        "tdp": "320"
+      }
+    ],
+    "GeForce RTX 4080 SUPER": [
+      {
+        "name": "Gigabyte GeForce RTX 4080 SUPER 16GB GAMING OC"
+      },
+      {
+        "name": "MSI GeForce RTX 4080 SUPER 16GB"
+      },
+      {
+        "name": "MSI GeForce RTX 4080 SUPER 16GB GAMING X Slim"
+      },
+      {
+        "name": "MSI GeForce RTX 4080 SUPER 16GB GAMING X Slim White"
+      },
+      {
+        "name": "GeForce RTX 4080 SUPER 16GB",
+        "memory_size": "16",
+        "transistors": "45.9",
+        "bus_interface": "PCIe 4.0 x16",
+        "base_clock": "2295",
+        "boost_clock": "2550",
+        "memory_type": "GDDR6X",
+        "memory_bus": "256",
+        "memory_bandwidth": "736.3",
+        "cores": "10240",
+        "tensor_cores": "320",
+        "rt_cores": "80",
+        "t_flops": "52.220",
+        "tdp": "320"
+      }
+    ],
+    "GeForce RTX 4090": [
+      {
+        "name": "ASUS ROG Strix GeForce RTX 4090 24GB GAMING"
+      },
+      {
+        "name": "ASUS TUF Gaming GeForce RTX 4090 24GB"
+      },
+      {
+        "name": "Gigabyte GeForce RTX 4090 24GB GAMING"
+      },
+      {
+        "name": "Gigabyte GeForce RTX 4090 24GB GAMING OC"
+      },
+      {
+        "name": "MSI GeForce RTX 4090 24GB"
+      },
+      {
+        "name": "MSI GeForce RTX 4090 24GB GAMING X"
+      },
+      {
+        "name": "MSI GeForce RTX 4090 24GB GAMING X Slim"
+      },
+      {
+        "name": "MSI GeForce RTX 4090 24GB VENTUS 3X OC"
+      },
+      {
+        "name": "MSI GeForce RTX 4090 24GB VENTUS E 3X OC"
+      },
+      {
+        "name": "GeForce RTX 4090 24GB",
+        "memory_size": "24",
+        "transistors": "76.3",
+        "bus_interface": "PCIe 4.0 x16",
+        "base_clock": "2235",
+        "boost_clock": "2520",
+        "memory_type": "GDDR6X",
+        "memory_bus": "384",
+        "memory_bandwidth": "1010",
+        "cores": "16384",
+        "tensor_cores": "512",
+        "rt_cores": "128",
+        "t_flops": "82.580",
+        "tdp": "450"
+      }
+    ],
+    "GeForce RTX 5050": [
+      {
+        "name": "ASUS Dual GeForce RTX 5050 8GB"
+      },
+      {
+        "name": "ASUS Prime GeForce RTX 5050 8GB"
+      },
+      {
+        "name": "Gigabyte GeForce RTX 5050 8GB GAMING"
+      },
+      {
+        "name": "Gigabyte GeForce RTX 5050 8GB GAMING OC"
+      },
+      {
+        "name": "Gigabyte GeForce RTX 5050 8GB WINDFORCE OC"
+      },
+      {
+        "name": "MSI GeForce RTX 5050 8GB OC"
+      },
+      {
+        "name": "MSI GeForce RTX 5050 8GB SHADOW 2X OC"
+      },
+      {
+        "name": "MSI GeForce RTX 5050 8GB SHADOW BULK 2X OC"
+      },
+      {
+        "name": "MSI GeForce RTX 5050 8GB VENTUS 2X"
+      },
+      {
+        "name": "MSI GeForce RTX 5050 8GB VENTUS 2X OC"
+      },
+      {
+        "name": "PNY GeForce RTX 5050 8GB Dual Fan"
+      },
+      {
+        "name": "PNY GeForce RTX 5050 8GB Dual Fan 2X"
+      },
+      {
+        "name": "ZOTAC GAMING GeForce RTX 5050 8GB Twin Edge"
+      },
+      {
+        "name": "GeForce RTX 5050 8GB",
+        "memory_size": "8",
+        "transistors": "16.9",
+        "bus_interface": "PCIe 5.0 x8",
+        "base_clock": "2317",
+        "boost_clock": "2572",
+        "memory_type": "GDDR6",
+        "memory_bus": "128",
+        "memory_bandwidth": "320",
+        "cores": "2560",
+        "tensor_cores": "80",
+        "rt_cores": "20",
+        "t_flops": "13.170",
+        "tdp": "130"
+      }
+    ],
+    "GeForce RTX 5060": [
+      {
+        "name": "ASUS Dual GeForce RTX 5060 8GB"
+      },
+      {
+        "name": "ASUS GeForce RTX 5060 8GB LP BRK"
+      },
+      {
+        "name": "ASUS TUF Gaming GeForce RTX 5060 8GB"
+      },
+      {
+        "name": "Gigabyte GeForce RTX 5060 8GB EAGLE OC"
+      },
+      {
+        "name": "Gigabyte GeForce RTX 5060 8GB WINDFORCE"
+      },
+      {
+        "name": "Gigabyte GeForce RTX 5060 8GB WINDFORCE 2X OC"
+      },
+      {
+        "name": "Gigabyte GeForce RTX 5060 8GB WINDFORCE OC"
+      },
+      {
+        "name": "INNO3D GeForce RTX 5060 8GB Twin X2"
+      },
+      {
+        "name": "MSI GeForce RTX 5060 8GB INSPIRE 2X OC"
+      },
+      {
+        "name": "MSI GeForce RTX 5060 8GB OC"
+      },
+      {
+        "name": "MSI GeForce RTX 5060 8GB SHADOW 2X"
+      },
+      {
+        "name": "MSI GeForce RTX 5060 8GB SHADOW 2X OC"
+      },
+      {
+        "name": "MSI GeForce RTX 5060 8GB SHADOW BULK 2X OC"
+      },
+      {
+        "name": "MSI GeForce RTX 5060 8GB VENTUS 2X OC"
+      },
+      {
+        "name": "MSI GeForce RTX 5060 8GB VENTUS 2X OC White"
+      },
+      {
+        "name": "PNY GeForce RTX 5060 8GB"
+      },
+      {
+        "name": "PNY GeForce RTX 5060 8GB Dual Fan"
+      },
+      {
+        "name": "PNY GeForce RTX 5060 8GB Dual Fan 2X OC"
+      },
+      {
+        "name": "PNY GeForce RTX 5060 8GB Dual Fan OC"
+      },
+      {
+        "name": "PNY GeForce RTX 5060 8GB OC"
+      },
+      {
+        "name": "ZOTAC GAMING GeForce RTX 5060 8GB AMP"
+      },
+      {
+        "name": "ZOTAC GAMING GeForce RTX 5060 8GB SOLO"
+      },
+      {
+        "name": "ZOTAC GAMING GeForce RTX 5060 8GB Twin Edge"
+      },
+      {
+        "name": "GeForce RTX 5060 8GB",
+        "memory_size": "8",
+        "transistors": "21.9",
+        "bus_interface": "PCIe 5.0 x8",
+        "base_clock": "2280",
+        "boost_clock": "2497",
+        "memory_type": "GDDR7",
+        "memory_bus": "128",
+        "memory_bandwidth": "448",
+        "cores": "3840",
+        "tensor_cores": "120",
+        "rt_cores": "30",
+        "t_flops": "19.180",
+        "tdp": "145"
+      }
+    ],
+    "GeForce RTX 5060 Ti": [
+      {
+        "name": "ASUS Dual GeForce RTX 5060 Ti 16GB"
+      },
+      {
+        "name": "Gigabyte GeForce RTX 5060 Ti 16GB WINDFORCE OC"
+      },
+      {
+        "name": "Gigabyte GeForce RTX 5060 Ti 8GB EAGLE OC"
+      },
+      {
+        "name": "Gigabyte GeForce RTX 5060 Ti 8GB WINDFORCE"
+      },
+      {
+        "name": "Gigabyte GeForce RTX 5060 Ti 8GB WINDFORCE OC"
+      },
+      {
+        "name": "MSI GeForce RTX 5060 Ti 16GB INSPIRE 2X OC"
+      },
+      {
+        "name": "MSI GeForce RTX 5060 Ti 16GB OC"
+      },
+      {
+        "name": "MSI GeForce RTX 5060 Ti 16GB SHADOW 2X OC"
+      },
+      {
+        "name": "MSI GeForce RTX 5060 Ti 16GB SHADOW Plus 2X OC"
+      },
+      {
+        "name": "MSI GeForce RTX 5060 Ti 16GB SHADOW Plus BULK 2X OC"
+      },
+      {
+        "name": "MSI GeForce RTX 5060 Ti 16GB TRIO"
+      },
+      {
+        "name": "MSI GeForce RTX 5060 Ti 16GB TRIO OC"
+      },
+      {
+        "name": "MSI GeForce RTX 5060 Ti 16GB TRIO OC White"
+      },
+      {
+        "name": "MSI GeForce RTX 5060 Ti 16GB VENTUS 2X OC"
+      },
+      {
+        "name": "MSI GeForce RTX 5060 Ti 16GB VENTUS 3X OC"
+      },
+      {
+        "name": "MSI GeForce RTX 5060 Ti 16GB VENTUS Plus 2X OC"
+      },
+      {
+        "name": "MSI GeForce RTX 5060 Ti 8GB VENTUS 2X OC"
+      },
+      {
+        "name": "MSI GeForce RTX 5060 Ti 8GB VENTUS Plus 2X OC"
+      },
+      {
+        "name": "PNY GeForce RTX 5060 Ti 16GB Dual Fan"
+      },
+      {
+        "name": "PNY GeForce RTX 5060 Ti 16GB Dual Fan OC"
+      },
+      {
+        "name": "PNY GeForce RTX 5060 Ti 16GB OC"
+      },
+      {
+        "name": "PNY GeForce RTX 5060 Ti 16GB RGB Triple Fan OC"
+      },
+      {
+        "name": "PNY GeForce RTX 5060 Ti 8GB Dual Fan"
+      },
+      {
+        "name": "PNY GeForce RTX 5060 Ti 8GB Dual Fan OC"
+      },
+      {
+        "name": "ZOTAC GAMING GeForce RTX 5060 Ti 16GB Twin Edge"
+      },
+      {
+        "name": "ZOTAC GAMING GeForce RTX 5060 Ti 8GB Twin Edge"
+      },
+      {
+        "name": "GeForce RTX 5060 Ti 8GB",
+        "memory_size": "8",
+        "transistors": "21.9",
+        "bus_interface": "PCIe 5.0 x8",
+        "base_clock": "2407",
+        "boost_clock": "2572",
+        "memory_type": "GDDR7",
+        "memory_bus": "128",
+        "memory_bandwidth": "448",
+        "cores": "4608",
+        "tensor_cores": "144",
+        "rt_cores": "36",
+        "t_flops": "23.700",
+        "tdp": "180"
+      },
+      {
+        "name": "GeForce RTX 5060 Ti 16GB",
+        "memory_size": "16",
+        "transistors": "21.9",
+        "bus_interface": "PCIe 5.0 x8",
+        "base_clock": "2407",
+        "boost_clock": "2572",
+        "memory_type": "GDDR7",
+        "memory_bus": "128",
+        "memory_bandwidth": "448",
+        "cores": "4608",
+        "tensor_cores": "144",
+        "rt_cores": "36",
+        "t_flops": "23.700",
+        "tdp": "180"
+      }
+    ],
+    "GeForce RTX 5070": [
+      {
+        "name": "ASUS Dual GeForce RTX 5070 12GB"
+      },
+      {
+        "name": "ASUS ROG Strix GeForce RTX 5070 12GB"
+      },
+      {
+        "name": "ASUS Prime GeForce RTX 5070 12GB"
+      },
+      {
+        "name": "ASUS TUF Gaming GeForce RTX 5070 12GB"
+      },
+      {
+        "name": "Gigabyte GeForce RTX 5070 12GB Aero OC"
+      },
+      {
+        "name": "Gigabyte GeForce RTX 5070 12GB EAGLE ICE SFF OC"
+      },
+      {
+        "name": "Gigabyte GeForce RTX 5070 12GB EAGLE OC"
+      },
+      {
+        "name": "Gigabyte GeForce RTX 5070 12GB EAGLE SFF OC"
+      },
+      {
+        "name": "Gigabyte GeForce RTX 5070 12GB GAMING OC"
+      },
+      {
+        "name": "Gigabyte GeForce RTX 5070 12GB WINDFORCE SFF OC"
+      },
+      {
+        "name": "INNO3D GeForce RTX 5070 12GB Twin X2"
+      },
+      {
+        "name": "MSI GeForce RTX 5070 12GB INSPIRE"
+      },
+      {
+        "name": "MSI GeForce RTX 5070 12GB INSPIRE 3X OC"
+      },
+      {
+        "name": "MSI GeForce RTX 5070 12GB SHADOW 2X OC"
+      },
+      {
+        "name": "MSI GeForce RTX 5070 12GB SHADOW 3X OC"
+      },
+      {
+        "name": "MSI GeForce RTX 5070 12GB TRIO OC"
+      },
+      {
+        "name": "MSI GeForce RTX 5070 12GB TRIO OC White"
+      },
+      {
+        "name": "MSI GeForce RTX 5070 12GB VANGUARD"
+      },
+      {
+        "name": "MSI GeForce RTX 5070 12GB VENTUS 2X OC"
+      },
+      {
+        "name": "MSI GeForce RTX 5070 12GB VENTUS 2X OC White"
+      },
+      {
+        "name": "MSI GeForce RTX 5070 12GB VENTUS 3X OC"
+      },
+      {
+        "name": "MSI GeForce RTX 5070 12GB World of Warcraft OC"
+      },
+      {
+        "name": "PNY GeForce RTX 5070 12GB"
+      },
+      {
+        "name": "PNY GeForce RTX 5070 12GB ARGB Triple Fan OC"
+      },
+      {
+        "name": "PNY GeForce RTX 5070 12GB OC"
+      },
+      {
+        "name": "ZOTAC GAMING GeForce RTX 5070 12GB"
+      },
+      {
+        "name": "ZOTAC GAMING GeForce RTX 5070 12GB OC"
+      },
+      {
+        "name": "ZOTAC GAMING GeForce RTX 5070 12GB Twin Edge"
+      },
+      {
+        "name": "ZOTAC GAMING GeForce RTX 5070 12GB Twin Edge OC"
+      },
+      {
+        "name": "ZOTAC GAMING GeForce RTX 5070 12GB Twin Edge White"
+      },
+      {
+        "name": "GeForce RTX 5070 12GB",
+        "memory_size": "12",
+        "transistors": "31.1",
+        "bus_interface": "PCIe 5.0 x16",
+        "base_clock": "2325",
+        "boost_clock": "2512",
+        "memory_type": "GDDR7",
+        "memory_bus": "192",
+        "memory_bandwidth": "672",
+        "cores": "6144",
+        "tensor_cores": "192",
+        "rt_cores": "48",
+        "t_flops": "30.870",
+        "tdp": "250"
+      }
+    ],
+    "GeForce RTX 5070 SUPER": [
+      {
+        "name": "GeForce RTX 5070 SUPER 18GB",
+        "memory_size": "18",
+        "transistors": "31.1",
+        "bus_interface": "PCIe 5.0 x16",
+        "base_clock": "2325",
+        "boost_clock": "2497",
+        "memory_type": "GDDR7",
+        "memory_bus": "192",
+        "memory_bandwidth": "672",
+        "cores": "6400",
+        "tensor_cores": "200",
+        "rt_cores": "50",
+        "t_flops": "31.960",
+        "tdp": "275"
+      }
+    ],
+    "GeForce RTX 5070 Ti": [
+      {
+        "name": "ASUS Prime GeForce RTX 5070 Ti 16GB"
+      },
+      {
+        "name": "Gigabyte GeForce RTX 5070 Ti 16GB EAGLE ICE OC White"
+      },
+      {
+        "name": "Gigabyte GeForce RTX 5070 Ti 16GB EAGLE ICE SFF OC"
+      },
+      {
+        "name": "Gigabyte GeForce RTX 5070 Ti 16GB EAGLE SFF OC"
+      },
+      {
+        "name": "Gigabyte GeForce RTX 5070 Ti 16GB GAMING OC"
+      },
+      {
+        "name": "Gigabyte GeForce RTX 5070 Ti 16GB WINDFORCE SFF OC"
+      },
+      {
+        "name": "MSI GeForce RTX 5070 Ti 16GB INSPIRE 3X OC"
+      },
+      {
+        "name": "MSI GeForce RTX 5070 Ti 16GB INSPIRE Plus 3X OC"
+      },
+      {
+        "name": "MSI GeForce RTX 5070 Ti 16GB INSPIRE Plus OC"
+      },
+      {
+        "name": "MSI GeForce RTX 5070 Ti 16GB MLG OC"
+      },
+      {
+        "name": "MSI GeForce RTX 5070 Ti 16GB SHADOW 3X OC"
+      },
+      {
+        "name": "MSI GeForce RTX 5070 Ti 16GB TRIO OC"
+      },
+      {
+        "name": "MSI GeForce RTX 5070 Ti 16GB TRIO OC White"
+      },
+      {
+        "name": "MSI GeForce RTX 5070 Ti 16GB TRIO Plus OC"
+      },
+      {
+        "name": "MSI GeForce RTX 5070 Ti 16GB VANGUARD"
+      },
+      {
+        "name": "MSI GeForce RTX 5070 Ti 16GB VENTUS 3X OC"
+      },
+      {
+        "name": "MSI GeForce RTX 5070 Ti 16GB VENTUS Plus 3X OC"
+      },
+      {
+        "name": "PNY GeForce RTX 5070 Ti 16GB OC"
+      },
+      {
+        "name": "ZOTAC GAMING GeForce RTX 5070 Ti 16GB"
+      },
+      {
+        "name": "ZOTAC GAMING GeForce RTX 5070 Ti 16GB Extreme INFINITY"
+      },
+      {
+        "name": "ZOTAC GAMING GeForce RTX 5070 Ti 16GB Extreme INFINITY AMP"
+      },
+      {
+        "name": "ZOTAC GAMING GeForce RTX 5070 Ti 16GB OC"
+      },
+      {
+        "name": "ZOTAC GAMING GeForce RTX 5070 Ti 16GB OC White"
+      },
+      {
+        "name": "ZOTAC GAMING GeForce RTX 5070 Ti 16GB SFF"
+      },
+      {
+        "name": "GeForce RTX 5070 Ti 16GB",
+        "memory_size": "16",
+        "transistors": "45.6",
+        "bus_interface": "PCIe 5.0 x16",
+        "base_clock": "2295",
+        "boost_clock": "2452",
+        "memory_type": "GDDR7",
+        "memory_bus": "256",
+        "memory_bandwidth": "896",
+        "cores": "8960",
+        "tensor_cores": "280",
+        "rt_cores": "70",
+        "t_flops": "43.940",
+        "tdp": "300"
+      }
+    ],
+    "GeForce RTX 5070 Ti SUPER": [
+      {
+        "name": "GeForce RTX 5070 Ti SUPER 16GB",
+        "memory_size": "16",
+        "transistors": "45.6",
+        "bus_interface": "PCIe 5.0 x16",
+        "base_clock": "2295",
+        "boost_clock": "2452",
+        "memory_type": "GDDR7",
+        "memory_bus": "256",
+        "memory_bandwidth": "896",
+        "cores": "8960",
+        "tensor_cores": "280",
+        "rt_cores": "70",
+        "t_flops": "43.940",
+        "tdp": "350"
+      }
+    ],
+    "GeForce RTX 5080": [
+      {
+        "name": "ASUS ROG Astral GeForce RTX 5080 16GB"
+      },
+      {
+        "name": "ASUS Prime GeForce RTX 5080 16GB"
+      },
+      {
+        "name": "ASUS TUF Gaming GeForce RTX 5080 16GB"
+      },
+      {
+        "name": "Gigabyte GeForce RTX 5080 16GB"
+      },
+      {
+        "name": "Gigabyte GeForce RTX 5080 16GB Aero SFF OC"
+      },
+      {
+        "name": "Gigabyte GeForce RTX 5080 16GB GAMING OC"
+      },
+      {
+        "name": "Gigabyte GeForce RTX 5080 16GB WINDFORCE SFF OC"
+      },
+      {
+        "name": "INNO3D GeForce RTX 5080 16GB OC"
+      },
+      {
+        "name": "MSI GeForce RTX 5080 16GB"
+      },
+      {
+        "name": "MSI GeForce RTX 5080 16GB INSPIRE 3X OC"
+      },
+      {
+        "name": "MSI GeForce RTX 5080 16GB INSPIRE Plus 3X OC"
+      },
+      {
+        "name": "MSI GeForce RTX 5080 16GB SHADOW 3X OC"
+      },
+      {
+        "name": "MSI GeForce RTX 5080 16GB TRIO OC"
+      },
+      {
+        "name": "MSI GeForce RTX 5080 16GB TRIO OC White"
+      },
+      {
+        "name": "MSI GeForce RTX 5080 16GB VANGUARD"
+      },
+      {
+        "name": "MSI GeForce RTX 5080 16GB VENTUS 3X OC"
+      },
+      {
+        "name": "MSI GeForce RTX 5080 16GB VENTUS 3X OC White"
+      },
+      {
+        "name": "MSI GeForce RTX 5080 16GB VENTUS Plus 3X OC"
+      },
+      {
+        "name": "ZOTAC GAMING GeForce RTX 5080 16GB"
+      },
+      {
+        "name": "GeForce RTX 5080 16GB",
+        "memory_size": "16",
+        "transistors": "45.6",
+        "bus_interface": "PCIe 5.0 x16",
+        "base_clock": "2295",
+        "boost_clock": "2617",
+        "memory_type": "GDDR7",
+        "memory_bus": "256",
+        "memory_bandwidth": "960",
+        "cores": "10752",
+        "tensor_cores": "336",
+        "rt_cores": "84",
+        "t_flops": "56.280",
+        "tdp": "360"
+      }
+    ],
+    "GeForce RTX 5080 SUPER": [
+      {
+        "name": "GeForce RTX 5080 SUPER 24GB",
+        "memory_size": "24",
+        "transistors": "45.6",
+        "bus_interface": "PCIe 5.0 x16",
+        "base_clock": "2295",
+        "boost_clock": "2617",
+        "memory_type": "GDDR7",
+        "memory_bus": "256",
+        "memory_bandwidth": "1020",
+        "cores": "10752",
+        "tensor_cores": "336",
+        "rt_cores": "84",
+        "t_flops": "56.280",
+        "tdp": "415"
+      }
+    ],
+    "GeForce RTX 5090": [
+      {
+        "name": "ASUS ROG Astral GeForce RTX 5090 32GB"
+      },
+      {
+        "name": "Gigabyte GeForce RTX 5090 32GB"
+      },
+      {
+        "name": "Gigabyte GeForce RTX 5090 32GB GAMING OC"
+      },
+      {
+        "name": "Gigabyte GeForce RTX 5090 32GB WINDFORCE OC"
+      },
+      {
+        "name": "MSI GeForce RTX 5090 32GB"
+      },
+      {
+        "name": "MSI GeForce RTX 5090 32GB LIGHTNING Z Plus"
+      },
+      {
+        "name": "MSI GeForce RTX 5090 32GB TRIO OC"
+      },
+      {
+        "name": "MSI GeForce RTX 5090 32GB VANGUARD"
+      },
+      {
+        "name": "MSI GeForce RTX 5090 32GB VANGUARD OC"
+      },
+      {
+        "name": "MSI GeForce RTX 5090 32GB VENTUS 3X OC"
+      },
+      {
+        "name": "GeForce RTX 5090 32GB",
+        "memory_size": "32",
+        "transistors": "92.2",
+        "bus_interface": "PCIe 5.0 x16",
+        "base_clock": "2017",
+        "boost_clock": "2407",
+        "memory_type": "GDDR7",
+        "memory_bus": "512",
+        "memory_bandwidth": "1790",
+        "cores": "21760",
+        "tensor_cores": "680",
+        "rt_cores": "170",
+        "t_flops": "104.800",
+        "tdp": "575"
+      }
+    ]
+  },
+  "Radeon": {
+    "Radeon 530": [
+      {
+        "name": "Radeon 530 2GB",
+        "memory_size": "2"
+      },
+      {
+        "name": "Radeon 530 4GB",
+        "memory_size": "4"
+      }
+    ],
+    "Radeon 610M": [
+      {
+        "name": "Radeon 610M"
+      }
+    ],
+    "Radeon 660M": [
+      {
+        "name": "Radeon 660M"
+      }
+    ],
+    "Radeon 680M": [
+      {
+        "name": "Radeon 680M"
+      }
+    ],
+    "Radeon 740M": [
+      {
+        "name": "Radeon 740M"
+      }
+    ],
+    "Radeon 760M": [
+      {
+        "name": "Radeon 760M"
+      }
+    ],
+    "Radeon 840M": [
+      {
+        "name": "Radeon 840M"
+      }
+    ],
+    "Radeon 860M": [
+      {
+        "name": "Radeon 860M"
+      }
+    ],
+    "Radeon 880M": [
+      {
+        "name": "Radeon 880M"
+      }
+    ],
+    "Radeon RX 580": [
+      {
+        "name": "AXLE Radeon RX 580 8GB"
+      },
+      {
+        "name": "OCPC Radeon RX 580 8GB"
+      },
+      {
+        "name": "Radeon RX 580 8GB",
+        "memory_size": "8",
+        "transistors": "5.7",
+        "bus_interface": "PCIe 3.0 x16",
+        "base_clock": "1257",
+        "boost_clock": "1340",
+        "memory_type": "GDDR5",
+        "memory_bus": "256",
+        "memory_bandwidth": "256",
+        "cores": "2304",
+        "tensor_cores": "0",
+        "rt_cores": "0",
+        "t_flops": "6.175",
+        "tdp": "185"
+      }
+    ],
+    "Radeon RX 6500 XT": [
+      {
+        "name": "Radeon RX 6500 XT 4GB",
+        "memory_size": "4",
+        "transistors": "5.4",
+        "bus_interface": "PCIe 4.0 x4",
+        "base_clock": "2310",
+        "boost_clock": "2815",
+        "memory_type": "GDDR6",
+        "memory_bus": "64",
+        "memory_bandwidth": "143.9",
+        "cores": "1024",
+        "tensor_cores": "0",
+        "rt_cores": "16",
+        "t_flops": "5.765",
+        "tdp": "107"
+      }
+    ],
+    "Radeon RX 6600": [
+      {
+        "name": "Radeon RX 6600 8GB",
+        "memory_size": "8",
+        "transistors": "11.1",
+        "bus_interface": "PCIe 4.0 x8",
+        "base_clock": "1626",
+        "boost_clock": "2491",
+        "memory_type": "GDDR6",
+        "memory_bus": "128",
+        "memory_bandwidth": "224",
+        "cores": "1792",
+        "tensor_cores": "0",
+        "rt_cores": "28",
+        "t_flops": "8.928",
+        "tdp": "132"
+      }
+    ],
+    "Radeon RX 6600 XT": [
+      {
+        "name": "MSI Radeon RX 6600 XT 8GB MECH 2X"
+      },
+      {
+        "name": "Radeon RX 6600 XT 8GB",
+        "memory_size": "8",
+        "transistors": "11.1",
+        "bus_interface": "PCIe 4.0 x8",
+        "base_clock": "1968",
+        "boost_clock": "2589",
+        "memory_type": "GDDR6",
+        "memory_bus": "128",
+        "memory_bandwidth": "256",
+        "cores": "2048",
+        "tensor_cores": "0",
+        "rt_cores": "32",
+        "t_flops": "10.600",
+        "tdp": "160"
+      }
+    ],
+    "Radeon RX 6650 XT": [
+      {
+        "name": "ZEPHYR Radeon RX 6650 XT 8GB MINI Loong Year Limited Edition White"
+      },
+      {
+        "name": "Radeon RX 6650 XT 8GB",
+        "memory_size": "8",
+        "transistors": "11.1",
+        "bus_interface": "PCIe 4.0 x8",
+        "base_clock": "2055",
+        "boost_clock": "2635",
+        "memory_type": "GDDR6",
+        "memory_bus": "128",
+        "memory_bandwidth": "280.3",
+        "cores": "2048",
+        "tensor_cores": "0",
+        "rt_cores": "32",
+        "t_flops": "10.790",
+        "tdp": "176"
+      }
+    ],
+    "Radeon RX 6700": [
+      {
+        "name": "Radeon RX 6700 10GB",
+        "memory_size": "10",
+        "transistors": "17.2",
+        "bus_interface": "PCIe 4.0 x16",
+        "base_clock": "1941",
+        "boost_clock": "2450",
+        "memory_type": "GDDR6",
+        "memory_bus": "160",
+        "memory_bandwidth": "320",
+        "cores": "2304",
+        "tensor_cores": "0",
+        "rt_cores": "36",
+        "t_flops": "11.290",
+        "tdp": "175"
+      }
+    ],
+    "Radeon RX 6700 XT": [
+      {
+        "name": "MSI Radeon RX 6700 XT 12GB MECH 2X"
+      },
+      {
+        "name": "Radeon RX 6700 XT 12GB",
+        "memory_size": "12",
+        "transistors": "17.2",
+        "bus_interface": "PCIe 4.0 x16",
+        "base_clock": "2321",
+        "boost_clock": "2581",
+        "memory_type": "GDDR6",
+        "memory_bus": "192",
+        "memory_bandwidth": "384",
+        "cores": "2560",
+        "tensor_cores": "0",
+        "rt_cores": "40",
+        "t_flops": "13.210",
+        "tdp": "230"
+      }
+    ],
+    "Radeon RX 6750 XT": [
+      {
+        "name": "Radeon RX 6750 XT 12GB",
+        "memory_size": "12",
+        "transistors": "17.2",
+        "bus_interface": "PCIe 4.0 x16",
+        "base_clock": "2150",
+        "boost_clock": "2600",
+        "memory_type": "GDDR6",
+        "memory_bus": "192",
+        "memory_bandwidth": "432",
+        "cores": "2560",
+        "tensor_cores": "0",
+        "rt_cores": "40",
+        "t_flops": "13.310",
+        "tdp": "250"
+      }
+    ],
+    "Radeon RX 6800": [
+      {
+        "name": "Radeon RX 6800 16GB",
+        "memory_size": "16",
+        "transistors": "26.8",
+        "bus_interface": "PCIe 4.0 x16",
+        "base_clock": "1700",
+        "boost_clock": "2105",
+        "memory_type": "GDDR6",
+        "memory_bus": "256",
+        "memory_bandwidth": "512",
+        "cores": "3840",
+        "tensor_cores": "0",
+        "rt_cores": "60",
+        "t_flops": "16.170",
+        "tdp": "250"
+      }
+    ],
+    "Radeon RX 6800 XT": [
+      {
+        "name": "Radeon RX 6800 XT 16GB",
+        "memory_size": "16",
+        "transistors": "26.8",
+        "bus_interface": "PCIe 4.0 x16",
+        "base_clock": "1825",
+        "boost_clock": "2250",
+        "memory_type": "GDDR6",
+        "memory_bus": "256",
+        "memory_bandwidth": "512",
+        "cores": "4608",
+        "tensor_cores": "0",
+        "rt_cores": "72",
+        "t_flops": "20.740",
+        "tdp": "300"
+      }
+    ],
+    "Radeon RX 6850M XT": [
+      {
+        "name": "Radeon RX 6850M XT 12GB",
+        "memory_size": "12",
+        "transistors": "17.2",
+        "bus_interface": "PCIe 4.0 x16",
+        "base_clock": "2321",
+        "boost_clock": "2581",
+        "memory_type": "GDDR6",
+        "memory_bus": "192",
+        "memory_bandwidth": "432",
+        "cores": "2560",
+        "tensor_cores": "0",
+        "rt_cores": "40",
+        "t_flops": "13.210",
+        "tdp": "165"
+      }
+    ],
+    "Radeon RX 6900 XT": [
+      {
+        "name": "MSI Radeon RX 6900 XT 16GB"
+      },
+      {
+        "name": "Radeon RX 6900 XT 16GB",
+        "memory_size": "16",
+        "transistors": "26.8",
+        "bus_interface": "PCIe 4.0 x16",
+        "base_clock": "1825",
+        "boost_clock": "2250",
+        "memory_type": "GDDR6",
+        "memory_bus": "256",
+        "memory_bandwidth": "512",
+        "cores": "5120",
+        "tensor_cores": "0",
+        "rt_cores": "80",
+        "t_flops": "23.040",
+        "tdp": "300"
+      }
+    ],
+    "Radeon RX 6950 XT": [
+      {
+        "name": "Radeon RX 6950 XT 16GB",
+        "memory_size": "16",
+        "transistors": "26.8",
+        "bus_interface": "PCIe 4.0 x16",
+        "base_clock": "1860",
+        "boost_clock": "2310",
+        "memory_type": "GDDR6",
+        "memory_bus": "256",
+        "memory_bandwidth": "576",
+        "cores": "5120",
+        "tensor_cores": "0",
+        "rt_cores": "80",
+        "t_flops": "23.650",
+        "tdp": "335"
+      }
+    ],
+    "Radeon RX 7600": [
+      {
+        "name": "Gigabyte Radeon RX 7600 8GB GAMING OC"
+      },
+      {
+        "name": "Radeon RX 7600 8GB",
+        "memory_size": "8",
+        "transistors": "13.3",
+        "bus_interface": "PCIe 4.0 x8",
+        "base_clock": "1720",
+        "boost_clock": "2655",
+        "memory_type": "GDDR6",
+        "memory_bus": "128",
+        "memory_bandwidth": "288",
+        "cores": "2048",
+        "tensor_cores": "64",
+        "rt_cores": "32",
+        "t_flops": "21.750",
+        "tdp": "165"
+      }
+    ],
+    "Radeon RX 7600 XT": [
+      {
+        "name": "Gigabyte Radeon RX 7600 XT 16GB GAMING OC"
+      },
+      {
+        "name": "XFX Speedster SWFT 210 Radeon RX 7600 XT 16GB"
+      },
+      {
+        "name": "Radeon RX 7600 XT 16GB",
+        "memory_size": "16",
+        "transistors": "13.3",
+        "bus_interface": "PCIe 4.0 x8",
+        "base_clock": "1980",
+        "boost_clock": "2755",
+        "memory_type": "GDDR6",
+        "memory_bus": "128",
+        "memory_bandwidth": "288",
+        "cores": "2048",
+        "tensor_cores": "64",
+        "rt_cores": "32",
+        "t_flops": "22.570",
+        "tdp": "190"
+      }
+    ],
+    "Radeon RX 7700": [
+      {
+        "name": "Radeon RX 7700 16GB",
+        "memory_size": "16",
+        "transistors": "28.1",
+        "bus_interface": "PCIe 4.0 x16",
+        "base_clock": "1900",
+        "boost_clock": "2600",
+        "memory_type": "GDDR6",
+        "memory_bus": "256",
+        "memory_bandwidth": "622.1",
+        "cores": "2560",
+        "tensor_cores": "80",
+        "rt_cores": "40",
+        "t_flops": "26.620",
+        "tdp": "200"
+      }
+    ],
+    "Radeon RX 7700 XT": [
+      {
+        "name": "Gigabyte Radeon RX 7700 XT 12GB GAMING OC"
+      },
+      {
+        "name": "Radeon RX 7700 XT 12GB",
+        "memory_size": "12",
+        "transistors": "28.1",
+        "bus_interface": "PCIe 4.0 x16",
+        "base_clock": "1435",
+        "boost_clock": "2544",
+        "memory_type": "GDDR6",
+        "memory_bus": "192",
+        "memory_bandwidth": "432",
+        "cores": "3456",
+        "tensor_cores": "108",
+        "rt_cores": "54",
+        "t_flops": "35.170",
+        "tdp": "245"
+      }
+    ],
+    "Radeon RX 7800 XT": [
+      {
+        "name": "ASRock Radeon RX 7800 XT 16GB Challenger"
+      },
+      {
+        "name": "Gigabyte Radeon RX 7800 XT 16GB GAMING OC"
+      },
+      {
+        "name": "PowerColor Fighter Radeon RX 7800 XT 16GB"
+      },
+      {
+        "name": "PowerColor Fighter Radeon RX 7800 XT 16GB 3X OC"
+      },
+      {
+        "name": "PowerColor Hellhound Radeon RX 7800 XT 16GB"
+      },
+      {
+        "name": "PowerColor Hellhound Radeon RX 7800 XT 16GB 3X OC"
+      },
+      {
+        "name": "PowerColor Radeon RX 7800 XT 16GB"
+      },
+      {
+        "name": "Radeon RX 7800 XT 16GB",
+        "memory_size": "16",
+        "transistors": "28.1",
+        "bus_interface": "PCIe 4.0 x16",
+        "base_clock": "1295",
+        "boost_clock": "2430",
+        "memory_type": "GDDR6",
+        "memory_bus": "256",
+        "memory_bandwidth": "624",
+        "cores": "3840",
+        "tensor_cores": "120",
+        "rt_cores": "60",
+        "t_flops": "37.320",
+        "tdp": "263"
+      }
+    ],
+    "Radeon RX 7900 XT": [
+      {
+        "name": "Radeon RX 7900 XT 20GB",
+        "memory_size": "20",
+        "transistors": "57.7",
+        "bus_interface": "PCIe 4.0 x16",
+        "base_clock": "1387",
+        "boost_clock": "2394",
+        "memory_type": "GDDR6",
+        "memory_bus": "320",
+        "memory_bandwidth": "800",
+        "cores": "5376",
+        "tensor_cores": "168",
+        "rt_cores": "84",
+        "t_flops": "51.480",
+        "tdp": "300"
+      }
+    ],
+    "Radeon RX 7900 XTX": [
+      {
+        "name": "Radeon RX 7900 XTX 24GB",
+        "memory_size": "24",
+        "transistors": "57.7",
+        "bus_interface": "PCIe 4.0 x16",
+        "base_clock": "1929",
+        "boost_clock": "2498",
+        "memory_type": "GDDR6",
+        "memory_bus": "384",
+        "memory_bandwidth": "960",
+        "cores": "6144",
+        "tensor_cores": "192",
+        "rt_cores": "96",
+        "t_flops": "61.390",
+        "tdp": "355"
+      }
+    ],
+    "Radeon RX 9060": [
+      {
+        "name": "Radeon RX 9060 8GB",
+        "memory_size": "8",
+        "transistors": "29.7",
+        "bus_interface": "PCIe 5.0 x16",
+        "base_clock": "1700",
+        "boost_clock": "2990",
+        "memory_type": "GDDR6",
+        "memory_bus": "128",
+        "memory_bandwidth": "288",
+        "cores": "1792",
+        "tensor_cores": "56",
+        "rt_cores": "28",
+        "t_flops": "21.430",
+        "tdp": "132"
+      }
+    ],
+    "Radeon RX 9060 XT": [
+      {
+        "name": "Gigabyte Radeon RX 9060 XT 16GB GAMING OC"
+      },
+      {
+        "name": "Sapphire PULSE Radeon RX 9060 XT 16GB OC"
+      },
+      {
+        "name": "XFX Swift Radeon RX 9060 XT 8GB OC White"
+      },
+      {
+        "name": "Radeon RX 9060 XT 8GB",
+        "memory_size": "8",
+        "transistors": "29.7",
+        "bus_interface": "PCIe 5.0 x16",
+        "base_clock": "1700",
+        "boost_clock": "3130",
+        "memory_type": "GDDR6",
+        "memory_bus": "128",
+        "memory_bandwidth": "322",
+        "cores": "2048",
+        "tensor_cores": "64",
+        "rt_cores": "32",
+        "t_flops": "25.640",
+        "tdp": "150"
+      },
+      {
+        "name": "Radeon RX 9060 XT 16GB",
+        "memory_size": "16",
+        "transistors": "29.7",
+        "bus_interface": "PCIe 5.0 x16",
+        "base_clock": "1700",
+        "boost_clock": "3130",
+        "memory_type": "GDDR6",
+        "memory_bus": "128",
+        "memory_bandwidth": "322",
+        "cores": "2048",
+        "tensor_cores": "64",
+        "rt_cores": "32",
+        "t_flops": "25.640",
+        "tdp": "160"
+      }
+    ],
+    "Radeon RX 9060 XT LP": [
+      {
+        "name": "Radeon RX 9060 XT LP 16GB",
+        "memory_size": "16",
+        "transistors": "29.7",
+        "bus_interface": "PCIe 5.0 x16",
+        "base_clock": "1380",
+        "boost_clock": "3050",
+        "memory_type": "GDDR6",
+        "memory_bus": "128",
+        "memory_bandwidth": "322.3",
+        "cores": "2048",
+        "tensor_cores": "64",
+        "rt_cores": "32",
+        "t_flops": "24.990",
+        "tdp": "140"
+      }
+    ],
+    "Radeon RX 9070": [
+      {
+        "name": "Gigabyte Radeon RX 9070 16GB GAMING OC"
+      },
+      {
+        "name": "Radeon RX 9070 16GB",
+        "memory_size": "16",
+        "transistors": "53.9",
+        "bus_interface": "PCIe 5.0 x16",
+        "base_clock": "1330",
+        "boost_clock": "2520",
+        "memory_type": "GDDR6",
+        "memory_bus": "256",
+        "memory_bandwidth": "644.6",
+        "cores": "3584",
+        "tensor_cores": "112",
+        "rt_cores": "56",
+        "t_flops": "36.130",
+        "tdp": "220"
+      }
+    ],
+    "Radeon RX 9070 XT": [
+      {
+        "name": "Gigabyte Radeon RX 9070 XT 16GB GAMING OC"
+      },
+      {
+        "name": "Radeon RX 9070 XT 16GB",
+        "memory_size": "16",
+        "transistors": "53.9",
+        "bus_interface": "PCIe 5.0 x16",
+        "base_clock": "1660",
+        "boost_clock": "2970",
+        "memory_type": "GDDR6",
+        "memory_bus": "256",
+        "memory_bandwidth": "644.6",
+        "cores": "4096",
+        "tensor_cores": "128",
+        "rt_cores": "64",
+        "t_flops": "48.660",
+        "tdp": "304"
+      }
+    ],
+    "Radeon Vega 11": [
+      {
+        "name": "Radeon Vega 11",
+        "transistors": "4.9",
+        "base_clock": "300",
+        "boost_clock": "1400",
+        "cores": "704",
+        "tensor_cores": "0",
+        "rt_cores": "0",
+        "t_flops": "1.971",
+        "tdp": "15"
+      }
+    ],
+    "Radeon Vega 6": [
+      {
+        "name": "Radeon Vega 6",
+        "transistors": "4.9",
+        "base_clock": "300",
+        "boost_clock": "1101",
+        "cores": "384",
+        "tensor_cores": "0",
+        "rt_cores": "0",
+        "t_flops": "0.845",
+        "tdp": "15"
+      }
+    ],
+    "Radeon Vega 7": [
+      {
+        "name": "Radeon Vega 7",
+        "transistors": "9.8",
+        "base_clock": "300",
+        "boost_clock": "1900",
+        "cores": "448",
+        "tensor_cores": "0",
+        "rt_cores": "0",
+        "t_flops": "1.702",
+        "tdp": "45"
+      }
+    ],
+    "Radeon Vega 8": [
+      {
+        "name": "Radeon Vega 8",
+        "transistors": "4.9",
+        "base_clock": "300",
+        "boost_clock": "1250",
+        "cores": "512",
+        "tensor_cores": "0",
+        "rt_cores": "0",
+        "t_flops": "1.280",
+        "tdp": "15"
+      }
+    ]
+  },
+  "Others": {
+    "Qualcomm Adreno": [],
+    "NVIDIA": {
+      "NVIDIA Quadro": [
+        {
+          "name": "NVIDIA Quadro P5000 16GB",
+          "memory_size": "16"
+        },
+        {
+          "name": "NVIDIA Quadro P2000 5GB",
+          "memory_size": "5"
+        },
+        {
+          "name": "NVIDIA Quadro P400 2GB",
+          "memory_size": "2"
+        },
+        {
+          "name": "NVIDIA Quadro P6000 24GB",
+          "memory_size": "24"
+        },
+        {
+          "name": "NVIDIA Quadro P620 2GB",
+          "memory_size": "2"
+        },
+        {
+          "name": "NVIDIA Quadro P2200 5GB",
+          "memory_size": "5"
+        },
+        {
+          "name": "NVIDIA Quadro P4000 8GB",
+          "memory_size": "8"
+        },
+        {
+          "name": "NVIDIA Quadro P1000 4GB",
+          "memory_size": "4"
+        },
+        {
+          "name": "NVIDIA Quadro P600 2GB",
+          "memory_size": "2"
+        }
+      ],
+      "NVIDIA GeForce MX": [
+        {
+          "name": "GeForce MX550 2GB",
+          "memory_size": "2"
+        },
+        {
+          "name": "GeForce MX570 2GB",
+          "memory_size": "2"
+        },
+        {
+          "name": "GeForce MX150 2GB",
+          "memory_size": "2"
+        },
+        {
+          "name": "GeForce MX570A 2GB",
+          "memory_size": "2"
+        },
+        {
+          "name": "GeForce MX130 2GB",
+          "memory_size": "2"
+        },
+        {
+          "name": "GeForce MX150 4GB",
+          "memory_size": "4"
+        },
+        {
+          "name": "GeForce MX110 2GB",
+          "memory_size": "2"
+        },
+        {
+          "name": "GeForce MX350 2GB",
+          "memory_size": "2"
+        },
+        {
+          "name": "GeForce MX450 2GB",
+          "memory_size": "2"
+        },
+        {
+          "name": "GeForce MX230 2GB",
+          "memory_size": "2"
+        },
+        {
+          "name": "GeForce MX330 2GB",
+          "memory_size": "2"
+        },
+        {
+          "name": "GeForce 940MX 2GB",
+          "memory_size": "2"
+        },
+        {
+          "name": "GeForce 920MX 2GB",
+          "memory_size": "2"
+        },
+        {
+          "name": "GeForce 920M 2GB",
+          "memory_size": "2"
+        }
+      ],
+      "NVIDIA RTX 2000": [
+        {
+          "name": "NVIDIA RTX 2000 16GB",
+          "memory_size": "16",
+          "transistors": "18.9",
+          "bus_interface": "PCIe 4.0 x8",
+          "base_clock": "1620",
+          "boost_clock": "2130",
+          "memory_type": "GDDR6",
+          "memory_bus": "128",
+          "memory_bandwidth": "256",
+          "cores": "2816",
+          "tensor_cores": "88",
+          "rt_cores": "22",
+          "t_flops": "12.000",
+          "tdp": "70"
+        }
+      ],
+      "NVIDIA RTX 500": [
+        {
+          "name": "NVIDIA RTX 500 4GB",
+          "memory_size": "4",
+          "transistors": "18.9",
+          "bus_interface": "PCIe 4.0 x8",
+          "base_clock": "1485",
+          "boost_clock": "2025",
+          "memory_type": "GDDR6",
+          "memory_bus": "64",
+          "memory_bandwidth": "128",
+          "cores": "2048",
+          "tensor_cores": "64",
+          "rt_cores": "16",
+          "t_flops": "8.294",
+          "tdp": "35"
+        }
+      ],
+      "NVIDIA RTX A1000": [
+        {
+          "name": "NVIDIA RTX A1000 8GB",
+          "memory_size": "8",
+          "transistors": "8.7",
+          "bus_interface": "PCIe 4.0 x8",
+          "base_clock": "727",
+          "boost_clock": "1462",
+          "memory_type": "GDDR6",
+          "memory_bus": "128",
+          "memory_bandwidth": "192",
+          "cores": "2304",
+          "tensor_cores": "72",
+          "rt_cores": "18",
+          "t_flops": "6.737",
+          "tdp": "50"
+        }
+      ],
+      "NVIDIA RTX A2000": [
+        {
+          "name": "NVIDIA RTX A2000 6GB",
+          "memory_size": "6",
+          "transistors": "12.0",
+          "bus_interface": "PCIe 4.0 x16",
+          "base_clock": "562",
+          "boost_clock": "1200",
+          "memory_type": "GDDR6",
+          "memory_bus": "192",
+          "memory_bandwidth": "288",
+          "cores": "3328",
+          "tensor_cores": "104",
+          "rt_cores": "26",
+          "t_flops": "7.987",
+          "tdp": "70"
+        }
+      ],
+      "NVIDIA RTX A3000": [
+        {
+          "name": "NVIDIA RTX A3000 6GB",
+          "memory_size": "6",
+          "transistors": "17.4",
+          "bus_interface": "PCIe 4.0 x16",
+          "base_clock": "600",
+          "boost_clock": "1230",
+          "memory_type": "GDDR6",
+          "memory_bus": "192",
+          "memory_bandwidth": "264",
+          "cores": "4096",
+          "tensor_cores": "128",
+          "rt_cores": "32",
+          "t_flops": "10.080",
+          "tdp": "70"
+        }
+      ],
+      "NVIDIA RTX A400": [
+        {
+          "name": "NVIDIA RTX A400 4GB",
+          "memory_size": "4",
+          "transistors": "8.7",
+          "bus_interface": "PCIe 4.0 x8",
+          "base_clock": "1417",
+          "boost_clock": "1762",
+          "memory_type": "GDDR6",
+          "memory_bus": "64",
+          "memory_bandwidth": "96",
+          "cores": "768",
+          "tensor_cores": "24",
+          "rt_cores": "6",
+          "t_flops": "2.706",
+          "tdp": "50"
+        }
+      ]
+    },
+    "AMD": [
+      {
+        "name": "AMD FirePro D300 2GB",
+        "memory_size": "2"
+      }
+    ],
+    "Intel": {
+      "Intel HD Graphics": [
+        {
+          "name": "Intel HD Graphics 4400"
+        },
+        {
+          "name": "Intel HD Graphics 5000"
+        },
+        {
+          "name": "Intel HD Graphics 630"
+        },
+        {
+          "name": "Intel HD Graphics 2000"
+        },
+        {
+          "name": "Intel HD Graphics 530"
+        },
+        {
+          "name": "Intel HD Graphics 510"
+        },
+        {
+          "name": "Intel HD Graphics 4600"
+        },
+        {
+          "name": "Intel HD Graphics 3000"
+        },
+        {
+          "name": "Intel HD Graphics 620"
+        },
+        {
+          "name": "Intel HD Graphics 4000"
+        }
+      ],
+      "Intel UHD Graphics": [
+        {
+          "name": "Intel UHD Graphics 750"
+        },
+        {
+          "name": "Intel UHD Graphics 730"
+        },
+        {
+          "name": "Intel UHD Graphics 610"
+        },
+        {
+          "name": "Intel UHD Graphics 710"
+        },
+        {
+          "name": "Intel UHD Graphics 630"
+        },
+        {
+          "name": "Intel UHD Graphics 770"
+        }
+      ],
+      "Intel Iris": [
+        {
+          "name": "Intel Iris Pro"
+        },
+        {
+          "name": "Intel Iris Plus Graphics 655"
+        },
+        {
+          "name": "Intel Iris Plus Graphics 645"
+        },
+        {
+          "name": "Intel Iris Plus"
+        },
+        {
+          "name": "Intel Iris Xe"
+        },
+        {
+          "name": "Intel Iris"
+        }
+      ]
+    }
+  }
+}

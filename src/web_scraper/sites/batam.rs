@@ -18,13 +18,24 @@ static CONFIG: SiteConfig = SiteConfig {
     status_sel: Some(Lazy::new(|| Selector::parse("div.product-info span").unwrap())),
     desc_sel: None,
     page_desc_sel: Some(Lazy::new(|| Selector::parse("div.product-description").unwrap())),
+    empty_page_sel: None,
     sections: &[
+        (Section::PC, "https://batam.com.tn/informatique/ordinateur-de-bureau/ordinateur-de-bureau.html"),
         (Section::Laptop, "https://batam.com.tn/informatique/ordinateur-portable.html"),
         (Section::GamingLaptop, "https://batam.com.tn/gaming/pc-gaming/pc-portable-gamer.html"),
-        (Section::PC, "https://batam.com.tn/informatique/ordinateur-de-bureau/ordinateur-de-bureau.html"),
         (Section::Monitor, "https://batam.com.tn/informatique/ordinateur-de-bureau/ecran-pc.html"),
         (Section::Keyboard, "https://batam.com.tn/gaming/peripheriques-et-accessoires-gaming/clavier-gamer.html"),
-        (Section::Mouse, "https://batam.com.tn/gaming/peripheriques-et-accessoires-gaming/souris-et-tapis-gamer.html")
+        (Section::Mouse, "https://batam.com.tn/gaming/peripheriques-et-accessoires-gaming/souris-et-tapis-gamer.html"),
+        (Section::Headphones, "https://batam.com.tn/gaming/peripheriques-et-accessoires-gaming/casque-et-ecouteur-gamer.html"),
+        (Section::Console, "https://batam.com.tn/gaming/console-de-jeux/console-de-jeux.html"),
+        (Section::Controller, "https://batam.com.tn/gaming/peripheriques-et-accessoires-gaming/manette.html"),
+        (Section::ConsoleGame, "https://batam.com.tn/gaming/console-de-jeux/jeux-video.html"),
+        (Section::ConsoleAccessories, "https://batam.com.tn/gaming/peripheriques-et-accessoires-gaming/volants.html"),
+        (Section::Smartphone, "https://batam.com.tn/telephonie-et-montres-connectes/smartphone-et-telephone-portable/smartphone.html"),
+        (Section::Smartphone, "https://batam.com.tn/telephonie-et-montres-connectes/smartphone-et-telephone-portable/iphone.html"),
+        (Section::Tablet, "https://batam.com.tn/informatique/tablette.html"),
+        (Section::Smartwatch, "https://batam.com.tn/telephonie-et-montres-connectes/montres-connectes.html"),
+        (Section::Television, "https://batam.com.tn/tv-image-son/televiseurs.html"),
     ]
 };
 

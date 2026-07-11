@@ -1,11 +1,11 @@
 use crate::utils::web_client::WebClientType;
 use crate::web_scraper::product::ProductStatus;
 use crate::web_scraper::sections::Section;
-use crate::web_scraper::utils::ElementRefExt;
 use crate::web_scraper::sites::{Site, SiteConfig};
 use once_cell::sync::Lazy;
 use scraper::{ElementRef, Selector};
 use std::str::FromStr;
+use crate::utils::scraper_ext::ElementRefExt;
 
 static CONFIG: SiteConfig = SiteConfig {
     name: "TechSpace",
@@ -20,26 +20,31 @@ static CONFIG: SiteConfig = SiteConfig {
     status_sel: Some(Lazy::new(|| Selector::parse("span.inventory_status").unwrap())),
     desc_sel: None,
     page_desc_sel: Some(Lazy::new(|| Selector::parse("div.woocommerce-product-details__short-description").unwrap())),
+    empty_page_sel: Some(Lazy::new(|| Selector::parse("div.woocommerce-no-products-found").unwrap())),
     sections: &[
         (Section::GamingPC, "https://techspace.tn/pc-gamer-tunisie/"),
         (Section::GamingPC, "https://techspace.tn/full-setup/"),
         (Section::Laptop, "https://techspace.tn/pc-portable-tunisie/"),
         (Section::Monitor, "https://techspace.tn/ecrans-gaming/"),
-        (Section::Mouse, "https://techspace.tn/souris/"),
-        (Section::Keyboard, "https://techspace.tn/clavier/"),
-        (Section::AccessoriesCombo, "https://techspace.tn/combo/"),
         (Section::CPU, "https://techspace.tn/processeur-intel/"),
         (Section::CPU, "https://techspace.tn/processeur-amd/"),
         (Section::GPU, "https://techspace.tn/carte-graphique/"),
         (Section::Memory, "https://techspace.tn/barette-memoire/"),
+        (Section::Storage, "https://techspace.tn/stockage/"),
         (Section::Motherboard, "https://techspace.tn/carte-mere-intel/"),
         (Section::Motherboard, "https://techspace.tn/carte-mere-amd/"),
-        (Section::Storage, "https://techspace.tn/stockage/"),
-        (Section::PowerSupply, "https://techspace.tn/boite-dalimentation/"),
         (Section::Cooler, "https://techspace.tn/air-cooling/"),
         (Section::Cooler, "https://techspace.tn/water-cooling/"),
         (Section::Cooler, "https://techspace.tn/ventilateur/"),
+        (Section::PowerSupply, "https://techspace.tn/boite-dalimentation/"),
         (Section::Case, "https://techspace.tn/boitier/"),
+        (Section::Mouse, "https://techspace.tn/souris/"),
+        (Section::Keyboard, "https://techspace.tn/clavier/"),
+        (Section::MousePad, "https://techspace.tn/tapis/"),
+        (Section::Headphones, "https://techspace.tn/casque/"),
+        (Section::AccessoriesCombo, "https://techspace.tn/combo/"),
+        (Section::Controller, "https://techspace.tn/manette/"),
+        (Section::ConsoleAccessories, "https://techspace.tn/volant/")
     ]
 };
 

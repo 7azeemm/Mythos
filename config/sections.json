@@ -1,119 +1,108 @@
 [
   {
-    "id": "pc",
-    "include": [
-      "pc|ordinateur|bureau|workstation|station|unite|centrale|supercomputer|superordinateur",
-      "thinkcentre|dell|office|ExpertCenter|Expert Center|probox", "mac&E5"
+    "id": "PC",
+    "move_rules": [
+      ["Monitor", "#^ecran||#^Écran"],
+      ["MiniPC", "mini&!=tower||studio"],
+      ["AllInOnePC", "all in one|all-in-one|tout en un|tout-en-un|aio|all in-one|imac"],
+      ["Laptop", "portable"],
+      ["GamingPC", "setup|gamer|gaming"]
     ],
-    "include_description": ["pc&intel"],
-    "exclude": [
-      "setup|all in one|all-in-one|tout en un|tout-en-un|aio|all in-one|imac|gamer|gaming|Processeur",
-      "rtx&!=station", "#portable", "vega&msi",
-      "#^ecran", "#^Écran", "mini&!=tower"
-    ],
-    "exclude_description": ["rtx&RedDragon"],
-    "switchable_to": ["gaming_pc", "all_in_one_pc", "mini_pc", "monitor", "laptop", "case"],
-    "requires_description": true,
-    "filters": ["cpu", "gpu_chipset", "memory_size", "memory_type", "storage_size"],
-    "render_specs": ["cpu", "gpu", "memory", "storage"]
+    "filters": ["CPU", "gpu_chipset", "memory_size", "memory_type", "storage_size"],
+    "components": ["cpu", "gpu", "memory", "storage"]
   },
   {
-    "id": "gaming_pc",
-    "include": ["pc|Ordinateur|bureau|config|gaming|gamer&gtx|rtx|radeon|rx|vega|rtx\\d+", "pc&gamer|gaming", "setup"],
-    "include_description": ["#rtx", "pc&pack|gamer", "arc|rx|vega|5600G"],
-    "exclude": ["station|Processeur|carte", "#portable", "#^ecran", "#^Écran", "mini&!=tower", "Boetier"],
-    "switchable_to": ["pc", "monitor", "case"],
-    "requires_description": true,
+    "id": "GamingPC",
+    "min_price": 200,
     "filters": ["cpu", "gpu_chipset", "memory_size", "memory_type", "storage_size"],
-    "render_specs": ["cpu", "gpu", "memory", "storage"]
+    "components": ["cpu", "gpu", "memory", "storage"]
   },
   {
-    "id": "all_in_one_pc",
-    "include": ["all in one|all-in-one|all in-one|tout en un|tout-en-un|a.i.o|aio|imac"],
-    "exclude": ["mini"],
-    "requires_description": true,
+    "id": "AllInOnePC",
+    "move_rules": [
+      ["MiniPC", "mini|barebone"]
+    ],
     "filters": [
       "cpu", "gpu_chipset", "memory_size", "memory_type", "storage_size", "display_size", "resolution", "refresh_rate"
     ],
-    "render_specs": ["display", "cpu", "gpu", "memory", "storage"]
+    "components": ["display", "cpu", "gpu", "memory", "storage"]
   },
   {
-    "id": "mini_pc",
-    "include": ["mini|mac studio|bmax"],
-    "exclude": ["tower"],
-    "requires_description": true,
+    "id": "MiniPC",
     "filters": ["cpu", "gpu_chipset", "memory_size", "memory_type", "storage_size"],
-    "render_specs": ["cpu", "gpu", "memory", "storage"]
+    "components": ["cpu", "gpu", "memory", "storage"]
   },
   {
-    "id": "laptop",
-    "force_include": ["ThinkBook|ThinkPad|HP Envy", "ProArt&!=carte"],
-    "include": ["laptop|portable|ideapad|thinkbook|thinkpad|zenbook|lenovo|acer|elite book|dell|hp|MSI SUMMIT"],
-    "include_description": ["laptop|portable"],
-    "exclude": ["carte|gamer|gaming|gtx|support|apple|macbook", "#rtx", "#^ecran"],
-    "exclude_description": ["rtx|gtx"],
-    "switchable_to": ["gaming_laptop", "mac_book", "mini_pc"],
-    "requires_description": true,
+    "id": "Laptop",
+    "force_include": ["elitebook"],
+    "move_rules": [
+      ["GamingLaptop", "gamer|gaming|gtx||#rtx"],
+      ["MacBook", "macbook|apple"]
+    ],
+    "move_by_description_rules": [
+      ["GamingLaptop", "#rtx||radeon rx&asus tuf"]
+    ],
     "filters": [
       "cpu", "gpu_chipset", "memory_size", "memory_type", "storage_size", "display_size", "resolution", "panel_type",
       "refresh_rate"
     ],
-    "render_specs": ["display", "cpu", "gpu", "memory", "storage"]
+    "components": ["display", "cpu", "gpu", "memory", "storage"]
   },
   {
-    "id": "gaming_laptop",
-    "include": ["laptop|portable|asus|msi|hp|lenovo|loq|rog|AORUS|legion|gigabyte aero&rtx|rtx\\d+|gtx|gamer|gaming"],
-    "include_description": ["laptop|portable|gigabyte&rx|gtx|rtx|gamer|gaming", "portable|gigabyte&rtx\\d+|gtx\\d+a"],
-    "exclude": ["carte|bureau|boetier|support", "#^ecran"],
-    "switchable_to": ["laptop", "gaming_pc", "monitor", "motherboard"],
-    "optional_dataset_words": ["Gaming", "Thin"],
-    "requires_description": true,
-    "filters": [
-      "model", "cpu", "gpu_chipset", "memory_size", "memory_type", "storage_size", "display_size", "resolution",
-      "panel_type", "refresh_rate"
+    "id": "GamingLaptop",
+    "move_rules": [
+      ["Others", "STATION ACCUEIL|Station D'accueil|Station d’accueil|Station deaccueil"],
+      ["Monitor", "#^ecran||#^Écran"],
+      ["Motherboard", "carte mere"],
+      ["PC", "PC de bureau"]
+    ],
+    "move_by_description_rules": [
+      ["Laptop", "!=rtx&iris|ThinkPad|Dell Pro|HP 15"]
     ],
     "title_cleaner": {
       "replace_words": [
-        ["Idea Pad", "IdeaPad"], ["Légion", "Legion"], ["GF 63", "GF63"]
+        ["Idea Pad", "IdeaPad"], ["Légion", "Legion"], ["GF 63", "GF63"], ["Cybrorg", "Cyborg"],
+        [" .6\"", ".6\""], [".,", "."], ["Graphique", "Graphics"], ["Graphic ", "Graphics "],
+        ["ᵉ", "E"], ["‑", "-"], ["™", ""], ["®", ""], ["(TM)", ""], ["–", ""], ["Processor ", ""]
       ],
       "add_brands_by_models": [
         ["V16", "V3607"], ["ROG", "Zephyrus"], ["TUF", "ASUS Dash"], ["MSI", "Katana"], ["Gigabyte", "Aorus"],
         ["Lenovo", "Legion"]
       ]
     },
-    "render_specs": ["model", "display", "cpu", "gpu", "memory", "storage"]
-  },
-  {
-    "id": "mac_book",
-    "include": ["macbook|macebook"],
-    "exclude": ["mini|imac|studio|e5"],
-    "requires_description": true,
     "filters": [
-      "cpu", "memory_size", "memory_type", "storage_size", "display_size", "resolution"
+      "model", "cpu", "gpu", "memory_size", "memory_type", "storage_size", "display_size", "resolution",
+      "panel_type", "refresh_rate"
     ],
-    "render_specs": ["display", "cpu", "memory", "storage"]
+    "components": ["model", "display", "cpu", "gpu", "memory", "storage"],
+    "group": ["model", "cpu", "gpu"],
+    "id_field_name": "model"
   },
   {
-    "id": "upgrade_kit",
-    "include": ["pack|upgrade|bundle|level up"],
-    "exclude": ["portable|souris|clavier"],
-    "unswitchable": true
-  },
-  {
-    "id": "monitor",
-    "include": ["ecran|Écran|monitor|moniteur|ips"],
-    "include_description": ["ecran|Écran|monitor|moniteur|hdr", "curved&QHD"],
-    "exclude": ["support&!=ips"],
-    "skip_include_check": true,
-    "requires_description": true
-  },
-  {
-    "id": "cpu",
-    "include": [
-      "intel|core|i3|i5|i7|i9|ryzen|snapdragon|Athlon|Athlon™|jasper lake|gemini lake", "#ryzen", "#AMD R9",
-      "ultra 5|ultra5|ultra 7|ultra7|ultra 9|ultra9"
+    "id": "MacBook",
+    "move_rules": [
+      ["MiniPC", "mini|mac studio"],
+      ["AllInOnePC", "imac"]
     ],
-    "optional_dataset_words": ["Intel", "Core", "AMD", "Pro"],
+    "filters": ["cpu", "memory_size", "memory_type", "storage_size", "display_size", "resolution"],
+    "components": ["display", "cpu", "memory", "storage"]
+  },
+  {
+    "id": "Monitor",
+    "move_rules": [
+      ["Others", "support&!=tactile||barre"]
+    ],
+    "filters": ["display_size", "resolution", "panel_type", "refresh_rate"],
+    "components": ["display"]
+  },
+  {
+    "id": "CPU",
+    "move_rules": [
+      ["Others", "frame|pate"],
+      ["Cooler", "#^ventil"],
+      ["Motherboard", "carte&!=pack|intel"],
+      ["Laptop", "portable"]
+    ],
     "title_cleaner": {
       "replace_words": [
         ["Ryzen3", "Ryzen 3"], ["Ryzen5", "Ryzen 5"], ["Ryzen7", "Ryzen 7"], ["Ryzen9", "Ryzen 9"],
@@ -127,21 +116,26 @@
         ["U5-", "Ultra 5 "], ["U7-", "Ultra 7 "], ["U9-", "Ultra 9 "],
         ["Ultra5", "Ultra 5"], ["Ultra7", "Ultra 7"], ["Ultra9", "Ultra 9"],
         ["Ultra 5-", "Ultra 5 "], ["Ultra 7-", "Ultra 7 "], ["Ultra 9-", "Ultra 9 "],
+        ["Intel ultra 5", "Intel Core Ultra 5"], ["Intel ultra 7", "Intel Core Ultra 7"],
+        ["Intel ultra 9", "Intel Core Ultra 9"],
         ["Core i 3 ", "Core i3"], ["Core i 5", "Core i5"], ["Core i 7", "Core i7"], ["Core i 9 ", "Core i9"],
         ["Ulta ", "Ultra "], ["Ryzen AL", "Ryzen AI"], [" 258 V ", " 258V "], [" 256 V ", " 256V "],
         ["RYZENTM5", "RYZEN 5"], ["RYZEN 9 AI", "RYZEN AI 9"], [", HEXA-CORE", ""], ["Penitum", "Pentium"],
-        [" HS", "HS"], [" HX", "HX"], ["Inte ", "Intel "], ["I ntel", "Intel"], [" A4- ", " A4-"]
+        [" HS", "HS"], ["Inte ", "Intel "], ["I ntel", "Intel"], [" A4- ", " A4-"], ["Ryzen 9 AI", "Ryzen AI 9"],
+        ["275 HX", "275HX"], ["0 H (", "0H ("]
       ]
     },
-    "filters": ["brand", "socket", "memory_support", "core_count", "thread_count", "integrated_gpu"],
-    "brands": ["Intel", "AMD"]
+    "filters": ["chipset", "brand", "socket", "memory_support", "core_count", "thread_count"],
+    "id_field_name": "chipset"
   },
   {
-    "id": "gpu",
-    "include": ["graphique|garphique|rtx|radeon|arc|gt|gtx|rx"],
-    "exclude": ["support|Bureau|laptop|portable"],
-    "optional_dataset_words": ["GeForce", "Radeon", "Dual", "GAMING", "OC"],
-    "has_chipsets_dataset": true,
+    "id": "GPU",
+    "move_rules": [
+      ["Others", "support|usb|board|nvlink"],
+      ["PowerSupply", "#alimentation"],
+      ["Case", "Boetier|Boitier"],
+      ["Motherboard", "mere"]
+    ],
     "title_cleaner": {
       "remove_words": ["carte graphique"],
       "replace_words": [
@@ -163,13 +157,19 @@
       "ASRock", "ASUS", "AXLE", "Arktek", "Gigabyte", "INNO3D", "MANLI", "MSI", "OCPC", "PNY", "Palit",
       "PowerColor", "Sapphire", "WINNFOX", "XFX", "XStorm", "ZEPHYR", "ZOTAC", "Biostar", "EVGA", "NVIDIA", "AMD"
     ],
-    "filters": ["brand", "chipset", "memory_size", "memory_type", "bus_interface"]
+    "filters": ["brand", "chipset", "memory_size"],
+    "group": ["name"],
+    "id_field_name": "chipset"
   },
   {
-    "id": "memory",
-    "include": ["mémoire|ram|memoire|mem|barette|barrette"],
-    "exclude": ["carte|chargeur|Batterie|Boîtier|Boetier|Boete|Boite"],
-    "skip_include_check": true,
+    "id": "Memory",
+    "move_rules": [
+      ["Others", "carte son|chargeur|usb"],
+      ["PowerSupply", "#alimentation"],
+      ["Case", "boitier|Boetier"],
+      ["GPU", "graphique"],
+      ["Motherboard", "mere"]
+    ],
     "title_cleaner": {
       "replace_words": [
         ["D4", "DDR4"], ["D5", "DDR5"], ["DDR 4", "DDR4"], ["DDR 5", "DDR5"], ["DRR4", "DDR4"], ["GAMMIG", "GAMMIX"],
@@ -180,11 +180,26 @@
     "filters": ["size", "memory_type", "speed"]
   },
   {
-    "id": "motherboard",
-    "include": ["mere|mére|mère"],
-    "exclude": ["alimentation|riser|carte hdd|hp|laptop"],
-    "skip_include_check": true,
-    "optional_dataset_words": ["TUF GAMING", "PRIME"],
+    "id": "Storage",
+    "move_rules": [
+      ["Others", "externe|usb|caddy|carte|Boitier|Boîtier|dock|argus"]
+    ],
+    "title_cleaner": {
+      "replace_words": [
+        ["Team Group", "TeamGroup"], ["SGAMMIX", "GAMMIX"], ["FUTUREX", "Future"], ["Colorfull", "Colorful"],
+        ["WD", "Western Digital"], ["Patriot/", "Patriot"], ["Gigabayte", "Gigabyte"]
+      ],
+      "add_brands_by_models": [
+        ["MSI", "SPATIUM"], ["Seagate", "BarraCuda"]
+      ]
+    },
+    "filters": ["size"]
+  },
+  {
+    "id": "Motherboard",
+    "move_rules": [
+      ["Others", "riser|portable|carte hdd|hp|dell"]
+    ],
     "title_cleaner": {
       "replace_words": [
         ["Wi-Fi", "WiFi"], ["B560-M", "B560M"],
@@ -200,29 +215,26 @@
     }
   },
   {
-    "id": "storage",
-    "include": ["ssd|nvme|hdd|SPATIUM|SATA|Seagate|disque"],
-    "exclude": ["externe|usb|argus|Boîtier|BOITIER|caddy|carte"],
-    "title_cleaner": {
-      "replace_words": [
-        ["Team Group", "TeamGroup"], ["SGAMMIX", "GAMMIX"], ["FUTUREX", "Future"], ["Colorfull", "Colorful"],
-        ["WD", "Western Digital"], ["Patriot/", "Patriot"], ["Gigabayte", "Gigabyte"]
-      ],
-      "add_brands_by_models": [
-        ["MSI", "SPATIUM"], ["Seagate", "BarraCuda"]
-      ]
-    },
-    "filters": ["size"]
+    "id": "Cooler",
+    "move_rules": [
+      ["Others", "thermique|Thérmique|pate|Pâte|portable|acer|hp|dell|asus|lenovo|toshiba|usb|table|thermal|noctua||#control||Refroidisseur|Refroidisseurs&SPIRIT OF GAMER airblade|havit|ice|17″ SOG"],
+      ["PowerSupply", "#alimentation"],
+      ["GPU", "graphique"]
+    ]
   },
   {
-    "id": "case",
-    "include": ["Boetier|boitier|Boîtier&!=pc"],
-    "exclude": [
-      "disque|hdd|ssd|m.2|nvme|clé|flash|usb|caddy|externe|amd|lenovo|pack|i3", "bande|bandes&led", "#rtx",
-      "#^ecran"
+    "id": "PowerSupply",
+    "move_rules": [
+      ["Others", "lenovo|hp|dell"],
+      ["AccessoriesCombo", "pack"]
+    ]
+  },
+  {
+    "id": "Case",
+    "move_rules": [
+      ["Others", "led&!=Boitier"],
+      ["GamingPC", "#rtx||ecran"]
     ],
-    "exclude_description": ["cpu|intel|ecran|rtx|amd"],
-    "skip_include_check": true,
     "title_cleaner": {
       "replace_words": [
         ["CoolerMaster", "Cooler Master"], ["Aero Cool", "AeroCool"], ["INTERECH", "Inter-Tech"],
@@ -234,48 +246,115 @@
     }
   },
   {
-    "id": "power_supply",
-    "include": ["alimentation"],
-    "exclude": ["pack"],
-    "skip_include_check": true
+    "id": "Mouse",
+    "move_rules": [
+      ["Others", "Air Mouse"],
+      ["AccessoriesCombo", "pack|combo|ensemble||souris&clavier|casque"],
+      ["MousePad", "tapis"],
+      ["Keyboard", "clavier"],
+      ["Headphones", "casque"]
+    ]
   },
   {
-    "id": "cooler",
-    "include": ["Ventilateur|Ventillateur"],
-    "skip_include_check": true,
-    "brands": ["Cooler Master"]
+    "id": "Keyboard",
+    "move_rules": [
+      ["Others", "Étiquette|Etiquette||touches&!=gamer"],
+      ["AccessoriesCombo", "pack|combo|ensemble||clavier&souris|tapis|casque"],
+      ["MousePad", "tapis"],
+      ["Mouse", "souris"],
+      ["Headphones", "casque"]
+    ]
   },
   {
-    "id": "mouse",
-    "include": ["mouse|souris"],
-    "exclude": ["keyboard|clavier|ecran|écran"],
-    "switchable_to": ["keyboard", "accessories_combo", "monitor"],
-    "skip_include_check": true
+    "id": "MousePad",
+    "move_rules": [
+      ["AccessoriesCombo", "pack|combo|ensemble"]
+    ]
   },
   {
-    "id": "keyboard",
-    "include": ["keyboard|clavier|Pavé"],
-    "exclude": ["mouse|souris|ecran|écran"],
-    "switchable_to": ["mouse", "accessories_combo", "monitor"],
-    "skip_include_check": true
+    "id": "Headphones",
+    "move_rules": [
+      ["Others", "touches"],
+      ["AccessoriesCombo", "pack|combo|ensemble||clavier&souris"]
+    ]
   },
   {
-    "id": "accessories_combo",
-    "include": ["mouse|souris&keyboard|clavier", "ensemble|combo|pack"],
-    "exclude": ["clavier&!=souris", "souris&!=clavier", "ecran|écran|Pavé"],
-    "switchable_to": ["mouse", "keyboard", "monitor"],
-    "skip_include_check": true
+    "id": "GamingChair",
+    "move_rules": [
+      ["Others", "bureau"]
+    ]
   },
   {
-    "id": "trash",
-    "include": [
-      "Vidéoprojecteur|Pâte|pate|Nettoyage|caddy|clé|cle|DOCK STATION|externe|Synchronization Board|support|chargeur|disque dur portable|Barre",
-      "STATION ACCUEIL|Station D'accueil|Station d’accueil|Station deaccueil", "alimentation&lenovo|hp|dell",
-      "Étiquette|Etiquette|Controleur|Serveur de stockage|Coque Arrière|sbox", "Refroidisseur|Ventilateur&portable|disque",
-      "thermal pad|cooling pad", "REFROIDISSEUR&SPIRIT OF GAMER airblade|havit|ice|17″ SOG",
-      "ventilateur|ventillo&hp|lenovo|dell|toshiba|acer|asus"
+    "id": "AccessoriesCombo",
+    "move_rules": [
+      ["PC", "PC"],
+      ["Monitor", "ecran"],
+      ["Keyboard", "Pavé||clavier&!=souris|combo|pack|ensemble"],
+      ["Mouse", "souris&!=clavier|combo|pack|ensemble"]
+    ]
+  },
+  {
+    "id": "UpgradeKit",
+    "move_rules": [
+      ["AccessoriesCombo", "Clavier&Souris"]
+    ]
+  },
+  {
+    "id": "Console",
+    "move_rules": [
+      ["Others", "imprimante|console de jeu"],
+      ["Controller", "manette&!=pack|sony|xbox||joy-con&!=console"],
+      ["ConsoleAccessories", "volant|dock|game stick&!=pack"],
+      ["ConsoleGame", "jeu Nintendo Switch||jeux|jeu&PS5|PS4|PC|Nintendo&!=console"]
     ],
-    "exclude": ["apple|Carte Mère|souris|mouse|poignet|SilentiumPC|ips|intel"],
-    "exclude_description": ["nvidia|rtx|intel|amd"]
+    "min_price": 400
+  },
+  {
+    "id": "Controller",
+    "move_rules": [
+      ["Others", "cable|câble"],
+      ["Headphones", "casque|Écouteurs"],
+      ["ConsoleAccessories", "pistolet|ventilateur|film|chargeur|stand|volant|vitesses|panneau|streamdeck|thrustmaster|ecran||joystick&logitech"],
+      ["ConsoleGame", "jeux|jeu&vidéo|Mario"]
+    ]
+  },
+  {
+    "id": "ConsoleGame",
+    "move_rules": [
+      ["Controller", "manette|mannette|manettes"],
+      ["ConsoleAccessories", "volant"]
+    ]
+  },
+  {
+    "id": "ConsoleAccessories",
+    "move_rules": [
+      ["Others", "led|Câble d’Extension"],
+      ["Console", "portable"],
+      ["Controller", "manette|mannette|manettes&!=chargeur|support|station|module"]
+    ]
+  },
+  {
+    "id": "Smartphone",
+    "move_rules": [
+      ["Headphones", "ecouteurs"]
+    ],
+    "min_price": 100
+  },
+  {
+    "id": "Tablet",
+    "min_price": 70
+  },
+  {
+    "id": "Smartwatch"
+  },
+  {
+    "id": "Television",
+    "move_rules": [
+      ["Others", "Télécommande"]
+    ],
+    "min_price": 100
+  },
+  {
+    "id": "Others"
   }
 ]

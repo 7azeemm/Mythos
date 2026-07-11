@@ -1,11 +1,11 @@
 use crate::utils::web_client::WebClientType;
 use crate::web_scraper::product::ProductStatus;
 use crate::web_scraper::sections::Section;
-use crate::web_scraper::utils::ElementRefExt;
 use crate::web_scraper::sites::{Site, SiteConfig};
 use once_cell::sync::Lazy;
 use scraper::{ElementRef, Html, Selector};
 use std::error::Error;
+use crate::utils::scraper_ext::ElementRefExt;
 
 const PRODUCTS_PER_PAGE: i32 = 3;
 
@@ -22,23 +22,29 @@ static CONFIG: SiteConfig = SiteConfig {
     status_sel: Some(Lazy::new(|| Selector::parse("div.tvproduct-cart-btn form button").unwrap())),
     desc_sel: Some(Lazy::new(|| Selector::parse("div.tv-product-desc").unwrap())),
     page_desc_sel: Some(Lazy::new(|| Selector::parse("div.tvproduct-page-decs").unwrap())),
+    empty_page_sel: Some(Lazy::new(|| Selector::parse("section.page-not-found").unwrap())),
     sections: &[
         (Section::GamingPC, "https://www.scoopgaming.com.tn/56-pc-gamer"),
         (Section::GamingLaptop, "https://www.scoopgaming.com.tn/62-pc-portable-gamer"),
         (Section::Monitor, "https://www.scoopgaming.com.tn/83-ecrans-pc"),
-        (Section::Mouse, "https://www.scoopgaming.com.tn/7-souris"),
-        (Section::Keyboard, "https://www.scoopgaming.com.tn/8-clavier"),
-        (Section::AccessoriesCombo, "https://www.scoopgaming.com.tn/133-nos-pack"),
-        (Section::UpgradeKit, "https://www.scoopgaming.com.tn/127-kit-upgrade-pc"),
         (Section::CPU, "https://www.scoopgaming.com.tn/80-processeur"),
         (Section::GPU, "https://www.scoopgaming.com.tn/39-carte-graphique"),
         (Section::Memory, "https://www.scoopgaming.com.tn/131-memoire-pc"),
-        (Section::Motherboard, "https://www.scoopgaming.com.tn/40-carte-mere"),
         (Section::Storage, "https://www.scoopgaming.com.tn/15-stockage"),
+        (Section::Motherboard, "https://www.scoopgaming.com.tn/40-carte-mere"),
         (Section::Cooler, "https://www.scoopgaming.com.tn/49-refroidissement"),
         (Section::Cooler, "https://www.scoopgaming.com.tn/42-ventilateur"),
         (Section::PowerSupply, "https://www.scoopgaming.com.tn/48-alimentation"),
         (Section::Case, "https://www.scoopgaming.com.tn/38-boitier"),
+        (Section::Mouse, "https://www.scoopgaming.com.tn/7-souris"),
+        (Section::Keyboard, "https://www.scoopgaming.com.tn/8-clavier"),
+        (Section::MousePad, "https://www.scoopgaming.com.tn/11-tapis"),
+        (Section::Headphones, "https://www.scoopgaming.com.tn/9-casque-micro"),
+        (Section::AccessoriesCombo, "https://www.scoopgaming.com.tn/133-nos-pack"),
+        (Section::UpgradeKit, "https://www.scoopgaming.com.tn/127-kit-upgrade-pc"),
+        (Section::Console, "https://www.scoopgaming.com.tn/95-consoles-de-jeux"),
+        (Section::Controller, "https://www.scoopgaming.com.tn/6-manette-joystick-et-volant"),
+        (Section::ConsoleGame, "https://www.scoopgaming.com.tn/96-jeux-videos"),
     ]
 };
 

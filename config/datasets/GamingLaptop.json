@@ -1,0 +1,114 @@
+{
+  "optionals": ["Gaming", "Thin"],
+  "ASUS": {
+    "ASUS ROG Flow": ["ASUS ROG Flow Z13"],
+    "ASUS ROG Strix": [
+      "ASUS ROG Strix G15",
+      "ASUS ROG Strix G16",
+      "ASUS ROG Strix G17",
+      "ASUS ROG Strix SCAR 15",
+      "ASUS ROG Strix SCAR 18"
+    ],
+    "ASUS ROG Zephyrus": [
+      "ASUS ROG Zephyrus G14",
+      "ASUS ROG Zephyrus G15",
+      "ASUS ROG Zephyrus G16",
+      "ASUS ROG Zephyrus M16"
+    ],
+    "ASUS TUF Gaming": [
+      "ASUS TUF Gaming Dash F15",
+      "ASUS TUF Gaming A14",
+      "ASUS TUF Gaming A15",
+      "ASUS TUF Gaming A16",
+      "ASUS TUF Gaming F16",
+      "ASUS TUF Gaming F17"
+    ],
+    "ASUS V16": [],
+    "ASUS Vivobook": [
+      "ASUS Vivobook Pro 15 OLED",
+      "ASUS Vivobook 16X"
+    ],
+    "ASUS Zenbook": [
+      "ASUS Zenbook Pro 14 Duo OLED"
+    ]
+  },
+  "Dell": {
+    "Dell Alienware": [
+      "Dell Alienware 16 Aurora"
+    ],
+    "Dell G3": [],
+    "Dell G15": [
+      "Dell G15 5510",
+      "Dell G15 5511",
+      "Dell G15 5520",
+      "Dell G15 5530",
+      "Dell G15 5535"
+    ]
+  },
+  "Gigabyte": {
+    "Gigabyte A16": [],
+    "Gigabyte AERO": [
+      "Gigabyte AERO X16",
+      "Gigabyte AERO 14",
+      "Gigabyte AERO 16",
+      "Gigabyte AERO 17"
+    ],
+    "Gigabyte AORUS": [
+      "Gigabyte AORUS Master 16",
+      "Gigabyte AORUS Master 18",
+      "Gigabyte AORUS 15",
+      "Gigabyte AORUS 16X"
+    ],
+    "Gigabyte G5": [],
+    "Gigabyte G6": [],
+    "Gigabyte G7": []
+  },
+  "HP": {
+    "HP OMEN": [
+      "HP OMEN MAX 16"
+    ],
+    "HP Victus": [
+      "HP Victus 15",
+      "HP Victus 16"
+    ]
+  },
+  "Lenovo": {
+    "Lenovo IdeaPad Gaming 3": [],
+    "Lenovo LOQ": [
+      "Lenovo LOQ Essential 15IRX11",
+      "Lenovo LOQ 15AHP10",
+      "Lenovo LOQ 15APH8",
+      "Lenovo LOQ 15ARP10E",
+      "Lenovo LOQ 15ARP9",
+      "Lenovo LOQ 15IAX9",
+      "Lenovo LOQ 15IAX9E",
+      "Lenovo LOQ 15IRH8",
+      "Lenovo LOQ 15IRX10",
+      "Lenovo LOQ 15IRX9",
+      "Lenovo LOQ 17IRX10"
+    ],
+    "Lenovo Legion": [
+      "Lenovo Legion Pro 5",
+      "Lenovo Legion Pro 7"
+    ],
+    "Lenovo ThinkPad": [
+      "Lenovo ThinkPad P16S Gen2",
+      "Lenovo ThinkPad P16S Gen3"
+    ]
+  },
+  "MSI": {
+    "MSI Creator": ["MSI Creator Z16"],
+    "MSI CreatorPro": ["MSI CreatorPro M16"],
+    "MSI Crosshair": ["MSI Crosshair 18 HX AI A2XW"],
+    "MSI Cyborg": ["MSI Cyborg 15", "MSI Cyborg 17"],
+    "MSI Katana": ["MSI Katana 15", "MSI Katana 17"],
+    "MSI Prestige": ["MSI Prestige 14"],
+    "MSI Stealth": ["MSI Stealth 17M"],
+    "MSI Thin": ["MSI Thin GF63", "MSI Thin 15"],
+    "MSI Vector": ["MSI Vector 16 HX AI A2XW", "MSI Vector GP68 HX 13V"]
+  },
+  "YATAGAN": {
+    "YATAGAN SPIKE": [],
+    "YATAGAN VARSAK": []
+  }
+}

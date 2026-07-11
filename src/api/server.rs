@@ -8,22 +8,14 @@ use crate::api::middleware::logging_middleware;
 
 pub async fn run(port: u16) -> Result<(), Box<dyn Error>> {
     let app = Router::new()
-        .route("/health", get(health_check))
-
-        .route("/debug/sections", get(endpoints::debug::get_sections))
-        .route("/debug/{section}", get(endpoints::debug::get_section))
-        .route("/debug/{section}/products", get(endpoints::debug::get_products))
+        .route("/info", get(endpoints::info::get_info))
+        .route("/{section}/products", get(endpoints::products::get_products))
 
         .layer(CorsLayer::permissive())// For Debugging ONLY
-
         .layer(middleware::from_fn(logging_middleware));
 
     let listener = TcpListener::bind(format!("0.0.0.0:{}", port)).await?;
     axum::serve(listener, app.into_make_service_with_connect_info::<std::net::SocketAddr>()).await?;
     
     Ok(())
-}
-
-pub async fn health_check() -> &'static str {
-    "OK"
 }

@@ -1,19 +1,16 @@
+use std::collections::HashMap;
 use crate::web_scraper::sections::Section;
 use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
-use serde_json::Value;
+use serde_json::{Map, Value};
 use std::fmt::Display;
 use std::hash::{DefaultHasher, Hash, Hasher};
 use std::str::FromStr;
-use crate::web_scraper::sites::mytek::Mytek;
-use crate::web_scraper::sites::Site;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Product {
     pub id: String,
     pub url: String,
-    #[serde(default)]
-    pub name: String,
     pub title: String,
     pub site: String,
     pub section: Section,
@@ -22,8 +19,13 @@ pub struct Product {
     pub status: ProductStatus,
     pub price: i32,
     pub old_price: Option<i32>,
-    #[serde(default)]
-    pub specs: Value,
+    // #[serde(skip_deserializing)]
+    #[serde(skip)]
+    pub specs: Specs,
+    #[serde(skip_deserializing)]
+    pub filter_ids: HashMap<String, String>,
+    #[serde(skip_deserializing)]
+    pub components: HashMap<String, String>,
     pub history: Value,
     pub updated_at: Option<DateTime<Utc>>,
     pub removed_at: Option<DateTime<Utc>>,
@@ -31,9 +33,10 @@ pub struct Product {
 }
 
 impl Product {
-    pub fn new(site: &str, url: String, title: String, section: Section,
-               description: Option<String>, image: String, status: ProductStatus,
-               price: i32, old_price: Option<i32>) -> Result<Self, String> {
+    pub fn new(
+        site: &str, url: String, title: String, section: Section, description: Option<String>,
+        image: String, status: ProductStatus, price: i32, old_price: Option<i32>
+    ) -> Result<Self, String> {
 
         let normalized_url = url.trim_end_matches("/").trim_end_matches(".html").to_lowercase();
         let str = format!("{}:{normalized_url}", site.to_lowercase());
@@ -44,7 +47,6 @@ impl Product {
         Ok(Self {
             id,
             url,
-            name: title.clone(),
             title,
             site: site.to_string(),
             section,
@@ -53,12 +55,35 @@ impl Product {
             status,
             price,
             old_price,
-            specs: Value::default(),
+            specs: Specs(Map::new()),
+            filter_ids: Default::default(),
+            components: Default::default(),
             history: Default::default(),
             updated_at: None,
             removed_at: None,
             added_at: Utc::now()
         })
+    }
+}
+
+#[derive(Debug, Clone, Default, Serialize, Deserialize)]
+pub struct Specs(Map<String, Value>);
+
+impl Specs {
+    pub fn set(&mut self, key: &str, value: impl Into<Value>) {
+        self.0.insert(key.to_string(), value.into());
+    }
+
+    pub fn get(&self, key: &str) -> Option<&Value> {
+        self.0.get(key)
+    }
+
+    pub fn get_str(&self, key: &str) -> Option<&str> {
+        self.0.get(key)?.as_str()
+    }
+
+    pub fn remove(&mut self, key: &str) {
+        self.0.remove(key);
     }
 }
 
@@ -87,9 +112,9 @@ impl FromStr for ProductStatus {
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         let lower = s.to_lowercase();
         let statuses = vec![
-            (Self::InStock, vec!["instock", "en stock", "in stock", "ajouter"]),
-            (Self::OutOfStock, vec!["outofstock", "hors stock", "epuisé", "rupture de stock"]),
-            (Self::OnArrive, vec!["onarrive", "en arrivage"]),
+            (Self::InStock, vec!["instock", "en stock", "in stock", "ajouter", "disponible", "sale"]),
+            (Self::OutOfStock, vec!["outofstock", "hors stock", "epuisé", "épuisé", "rupture de stock"]),
+            (Self::OnArrive, vec!["onarrive", "en arrivage", "arriving"]),
             (Self::OnRequest, vec!["onrequest", "sur commande", "surcommande"]),
         ];
 

@@ -1,0 +1,2779 @@
+{
+  "optionals": ["Intel", "Core", "AMD", "Pro"],
+  "Intel": {
+    "Intel Core i3": [
+      {
+        "name": "Intel Core i3-10100",
+        "core_count": "4",
+        "thread_count": "8",
+        "base_clock": "3.6",
+        "boost_clock": "4.3",
+        "tdp": "65",
+        "l1_cache": "256",
+        "l2_cache": "1",
+        "l3_cache": "6",
+        "total_cache": "7",
+        "socket": "Intel Socket 1200",
+        "memory_support": "DDR4",
+        "integrated_gpu": "UHD Graphics 630"
+      },
+      {
+        "name": "Intel Core i3-10100F",
+        "core_count": "4",
+        "thread_count": "8",
+        "base_clock": "3.6",
+        "boost_clock": "4.3",
+        "tdp": "65",
+        "l1_cache": "256",
+        "l2_cache": "1",
+        "l3_cache": "6",
+        "total_cache": "7",
+        "socket": "Intel Socket 1200",
+        "memory_support": "DDR4"
+      },
+      {
+        "name": "Intel Core i3-10105",
+        "core_count": "4",
+        "thread_count": "8",
+        "base_clock": "3.7",
+        "boost_clock": "4.4",
+        "tdp": "65",
+        "l1_cache": "256",
+        "l2_cache": "1",
+        "l3_cache": "6",
+        "total_cache": "7",
+        "socket": "Intel Socket 1200",
+        "memory_support": "DDR4",
+        "integrated_gpu": "UHD Graphics 630"
+      },
+      {
+        "name": "Intel Core i3-10105F",
+        "core_count": "4",
+        "thread_count": "8",
+        "base_clock": "3.7",
+        "boost_clock": "4.4",
+        "tdp": "65",
+        "l1_cache": "256",
+        "l2_cache": "1",
+        "l3_cache": "6",
+        "total_cache": "7",
+        "socket": "Intel Socket 1200",
+        "memory_support": "DDR4"
+      },
+      {
+        "name": "Intel Core i3-10320",
+        "core_count": "4",
+        "thread_count": "8",
+        "base_clock": "3.8",
+        "boost_clock": "4.6",
+        "tdp": "91",
+        "l1_cache": "256",
+        "l2_cache": "1",
+        "l3_cache": "8",
+        "total_cache": "9",
+        "socket": "Intel Socket 1200",
+        "memory_support": "DDR4",
+        "integrated_gpu": "UHD Graphics 630"
+      },
+      {
+        "name": "Intel Core i3-12100",
+        "core_count": "4",
+        "thread_count": "8",
+        "base_clock": "3.3",
+        "boost_clock": "4.3",
+        "tdp": "60",
+        "l1_cache": "320",
+        "l2_cache": "5",
+        "l3_cache": "12",
+        "total_cache": "17",
+        "socket": "Intel Socket 1700",
+        "memory_support": "DDR4, DDR5",
+        "integrated_gpu": "UHD Graphics 730"
+      },
+      {
+        "name": "Intel Core i3-12100F",
+        "core_count": "4",
+        "thread_count": "8",
+        "base_clock": "3.3",
+        "boost_clock": "4.3",
+        "tdp": "58",
+        "l1_cache": "320",
+        "l2_cache": "5",
+        "l3_cache": "12",
+        "total_cache": "17",
+        "socket": "Intel Socket 1700",
+        "memory_support": "DDR4, DDR5"
+      },
+      {
+        "name": "Intel Core i3-12300"
+      },
+      {
+        "name": "Intel Core i3-13100"
+      },
+      {
+        "name": "Intel Core i3-13100F",
+        "core_count": "4",
+        "thread_count": "8",
+        "base_clock": "3.4",
+        "boost_clock": "4.5",
+        "tdp": "58",
+        "l1_cache": "320",
+        "l2_cache": "5",
+        "l3_cache": "12",
+        "total_cache": "17",
+        "socket": "Intel Socket 1700",
+        "memory_support": "DDR4, DDR5"
+      },
+      {
+        "name": "Intel Core i3-14100",
+        "core_count": "4",
+        "thread_count": "8",
+        "base_clock": "3.5",
+        "boost_clock": "4.7",
+        "tdp": "58",
+        "l1_cache": "320",
+        "l2_cache": "5",
+        "l3_cache": "12",
+        "total_cache": "17",
+        "socket": "Intel Socket 1700",
+        "memory_support": "DDR4, DDR5",
+        "integrated_gpu": "UHD Graphics 730"
+      },
+      {
+        "name": "Intel Core i3-14100F",
+        "core_count": "4",
+        "thread_count": "8",
+        "base_clock": "3.5",
+        "boost_clock": "4.7",
+        "tdp": "58",
+        "l1_cache": "320",
+        "l2_cache": "5",
+        "l3_cache": "12",
+        "total_cache": "17",
+        "socket": "Intel Socket 1700",
+        "memory_support": "DDR4, DDR5"
+      },
+      {
+        "name": "Intel Core i3-1000NG4"
+      },
+      {
+        "name": "Intel Core i3-1005G1"
+      },
+      {
+        "name": "Intel Core i3-10110U"
+      },
+      {
+        "name": "Intel Core i3-1110G4"
+      },
+      {
+        "name": "Intel Core i3-1115G4"
+      },
+      {
+        "name": "Intel Core i3-1115G4"
+      },
+      {
+        "name": "Intel Core i3-1215U"
+      },
+      {
+        "name": "Intel Core i3-1220P"
+      },
+      {
+        "name": "Intel Core i3-1305U"
+      },
+      {
+        "name": "Intel Core i3-1315U"
+      },
+      {
+        "name": "Intel Core i3-2100"
+      },
+      {
+        "name": "Intel Core i3-2310M"
+      },
+      {
+        "name": "Intel Core i3-4005U"
+      },
+      {
+        "name": "Intel Core i3-4130"
+      },
+      {
+        "name": "Intel Core i3-4150"
+      },
+      {
+        "name": "Intel Core i3-550"
+      },
+      {
+        "name": "Intel Core i3-6100"
+      },
+      {
+        "name": "Intel Core i3-6006U"
+      },
+      {
+        "name": "Intel Core i3-7020U"
+      },
+      {
+        "name": "Intel Core i3-7100"
+      },
+      {
+        "name": "Intel Core i3-7100U"
+      },
+      {
+        "name": "Intel Core i3-8100"
+      },
+      {
+        "name": "Intel Core i3-8109U"
+      },
+      {
+        "name": "Intel Core i3-8145U"
+      },
+      {
+        "name": "Intel Core i3-9100T"
+      },
+      {
+        "name": "Intel Core i3-N300"
+      },
+      {
+        "name": "Intel Core i3-N305"
+      },
+      {
+        "name": "Intel Core i3-10100Y"
+      }
+    ],
+    "Intel Core i5": [
+      {
+        "name": "Intel Core i5-10400",
+        "core_count": "6",
+        "thread_count": "12",
+        "base_clock": "2.9",
+        "boost_clock": "4.3",
+        "tdp": "65",
+        "l1_cache": "384",
+        "l2_cache": "1.5",
+        "l3_cache": "12",
+        "total_cache": "14",
+        "socket": "Intel Socket 1200",
+        "memory_support": "DDR4",
+        "integrated_gpu": "UHD Graphics 630"
+      },
+      {
+        "name": "Intel Core i5-10400F",
+        "core_count": "6",
+        "thread_count": "12",
+        "base_clock": "2.9",
+        "boost_clock": "4.3",
+        "tdp": "65",
+        "l1_cache": "384",
+        "l2_cache": "1.5",
+        "l3_cache": "12",
+        "total_cache": "14",
+        "socket": "Intel Socket 1200",
+        "memory_support": "DDR4"
+      },
+      {
+        "name": "Intel Core i5-10500",
+        "core_count": "6",
+        "thread_count": "12",
+        "base_clock": "3.1",
+        "boost_clock": "4.5",
+        "tdp": "65",
+        "l1_cache": "384",
+        "l2_cache": "1.5",
+        "l3_cache": "12",
+        "total_cache": "14",
+        "socket": "Intel Socket 1200",
+        "memory_support": "DDR4",
+        "integrated_gpu": "UHD Graphics 630"
+      },
+      {
+        "name": "Intel Core i5-10600"
+      },
+      {
+        "name": "Intel Core i5-10600K",
+        "core_count": "6",
+        "thread_count": "12",
+        "base_clock": "4.1",
+        "boost_clock": "4.8",
+        "tdp": "125",
+        "l1_cache": "384",
+        "l2_cache": "1.5",
+        "l3_cache": "12",
+        "total_cache": "14",
+        "socket": "Intel Socket 1200",
+        "memory_support": "DDR4",
+        "integrated_gpu": "UHD Graphics 630"
+      },
+      {
+        "name": "Intel Core i5-10600KF",
+        "core_count": "6",
+        "thread_count": "12",
+        "base_clock": "4.1",
+        "boost_clock": "4.8",
+        "tdp": "95",
+        "l1_cache": "384",
+        "l2_cache": "1.5",
+        "l3_cache": "12",
+        "total_cache": "14",
+        "socket": "Intel Socket 1200",
+        "memory_support": "DDR4"
+      },
+      {
+        "name": "Intel Core i5-11400",
+        "core_count": "6",
+        "thread_count": "12",
+        "base_clock": "2.6",
+        "boost_clock": "4.4",
+        "tdp": "65",
+        "l1_cache": "480",
+        "l2_cache": "3",
+        "l3_cache": "12",
+        "total_cache": "15",
+        "socket": "Intel Socket 1200",
+        "memory_support": "DDR4",
+        "integrated_gpu": "UHD Graphics 730"
+      },
+      {
+        "name": "Intel Core i5-11400F",
+        "core_count": "6",
+        "thread_count": "12",
+        "base_clock": "2.6",
+        "boost_clock": "4.4",
+        "tdp": "65",
+        "l1_cache": "480",
+        "l2_cache": "3",
+        "l3_cache": "12",
+        "total_cache": "15",
+        "socket": "Intel Socket 1200",
+        "memory_support": "DDR4"
+      },
+      {
+        "name": "Intel Core i5-11500",
+        "core_count": "6",
+        "thread_count": "12",
+        "base_clock": "2.7",
+        "boost_clock": "4.6",
+        "tdp": "65",
+        "l1_cache": "480",
+        "l2_cache": "3",
+        "l3_cache": "12",
+        "total_cache": "15",
+        "socket": "Intel Socket 1200",
+        "memory_support": "DDR4",
+        "integrated_gpu": "UHD Graphics 750"
+      },
+      {
+        "name": "Intel Core i5-11600"
+      },
+      {
+        "name": "Intel Core i5-11600K",
+        "core_count": "6",
+        "thread_count": "12",
+        "base_clock": "3.9",
+        "boost_clock": "4.9",
+        "tdp": "125",
+        "l1_cache": "480",
+        "l2_cache": "3",
+        "l3_cache": "12",
+        "total_cache": "15",
+        "socket": "Intel Socket 1200",
+        "memory_support": "DDR4",
+        "integrated_gpu": "UHD Graphics 750"
+      },
+      {
+        "name": "Intel Core i5-12100"
+      },
+      {
+        "name": "Intel Core i5-12100F"
+      },
+      {
+        "name": "Intel Core i5-12100T"
+      },
+      {
+        "name": "Intel Core i5-12400",
+        "core_count": "6",
+        "thread_count": "12",
+        "base_clock": "2.5",
+        "boost_clock": "4.4",
+        "tdp": "65",
+        "l1_cache": "480",
+        "l2_cache": "7.5",
+        "l3_cache": "18",
+        "total_cache": "26",
+        "socket": "Intel Socket 1700",
+        "memory_support": "DDR4, DDR5",
+        "integrated_gpu": "UHD Graphics 730"
+      },
+      {
+        "name": "Intel Core i5-12400F",
+        "core_count": "6",
+        "thread_count": "12",
+        "base_clock": "2.5",
+        "boost_clock": "4.4",
+        "tdp": "65",
+        "l1_cache": "480",
+        "l2_cache": "7.5",
+        "l3_cache": "18",
+        "total_cache": "26",
+        "socket": "Intel Socket 1700",
+        "memory_support": "DDR4, DDR5"
+      },
+      {
+        "name": "Intel Core i5-12500",
+        "core_count": "6",
+        "thread_count": "12",
+        "base_clock": "3",
+        "boost_clock": "4.6",
+        "tdp": "65",
+        "l1_cache": "480",
+        "l2_cache": "7.5",
+        "l3_cache": "18",
+        "total_cache": "26",
+        "socket": "Intel Socket 1700",
+        "memory_support": "DDR4, DDR5",
+        "integrated_gpu": "UHD Graphics 770"
+      },
+      {
+        "name": "Intel Core i5-12600"
+      },
+      {
+        "name": "Intel Core i5-12600K",
+        "core_count": "10",
+        "thread_count": "16",
+        "base_clock": "3.7",
+        "boost_clock": "4.9",
+        "tdp": "125",
+        "l1_cache": "800",
+        "l2_cache": "12.5",
+        "l3_cache": "20",
+        "total_cache": "33",
+        "socket": "Intel Socket 1700",
+        "memory_support": "DDR4, DDR5",
+        "integrated_gpu": "UHD Graphics 770"
+      },
+      {
+        "name": "Intel Core i5-12600KF",
+        "core_count": "10",
+        "thread_count": "16",
+        "base_clock": "3.7",
+        "boost_clock": "4.9",
+        "tdp": "125",
+        "l1_cache": "800",
+        "l2_cache": "12.5",
+        "l3_cache": "20",
+        "total_cache": "33",
+        "socket": "Intel Socket 1700",
+        "memory_support": "DDR4, DDR5"
+      },
+      {
+        "name": "Intel Core i5-13400",
+        "core_count": "10",
+        "thread_count": "16",
+        "base_clock": "2.5",
+        "boost_clock": "4.6",
+        "tdp": "65",
+        "l1_cache": "800",
+        "l2_cache": "12.5",
+        "l3_cache": "20",
+        "total_cache": "33",
+        "socket": "Intel Socket 1700",
+        "memory_support": "DDR4, DDR5",
+        "integrated_gpu": "UHD Graphics 730"
+      },
+      {
+        "name": "Intel Core i5-13400F",
+        "core_count": "10",
+        "thread_count": "16",
+        "base_clock": "2.5",
+        "boost_clock": "4.6",
+        "tdp": "65",
+        "l1_cache": "800",
+        "l2_cache": "12.5",
+        "l3_cache": "20",
+        "total_cache": "33",
+        "socket": "Intel Socket 1700",
+        "memory_support": "DDR4, DDR5"
+      },
+      {
+        "name": "Intel Core i5-13420"
+      },
+      {
+        "name": "Intel Core i5-13500",
+        "core_count": "14",
+        "thread_count": "20",
+        "base_clock": "2.5",
+        "boost_clock": "4.8",
+        "tdp": "65",
+        "l1_cache": "1120",
+        "l2_cache": "17.5",
+        "l3_cache": "24",
+        "total_cache": "43",
+        "socket": "Intel Socket 1700",
+        "memory_support": "DDR4, DDR5",
+        "integrated_gpu": "UHD Graphics 770"
+      },
+      {
+        "name": "Intel Core i5-13600K",
+        "core_count": "14",
+        "thread_count": "20",
+        "base_clock": "3.5",
+        "boost_clock": "5.1",
+        "tdp": "125",
+        "l1_cache": "1120",
+        "l2_cache": "28",
+        "l3_cache": "24",
+        "total_cache": "53",
+        "socket": "Intel Socket 1700",
+        "memory_support": "DDR4, DDR5",
+        "integrated_gpu": "UHD Graphics 770"
+      },
+      {
+        "name": "Intel Core i5-13600KF",
+        "core_count": "14",
+        "thread_count": "20",
+        "base_clock": "3.5",
+        "boost_clock": "5.1",
+        "tdp": "125",
+        "l1_cache": "1120",
+        "l2_cache": "28",
+        "l3_cache": "24",
+        "total_cache": "53",
+        "socket": "Intel Socket 1700",
+        "memory_support": "DDR4, DDR5"
+      },
+      {
+        "name": "Intel Core i5-14400",
+        "core_count": "10",
+        "thread_count": "16",
+        "base_clock": "2.5",
+        "boost_clock": "4.7",
+        "tdp": "65",
+        "l1_cache": "800",
+        "l2_cache": "12.5",
+        "l3_cache": "20",
+        "total_cache": "33",
+        "socket": "Intel Socket 1700",
+        "memory_support": "DDR4, DDR5",
+        "integrated_gpu": "UHD Graphics 730"
+      },
+      {
+        "name": "Intel Core i5-14400F",
+        "core_count": "10",
+        "thread_count": "16",
+        "base_clock": "2.5",
+        "boost_clock": "4.7",
+        "tdp": "65",
+        "l1_cache": "800",
+        "l2_cache": "12.5",
+        "l3_cache": "20",
+        "total_cache": "33",
+        "socket": "Intel Socket 1700",
+        "memory_support": "DDR4, DDR5"
+      },
+      {
+        "name": "Intel Core i5-14500",
+        "core_count": "14",
+        "thread_count": "20",
+        "base_clock": "2.6",
+        "boost_clock": "5",
+        "tdp": "65",
+        "l1_cache": "1120",
+        "l2_cache": "17.5",
+        "l3_cache": "24",
+        "total_cache": "43",
+        "socket": "Intel Socket 1700",
+        "memory_support": "DDR4, DDR5",
+        "integrated_gpu": "UHD Graphics 770"
+      },
+      {
+        "name": "Intel Core i5-14600"
+      },
+      {
+        "name": "Intel Core i5-14600K",
+        "core_count": "14",
+        "thread_count": "20",
+        "base_clock": "3.5",
+        "boost_clock": "5.3",
+        "tdp": "125",
+        "l1_cache": "1120",
+        "l2_cache": "28",
+        "l3_cache": "24",
+        "total_cache": "53",
+        "socket": "Intel Socket 1700",
+        "memory_support": "DDR4, DDR5",
+        "integrated_gpu": "UHD Graphics 770"
+      },
+      {
+        "name": "Intel Core i5-14600KF",
+        "core_count": "14",
+        "thread_count": "20",
+        "base_clock": "3.5",
+        "boost_clock": "5.3",
+        "tdp": "125",
+        "l1_cache": "1120",
+        "l2_cache": "28",
+        "l3_cache": "24",
+        "total_cache": "53",
+        "socket": "Intel Socket 1700",
+        "memory_support": "DDR4, DDR5"
+      },
+      {
+        "name": "Intel Core i5-10210U"
+      },
+      {
+        "name": "Intel Core i5-10300H"
+      },
+      {
+        "name": "Intel Core i5-10500H"
+      },
+      {
+        "name": "Intel Core i5-1030NG7"
+      },
+      {
+        "name": "Intel Core i5-1035G1"
+      },
+      {
+        "name": "Intel Core i5-1035G7"
+      },
+      {
+        "name": "Intel Core i5-11300H"
+      },
+      {
+        "name": "Intel Core i5-11320H"
+      },
+      {
+        "name": "Intel Core i5-1135G7"
+      },
+      {
+        "name": "Intel Core i5-1145G7"
+      },
+      {
+        "name": "Intel Core i5-1155G7"
+      },
+      {
+        "name": "Intel Core i5-11400H"
+      },
+      {
+        "name": "Intel Core i5-12500H"
+      },
+      {
+        "name": "Intel Core i5-1215U"
+      },
+      {
+        "name": "Intel Core i5-1235U"
+      },
+      {
+        "name": "Intel Core i5-1240P"
+      },
+      {
+        "name": "Intel Core i5-12450H"
+      },
+      {
+        "name": "Intel Core i5-1250P"
+      },
+      {
+        "name": "Intel Core i5-12600H"
+      },
+      {
+        "name": "Intel Core i5-12600HX"
+      },
+      {
+        "name": "Intel Core i5-1334U"
+      },
+      {
+        "name": "Intel Core i5-1335U"
+      },
+      {
+        "name": "Intel Core i5-1335U"
+      },
+      {
+        "name": "Intel Core i5-1340P"
+      },
+      {
+        "name": "Intel Core i5-13420H"
+      },
+      {
+        "name": "Intel Core i5-13450HX"
+      },
+      {
+        "name": "Intel Core i5-13500H"
+      },
+      {
+        "name": "Intel Core i5-14450HX"
+      },
+      {
+        "name": "Intel Core i5-2400"
+      },
+      {
+        "name": "Intel Core i5-3470"
+      },
+      {
+        "name": "Intel Core i5-4210U"
+      },
+      {
+        "name": "Intel Core i5-4430"
+      },
+      {
+        "name": "Intel Core i5-6200U"
+      },
+      {
+        "name": "Intel Core i5-6400"
+      },
+      {
+        "name": "Intel Core i5-6600"
+      },
+      {
+        "name": "Intel Core i5-7200U"
+      },
+      {
+        "name": "Intel Core i5-7400"
+      },
+      {
+        "name": "Intel Core i5-7500"
+      },
+      {
+        "name": "Intel Core i5-8250U"
+      },
+      {
+        "name": "Intel Core i5-8257U"
+      },
+      {
+        "name": "Intel Core i5-8400"
+      },
+      {
+        "name": "Intel Core i5-8400T"
+      },
+      {
+        "name": "Intel Core i5-8500"
+      }
+    ],
+    "Intel Core i7": [
+      {
+        "name": "Intel Core i7-10700",
+        "core_count": "8",
+        "thread_count": "16",
+        "base_clock": "2.9",
+        "boost_clock": "4.8",
+        "tdp": "65",
+        "l1_cache": "512",
+        "l2_cache": "2",
+        "l3_cache": "16",
+        "total_cache": "19",
+        "socket": "Intel Socket 1200",
+        "memory_support": "DDR4",
+        "integrated_gpu": "UHD Graphics 630"
+      },
+      {
+        "name": "Intel Core i7-10700F",
+        "core_count": "8",
+        "thread_count": "16",
+        "base_clock": "2.9",
+        "boost_clock": "4.8",
+        "tdp": "65",
+        "l1_cache": "512",
+        "l2_cache": "2",
+        "l3_cache": "16",
+        "total_cache": "19",
+        "socket": "Intel Socket 1200",
+        "memory_support": "DDR4"
+      },
+      {
+        "name": "Intel Core i7-11700",
+        "core_count": "8",
+        "thread_count": "16",
+        "base_clock": "2.5",
+        "boost_clock": "4.9",
+        "tdp": "65",
+        "l1_cache": "640",
+        "l2_cache": "4",
+        "l3_cache": "16",
+        "total_cache": "21",
+        "socket": "Intel Socket 1200",
+        "memory_support": "DDR4",
+        "integrated_gpu": "UHD Graphics 750"
+      },
+      {
+        "name": "Intel Core i7-11700F",
+        "core_count": "8",
+        "thread_count": "16",
+        "base_clock": "2.5",
+        "boost_clock": "4.9",
+        "tdp": "65",
+        "l1_cache": "640",
+        "l2_cache": "4",
+        "l3_cache": "16",
+        "total_cache": "21",
+        "socket": "Intel Socket 1200",
+        "memory_support": "DDR4"
+      },
+      {
+        "name": "Intel Core i7-11700K",
+        "core_count": "8",
+        "thread_count": "16",
+        "base_clock": "3.6",
+        "boost_clock": "5",
+        "tdp": "125",
+        "l1_cache": "640",
+        "l2_cache": "4",
+        "l3_cache": "16",
+        "total_cache": "21",
+        "socket": "Intel Socket 1200",
+        "memory_support": "DDR4",
+        "integrated_gpu": "UHD Graphics 750"
+      },
+      {
+        "name": "Intel Core i7-12700",
+        "core_count": "12",
+        "thread_count": "20",
+        "base_clock": "2.1",
+        "boost_clock": "4.9",
+        "tdp": "65",
+        "l1_cache": "960",
+        "l2_cache": "15",
+        "l3_cache": "25",
+        "total_cache": "41",
+        "socket": "Intel Socket 1700",
+        "memory_support": "DDR4, DDR5",
+        "integrated_gpu": "UHD Graphics 770"
+      },
+      {
+        "name": "Intel Core i7-12700F",
+        "core_count": "12",
+        "thread_count": "20",
+        "base_clock": "2.1",
+        "boost_clock": "4.9",
+        "tdp": "65",
+        "l1_cache": "960",
+        "l2_cache": "15",
+        "l3_cache": "25",
+        "total_cache": "41",
+        "socket": "Intel Socket 1700",
+        "memory_support": "DDR4, DDR5"
+      },
+      {
+        "name": "Intel Core i7-12700K",
+        "core_count": "12",
+        "thread_count": "20",
+        "base_clock": "3.6",
+        "boost_clock": "5",
+        "tdp": "125",
+        "l1_cache": "960",
+        "l2_cache": "15",
+        "l3_cache": "25",
+        "total_cache": "41",
+        "socket": "Intel Socket 1700",
+        "memory_support": "DDR4, DDR5",
+        "integrated_gpu": "UHD Graphics 770"
+      },
+      {
+        "name": "Intel Core i7-12700KF",
+        "core_count": "12",
+        "thread_count": "20",
+        "base_clock": "3.6",
+        "boost_clock": "5",
+        "tdp": "125",
+        "l1_cache": "960",
+        "l2_cache": "15",
+        "l3_cache": "25",
+        "total_cache": "41",
+        "socket": "Intel Socket 1700",
+        "memory_support": "DDR4, DDR5"
+      },
+      {
+        "name": "Intel Core i7-13700",
+        "core_count": "16",
+        "thread_count": "24",
+        "base_clock": "2.1",
+        "boost_clock": "5.2",
+        "tdp": "65",
+        "l1_cache": "1280",
+        "l2_cache": "32",
+        "l3_cache": "30",
+        "total_cache": "63",
+        "socket": "Intel Socket 1700",
+        "memory_support": "DDR4, DDR5",
+        "integrated_gpu": "UHD Graphics 770"
+      },
+      {
+        "name": "Intel Core i7-13700F",
+        "core_count": "16",
+        "thread_count": "24",
+        "base_clock": "2.1",
+        "boost_clock": "5.2",
+        "tdp": "65",
+        "l1_cache": "1280",
+        "l2_cache": "32",
+        "l3_cache": "30",
+        "total_cache": "63",
+        "socket": "Intel Socket 1700",
+        "memory_support": "DDR4, DDR5"
+      },
+      {
+        "name": "Intel Core i7-13700K",
+        "core_count": "16",
+        "thread_count": "24",
+        "base_clock": "3.4",
+        "boost_clock": "5.4",
+        "tdp": "125",
+        "l1_cache": "1280",
+        "l2_cache": "32",
+        "l3_cache": "30",
+        "total_cache": "63",
+        "socket": "Intel Socket 1700",
+        "memory_support": "DDR4, DDR5",
+        "integrated_gpu": "UHD Graphics 770"
+      },
+      {
+        "name": "Intel Core i7-13700KF",
+        "core_count": "16",
+        "thread_count": "24",
+        "base_clock": "3.4",
+        "boost_clock": "5.4",
+        "tdp": "125",
+        "l1_cache": "1280",
+        "l2_cache": "32",
+        "l3_cache": "30",
+        "total_cache": "63",
+        "socket": "Intel Socket 1700",
+        "memory_support": "DDR4, DDR5"
+      },
+      {
+        "name": "Intel Core i7-14700",
+        "core_count": "20",
+        "thread_count": "28",
+        "base_clock": "2.1",
+        "boost_clock": "5.4",
+        "tdp": "65",
+        "l1_cache": "1600",
+        "l2_cache": "40",
+        "l3_cache": "33",
+        "total_cache": "75",
+        "socket": "Intel Socket 1700",
+        "memory_support": "DDR4, DDR5",
+        "integrated_gpu": "UHD Graphics 770"
+      },
+      {
+        "name": "Intel Core i7-14700F",
+        "core_count": "20",
+        "thread_count": "28",
+        "base_clock": "2.1",
+        "boost_clock": "5.4",
+        "tdp": "65",
+        "l1_cache": "1600",
+        "l2_cache": "40",
+        "l3_cache": "33",
+        "total_cache": "75",
+        "socket": "Intel Socket 1700",
+        "memory_support": "DDR4, DDR5"
+      },
+      {
+        "name": "Intel Core i7-14700K",
+        "core_count": "20",
+        "thread_count": "28",
+        "base_clock": "3.4",
+        "boost_clock": "5.6",
+        "tdp": "125",
+        "l1_cache": "1600",
+        "l2_cache": "40",
+        "l3_cache": "33",
+        "total_cache": "75",
+        "socket": "Intel Socket 1700",
+        "memory_support": "DDR4, DDR5",
+        "integrated_gpu": "UHD Graphics 770"
+      },
+      {
+        "name": "Intel Core i7-14700KF",
+        "core_count": "20",
+        "thread_count": "28",
+        "base_clock": "3.4",
+        "boost_clock": "5.6",
+        "tdp": "125",
+        "l1_cache": "1600",
+        "l2_cache": "40",
+        "l3_cache": "33",
+        "total_cache": "75",
+        "socket": "Intel Socket 1700",
+        "memory_support": "DDR4, DDR5"
+      },
+      {
+        "name": "Intel Core i7-12700H"
+      },
+      {
+        "name": "Intel Core i7-13700HX"
+      },
+      {
+        "name": "Intel Core i7-14700HX"
+      },
+      {
+        "name": "Intel Core i7-10510U"
+      },
+      {
+        "name": "Intel Core i7-1060NG7"
+      },
+      {
+        "name": "Intel Core i7-1065G7"
+      },
+      {
+        "name": "Intel Core i7-10750H"
+      },
+      {
+        "name": "Intel Core i7-11370H"
+      },
+      {
+        "name": "Intel Core i7-1165G7"
+      },
+      {
+        "name": "Intel Core i7-11800H"
+      },
+      {
+        "name": "Intel Core i7-1185G7"
+      },
+      {
+        "name": "Intel Core i7-1250U"
+      },
+      {
+        "name": "Intel Core i7-1255U"
+      },
+      {
+        "name": "Intel Core i7-1260P"
+      },
+      {
+        "name": "Intel Core i7-12650H"
+      },
+      {
+        "name": "Intel Core i7-1265U"
+      },
+      {
+        "name": "Intel Core i7-1270P"
+      },
+      {
+        "name": "Intel Core i7-1280P"
+      },
+      {
+        "name": "Intel Core i7-1355U"
+      },
+      {
+        "name": "Intel Core i7-1360P"
+      },
+      {
+        "name": "Intel Core i7-13620H"
+      },
+      {
+        "name": "Intel Core i7-13650HX"
+      },
+      {
+        "name": "Intel Core i7-1365U"
+      },
+      {
+        "name": "Intel Core i7-14650HX"
+      },
+      {
+        "name": "Intel Core i7-4510U"
+      },
+      {
+        "name": "Intel Core i7-4720HQ"
+      },
+      {
+        "name": "Intel Core i7-7600U"
+      },
+      {
+        "name": "Intel Core i7-7700"
+      },
+      {
+        "name": "Intel Core i7-7700HQ"
+      },
+      {
+        "name": "Intel Core i7-8400"
+      },
+      {
+        "name": "Intel Core i7-8550U"
+      },
+      {
+        "name": "Intel Core i7-8565U"
+      },
+      {
+        "name": "Intel Core i7-8700"
+      },
+      {
+        "name": "Intel Core i7‑8750H"
+      },
+      {
+        "name": "Intel Core i7-13700H"
+      }
+    ],
+    "Intel Core i9": [
+      {
+        "name": "Intel Core i9-10900",
+        "core_count": "10",
+        "thread_count": "20",
+        "base_clock": "2.8",
+        "boost_clock": "5.2",
+        "tdp": "65",
+        "l1_cache": "640",
+        "l2_cache": "2.5",
+        "l3_cache": "20",
+        "total_cache": "23",
+        "socket": "Intel Socket 1200",
+        "memory_support": "DDR4",
+        "integrated_gpu": "UHD Graphics 630"
+      },
+      {
+        "name": "Intel Core i9-10900F",
+        "core_count": "10",
+        "thread_count": "20",
+        "base_clock": "2.8",
+        "boost_clock": "5.2",
+        "tdp": "65",
+        "l1_cache": "640",
+        "l2_cache": "2.5",
+        "l3_cache": "20",
+        "total_cache": "23",
+        "socket": "Intel Socket 1200",
+        "memory_support": "DDR4"
+      },
+      {
+        "name": "Intel Core i9-10900KF",
+        "core_count": "10",
+        "thread_count": "20",
+        "base_clock": "3.7",
+        "boost_clock": "5.3",
+        "tdp": "125",
+        "l1_cache": "640",
+        "l2_cache": "2.5",
+        "l3_cache": "20",
+        "total_cache": "23",
+        "socket": "Intel Socket 1200",
+        "memory_support": "DDR4"
+      },
+      {
+        "name": "Intel Core i9-11900"
+      },
+      {
+        "name": "Intel Core i9-11900K",
+        "core_count": "8",
+        "thread_count": "16",
+        "base_clock": "3.5",
+        "boost_clock": "5.3",
+        "tdp": "125",
+        "l1_cache": "640",
+        "l2_cache": "4",
+        "l3_cache": "16",
+        "total_cache": "21",
+        "socket": "Intel Socket 1200",
+        "memory_support": "DDR4",
+        "integrated_gpu": "UHD Graphics 750"
+      },
+      {
+        "name": "Intel Core i9-12900F",
+        "core_count": "16",
+        "thread_count": "24",
+        "base_clock": "2.4",
+        "boost_clock": "5.1",
+        "tdp": "65",
+        "l1_cache": "1280",
+        "l2_cache": "20",
+        "l3_cache": "30",
+        "total_cache": "51",
+        "socket": "Intel Socket 1700",
+        "memory_support": "DDR4, DDR5"
+      },
+      {
+        "name": "Intel Core i9-12900K",
+        "core_count": "16",
+        "thread_count": "24",
+        "base_clock": "3.2",
+        "boost_clock": "5.2",
+        "tdp": "125",
+        "l1_cache": "1280",
+        "l2_cache": "20",
+        "l3_cache": "30",
+        "total_cache": "51",
+        "socket": "Intel Socket 1700",
+        "memory_support": "DDR4, DDR5",
+        "integrated_gpu": "UHD Graphics 770"
+      },
+      {
+        "name": "Intel Core i9-12900KF",
+        "core_count": "16",
+        "thread_count": "24",
+        "base_clock": "3.2",
+        "boost_clock": "5.2",
+        "tdp": "125",
+        "l1_cache": "1280",
+        "l2_cache": "20",
+        "l3_cache": "30",
+        "total_cache": "51",
+        "socket": "Intel Socket 1700",
+        "memory_support": "DDR4, DDR5"
+      },
+      {
+        "name": "Intel Core i9-13900F",
+        "core_count": "24",
+        "thread_count": "32",
+        "base_clock": "2",
+        "boost_clock": "5.6",
+        "tdp": "65",
+        "l1_cache": "1920",
+        "l2_cache": "48",
+        "l3_cache": "36",
+        "total_cache": "86",
+        "socket": "Intel Socket 1700",
+        "memory_support": "DDR4, DDR5"
+      },
+      {
+        "name": "Intel Core i9-13900K",
+        "core_count": "24",
+        "thread_count": "32",
+        "base_clock": "3",
+        "boost_clock": "5.8",
+        "tdp": "125",
+        "l1_cache": "1920",
+        "l2_cache": "48",
+        "l3_cache": "36",
+        "total_cache": "86",
+        "socket": "Intel Socket 1700",
+        "memory_support": "DDR4, DDR5",
+        "integrated_gpu": "UHD Graphics 770"
+      },
+      {
+        "name": "Intel Core i9-13900KF",
+        "core_count": "24",
+        "thread_count": "32",
+        "base_clock": "3",
+        "boost_clock": "5.8",
+        "tdp": "125",
+        "l1_cache": "1920",
+        "l2_cache": "48",
+        "l3_cache": "36",
+        "total_cache": "86",
+        "socket": "Intel Socket 1700",
+        "memory_support": "DDR4, DDR5"
+      },
+      {
+        "name": "Intel Core i9-14900",
+        "core_count": "24",
+        "thread_count": "32",
+        "base_clock": "2",
+        "boost_clock": "5.8",
+        "tdp": "65",
+        "l1_cache": "1920",
+        "l2_cache": "48",
+        "l3_cache": "36",
+        "total_cache": "86",
+        "socket": "Intel Socket 1700",
+        "memory_support": "DDR4, DDR5",
+        "integrated_gpu": "UHD Graphics 770"
+      },
+      {
+        "name": "Intel Core i9-14900K",
+        "core_count": "24",
+        "thread_count": "32",
+        "base_clock": "3.2",
+        "boost_clock": "6",
+        "tdp": "125",
+        "l1_cache": "1920",
+        "l2_cache": "48",
+        "l3_cache": "36",
+        "total_cache": "86",
+        "socket": "Intel Socket 1700",
+        "memory_support": "DDR4, DDR5",
+        "integrated_gpu": "UHD Graphics 770"
+      },
+      {
+        "name": "Intel Core i9-14900KF",
+        "core_count": "24",
+        "thread_count": "32",
+        "base_clock": "3.2",
+        "boost_clock": "6",
+        "tdp": "125",
+        "l1_cache": "1920",
+        "l2_cache": "48",
+        "l3_cache": "36",
+        "total_cache": "86",
+        "socket": "Intel Socket 1700",
+        "memory_support": "DDR4, DDR5"
+      },
+      {
+        "name": "Intel Core i9-14900HX"
+      },
+      {
+        "name": "Intel Core i9-12900H"
+      },
+      {
+        "name": "Intel Core i9-13900H"
+      }
+    ],
+    "Intel Core Ultra 5": [
+      {
+        "name": "Intel Core Ultra 5 225"
+      },
+      {
+        "name": "Intel Core Ultra 5 225F",
+        "core_count": "10",
+        "thread_count": "10",
+        "base_clock": "3.3",
+        "boost_clock": "4.9",
+        "tdp": "65",
+        "l1_cache": "1920",
+        "l2_cache": "30",
+        "l3_cache": "20",
+        "total_cache": "52",
+        "socket": "Intel Socket 1851",
+        "memory_support": "DDR5"
+      },
+      {
+        "name": "Intel Core Ultra 5 235"
+      },
+      {
+        "name": "Intel Core Ultra 5 245"
+      },
+      {
+        "name": "Intel Core Ultra 5 245K",
+        "core_count": "14",
+        "thread_count": "14",
+        "base_clock": "4.2",
+        "boost_clock": "5.2",
+        "tdp": "125",
+        "l1_cache": "2688",
+        "l2_cache": "42",
+        "l3_cache": "24",
+        "total_cache": "69",
+        "socket": "Intel Socket 1851",
+        "memory_support": "DDR5",
+        "integrated_gpu": "Arc Xe-LPG Graphics 64EU"
+      },
+      {
+        "name": "Intel Core Ultra 5 245KF",
+        "core_count": "14",
+        "thread_count": "14",
+        "base_clock": "4.2",
+        "boost_clock": "5.2",
+        "tdp": "125",
+        "l1_cache": "2688",
+        "l2_cache": "42",
+        "l3_cache": "24",
+        "total_cache": "69",
+        "socket": "Intel Socket 1851",
+        "memory_support": "DDR5"
+      },
+      {
+        "name": "Intel Core Ultra 5 125H"
+      },
+      {
+        "name": "Intel Core Ultra 5 125U"
+      },
+      {
+        "name": "Intel Core Ultra 5 135U"
+      },
+      {
+        "name": "Intel Core Ultra 5 225U"
+      },
+      {
+        "name": "Intel Core Ultra 5 226V"
+      },
+      {
+        "name": "Intel Core Ultra 5 235U"
+      },
+      {
+        "name": "Intel Core Ultra 5 225H"
+      }
+    ],
+    "Intel Core Ultra 7": [
+      {
+        "name": "Intel Core Ultra 7 265"
+      },
+      {
+        "name": "Intel Core Ultra 7 265K",
+        "core_count": "20",
+        "thread_count": "20",
+        "base_clock": "3.9",
+        "boost_clock": "5.5",
+        "tdp": "125",
+        "l1_cache": "3840",
+        "l2_cache": "60",
+        "l3_cache": "30",
+        "total_cache": "94",
+        "socket": "Intel Socket 1851",
+        "memory_support": "DDR5",
+        "integrated_gpu": "Arc Xe-LPG Graphics 64EU"
+      },
+      {
+        "name": "Intel Core Ultra 7 265KF",
+        "core_count": "20",
+        "thread_count": "20",
+        "base_clock": "3.9",
+        "boost_clock": "5.5",
+        "tdp": "125",
+        "l1_cache": "3840",
+        "l2_cache": "60",
+        "l3_cache": "30",
+        "total_cache": "94",
+        "socket": "Intel Socket 1851",
+        "memory_support": "DDR5"
+      },
+      {
+        "name": "Intel Core Ultra 7 155H"
+      },
+      {
+        "name": "Intel Core Ultra 7 155U"
+      },
+      {
+        "name": "Intel Core Ultra 7 164U"
+      },
+      {
+        "name": "Intel Core Ultra 7 165U"
+      },
+      {
+        "name": "Intel Core Ultra 7 255H"
+      },
+      {
+        "name": "Intel Core Ultra 7 255U"
+      },
+      {
+        "name": "Intel Core Ultra 7 256V"
+      },
+      {
+        "name": "Intel Core Ultra 7 258V"
+      },
+      {
+        "name": "Intel Core Ultra 7 266V"
+      },
+      {
+        "name": "Intel Core Ultra 7 268V"
+      },
+      {
+        "name": "Intel Core Ultra 7 265U"
+      }
+    ],
+    "Intel Core Ultra 9": [
+      {
+        "name": "Intel Core Ultra 9 285"
+      },
+      {
+        "name": "Intel Core Ultra 9 285K",
+        "core_count": "24",
+        "thread_count": "24",
+        "base_clock": "3.7",
+        "boost_clock": "5.7",
+        "tdp": "125",
+        "l1_cache": "4608",
+        "l2_cache": "72",
+        "l3_cache": "36",
+        "total_cache": "113",
+        "socket": "Intel Socket 1851",
+        "memory_support": "DDR5",
+        "integrated_gpu": "Arc Xe-LPG Graphics 64EU"
+      },
+      {
+        "name": "Intel Core Ultra 9 185H"
+      },
+      {
+        "name": "Intel Core Ultra 9 275HX"
+      },
+      {
+        "name": "Intel Core Ultra 9 285H"
+      },
+      {
+        "name": "Intel Core Ultra 9 288V"
+      }
+    ],
+    "Intel Core 3": [
+      {
+        "name": "Intel Core 3 100U"
+      }
+    ],
+    "Intel Core 5": [
+      {
+        "name": "Intel Core 5 120U"
+      },
+      {
+        "name": "Intel Core 5 210H"
+      }
+    ],
+    "Intel Core 7": [
+      {
+        "name": "Intel Core 7 150U"
+      },
+      {
+        "name": "Intel Core 7 240H"
+      }
+    ],
+    "Intel Core 9": [
+      {
+        "name": "Intel Core 9 270H"
+      }
+    ],
+    "Intel Atom": [
+      {
+        "name": "Intel Atom"
+      }
+    ],
+    "Intel Celeron": [
+      {
+        "name": "Intel Celeron"
+      },
+      {
+        "name": "Intel Celeron G5900"
+      },
+      {
+        "name": "Intel Celeron G5905"
+      },
+      {
+        "name": "Intel Celeron N3350"
+      },
+      {
+        "name": "Intel Celeron N4020"
+      },
+      {
+        "name": "Intel Celeron J4025"
+      },
+      {
+        "name": "Intel Celeron J4005"
+      },
+      {
+        "name": "Intel Celeron N4500"
+      },
+      {
+        "name": "Intel Celeron N5095"
+      },
+      {
+        "name": "Intel Celeron N4000"
+      },
+      {
+        "name": "Intel Celeron G6900"
+      },
+      {
+        "name": "Intel Celeron 5205U"
+      }
+    ],
+    "Intel Pentium": [
+      {
+        "name": "Intel Pentium"
+      },
+      {
+        "name": "Intel Pentium G4400"
+      },
+      {
+        "name": "Intel Pentium G4560"
+      },
+      {
+        "name": "Intel Pentium J2900"
+      },
+      {
+        "name": "Intel Pentium 4415U"
+      },
+      {
+        "name": "Intel Pentium Gold"
+      },
+      {
+        "name": "Intel Pentium Gold G5400"
+      },
+      {
+        "name": "Intel Pentium Gold G6400"
+      },
+      {
+        "name": "Intel Pentium Gold G6405"
+      },
+      {
+        "name": "Intel Pentium Gold G7400"
+      },
+      {
+        "name": "Intel Pentium Gold 8505"
+      },
+      {
+        "name": "Intel Pentium Silver"
+      },
+      {
+        "name": "Intel Pentium Silver N6000"
+      },
+      {
+        "name": "Intel Pentium Silver J5040"
+      },
+      {
+        "name": "Intel Pentium G3250"
+      },
+      {
+        "name": "Intel Pentium E6500"
+      }
+    ],
+    "Intel Xeon": [
+      {
+        "name": "Intel Xeon"
+      },
+      {
+        "name": "Intel Xeon E5"
+      },
+      {
+        "name": "Intel Xeon E-2104"
+      },
+      {
+        "name": "Intel Xeon E-2124"
+      },
+      {
+        "name": "Intel Xeon E-2224"
+      },
+      {
+        "name": "Intel Xeon W-2104"
+      }
+    ],
+    "Others": [
+      {
+        "name": "Intel Processor N100"
+      },
+      {
+        "name": "Intel Processor N150"
+      },
+      {
+        "name": "Intel Processor N95"
+      }
+    ]
+  },
+  "Snapdragon": [
+    {
+      "name": "Snapdragon"
+    },
+    {
+      "name": "Snapdragon Purwa SE"
+    },
+    {
+      "name": "Snapdragon X"
+    }
+  ],
+  "Apple": [
+    {
+      "name": "Apple M1"
+    },
+    {
+      "name": "Apple M2"
+    },
+    {
+      "name": "Apple M3"
+    },
+    {
+      "name": "Apple M4"
+    },
+    {
+      "name": "Apple M5"
+    },
+    {
+      "name": "Apple A18 Pro"
+    }
+  ],
+  "AMD": {
+    "AMD Ryzen 3": [
+      {
+        "name": "AMD Ryzen 3 1200",
+        "core_count": "4",
+        "thread_count": "4",
+        "base_clock": "3.1",
+        "boost_clock": "3.4",
+        "tdp": "65",
+        "l1_cache": "384",
+        "l2_cache": "2",
+        "l3_cache": "8",
+        "total_cache": "10",
+        "socket": "AMD Socket AM4",
+        "memory_support": "DDR4"
+      },
+      {
+        "name": "AMD Ryzen 3 3100",
+        "core_count": "4",
+        "thread_count": "8",
+        "base_clock": "3.6",
+        "boost_clock": "3.9",
+        "tdp": "65",
+        "l1_cache": "256",
+        "l2_cache": "2",
+        "l3_cache": "16",
+        "total_cache": "18",
+        "socket": "AMD Socket AM4",
+        "memory_support": "DDR4"
+      },
+      {
+        "name": "AMD Ryzen 3 3200G",
+        "core_count": "4",
+        "thread_count": "4",
+        "base_clock": "3.6",
+        "boost_clock": "4",
+        "tdp": "65",
+        "l1_cache": "384",
+        "l2_cache": "2",
+        "l3_cache": "4",
+        "total_cache": "6",
+        "socket": "AMD Socket AM4",
+        "memory_support": "DDR4",
+        "integrated_gpu": "Radeon Vega 8"
+      },
+      {
+        "name": "AMD Ryzen 3 3300X",
+        "core_count": "4",
+        "thread_count": "8",
+        "base_clock": "3.8",
+        "boost_clock": "4.3",
+        "tdp": "65",
+        "l1_cache": "256",
+        "l2_cache": "2",
+        "l3_cache": "16",
+        "total_cache": "18",
+        "socket": "AMD Socket AM4",
+        "memory_support": "DDR4"
+      },
+      {
+        "name": "AMD Ryzen 3 4100",
+        "core_count": "4",
+        "thread_count": "8",
+        "base_clock": "3.8",
+        "boost_clock": "4",
+        "tdp": "65",
+        "l1_cache": "256",
+        "l2_cache": "2",
+        "l3_cache": "8",
+        "total_cache": "10",
+        "socket": "AMD Socket AM4",
+        "memory_support": "DDR4"
+      },
+      {
+        "name": "AMD Ryzen 3 5300G",
+        "integrated_gpu": "Radeon Vega 6"
+      },
+      {
+        "name": "AMD Ryzen 3 PRO 4350G",
+        "integrated_gpu": "Radeon Vega 6"
+      },
+      {
+        "name": "AMD Ryzen 3 3250U"
+      },
+      {
+        "name": "AMD Ryzen 3 5300U"
+      },
+      {
+        "name": "AMD Ryzen 3 7320U"
+      }
+    ],
+    "AMD Ryzen 5": [
+      {
+        "name": "AMD Ryzen 5 1600"
+      },
+      {
+        "name": "AMD Ryzen 5 1600 AF",
+        "core_count": "6",
+        "thread_count": "12",
+        "base_clock": "3.2",
+        "boost_clock": "3.6",
+        "tdp": "65",
+        "l1_cache": "576",
+        "l2_cache": "3",
+        "l3_cache": "16",
+        "total_cache": "20",
+        "socket": "AMD Socket AM4",
+        "memory_support": "DDR4"
+      },
+      {
+        "name": "AMD Ryzen 5 220",
+        "integrated_gpu": "Radeon 740M"
+      },
+      {
+        "name": "AMD Ryzen 5 2600X",
+        "core_count": "6",
+        "thread_count": "12",
+        "base_clock": "3.6",
+        "boost_clock": "4.25",
+        "tdp": "95",
+        "l1_cache": "576",
+        "l2_cache": "3",
+        "l3_cache": "16",
+        "total_cache": "20",
+        "socket": "AMD Socket AM4",
+        "memory_support": "DDR4"
+      },
+      {
+        "name": "AMD Ryzen 5 3400G",
+        "core_count": "4",
+        "thread_count": "8",
+        "base_clock": "3.7",
+        "boost_clock": "4.2",
+        "tdp": "65",
+        "l1_cache": "384",
+        "l2_cache": "2",
+        "l3_cache": "4",
+        "total_cache": "6",
+        "socket": "AMD Socket AM4",
+        "memory_support": "DDR4",
+        "integrated_gpu": "Radeon Vega 11"
+      },
+      {
+        "name": "AMD Ryzen 5 3400GE",
+        "core_count": "4",
+        "thread_count": "8",
+        "base_clock": "3.3",
+        "boost_clock": "4",
+        "tdp": "35",
+        "l1_cache": "384",
+        "l2_cache": "2",
+        "l3_cache": "4",
+        "total_cache": "6",
+        "socket": "AMD Socket AM4",
+        "memory_support": "DDR4",
+        "integrated_gpu": "Radeon Vega 11"
+      },
+      {
+        "name": "AMD Ryzen 5 3500X",
+        "core_count": "6",
+        "thread_count": "6",
+        "base_clock": "3.6",
+        "boost_clock": "4.1",
+        "tdp": "65",
+        "l1_cache": "384",
+        "l2_cache": "3",
+        "l3_cache": "32",
+        "total_cache": "35",
+        "socket": "AMD Socket AM4",
+        "memory_support": "DDR4"
+      },
+      {
+        "name": "AMD Ryzen 5 3600",
+        "core_count": "6",
+        "thread_count": "12",
+        "base_clock": "3.6",
+        "boost_clock": "4.2",
+        "tdp": "65",
+        "l1_cache": "384",
+        "l2_cache": "3",
+        "l3_cache": "32",
+        "total_cache": "35",
+        "socket": "AMD Socket AM4",
+        "memory_support": "DDR4"
+      },
+      {
+        "name": "AMD Ryzen 5 3600X",
+        "core_count": "6",
+        "thread_count": "12",
+        "base_clock": "3.8",
+        "boost_clock": "4.4",
+        "tdp": "95",
+        "l1_cache": "384",
+        "l2_cache": "3",
+        "l3_cache": "32",
+        "total_cache": "35",
+        "socket": "AMD Socket AM4",
+        "memory_support": "DDR4"
+      },
+      {
+        "name": "AMD Ryzen 5 4500",
+        "core_count": "6",
+        "thread_count": "12",
+        "base_clock": "3.6",
+        "boost_clock": "4.1",
+        "tdp": "65",
+        "l1_cache": "384",
+        "l2_cache": "3",
+        "l3_cache": "8",
+        "total_cache": "11",
+        "socket": "AMD Socket AM4",
+        "memory_support": "DDR4"
+      },
+      {
+        "name": "AMD Ryzen 5 4600G",
+        "core_count": "6",
+        "thread_count": "12",
+        "base_clock": "3.7",
+        "boost_clock": "4.2",
+        "tdp": "65",
+        "l1_cache": "384",
+        "l2_cache": "3",
+        "l3_cache": "8",
+        "total_cache": "11",
+        "socket": "AMD Socket AM4",
+        "memory_support": "DDR4"
+      },
+      {
+        "name": "AMD Ryzen 5 5500",
+        "core_count": "6",
+        "thread_count": "12",
+        "base_clock": "3.6",
+        "boost_clock": "4.2",
+        "tdp": "65",
+        "l1_cache": "384",
+        "l2_cache": "3",
+        "l3_cache": "16",
+        "total_cache": "19",
+        "socket": "AMD Socket AM4",
+        "memory_support": "DDR4"
+      },
+      {
+        "name": "AMD Ryzen 5 5500GT",
+        "core_count": "6",
+        "thread_count": "12",
+        "base_clock": "3.6",
+        "boost_clock": "4.4",
+        "tdp": "65",
+        "l1_cache": "384",
+        "l2_cache": "3",
+        "l3_cache": "16",
+        "total_cache": "19",
+        "socket": "AMD Socket AM4",
+        "memory_support": "DDR4",
+        "integrated_gpu": "Radeon Vega 7"
+      },
+      {
+        "name": "AMD Ryzen 5 5600",
+        "core_count": "6",
+        "thread_count": "12",
+        "base_clock": "3.5",
+        "boost_clock": "4.4",
+        "tdp": "65",
+        "l1_cache": "384",
+        "l2_cache": "3",
+        "l3_cache": "32",
+        "total_cache": "35",
+        "socket": "AMD Socket AM4",
+        "memory_support": "DDR4"
+      },
+      {
+        "name": "AMD Ryzen 5 5600G",
+        "core_count": "6",
+        "thread_count": "12",
+        "base_clock": "3.9",
+        "boost_clock": "4.4",
+        "tdp": "65",
+        "l1_cache": "384",
+        "l2_cache": "3",
+        "l3_cache": "16",
+        "total_cache": "19",
+        "socket": "AMD Socket AM4",
+        "memory_support": "DDR4",
+        "integrated_gpu": "Radeon Vega 7"
+      },
+      {
+        "name": "AMD Ryzen 5 5600GT",
+        "core_count": "6",
+        "thread_count": "12",
+        "base_clock": "3.6",
+        "boost_clock": "4.6",
+        "tdp": "65",
+        "l1_cache": "384",
+        "l2_cache": "3",
+        "l3_cache": "16",
+        "total_cache": "19",
+        "socket": "AMD Socket AM4",
+        "memory_support": "DDR4",
+        "integrated_gpu": "Radeon Vega 7"
+      },
+      {
+        "name": "AMD Ryzen 5 5600X",
+        "core_count": "6",
+        "thread_count": "12",
+        "base_clock": "3.7",
+        "boost_clock": "4.6",
+        "tdp": "65",
+        "l1_cache": "384",
+        "l2_cache": "3",
+        "l3_cache": "32",
+        "total_cache": "35",
+        "socket": "AMD Socket AM4",
+        "memory_support": "DDR4"
+      },
+      {
+        "name": "AMD Ryzen 5 7400F",
+        "core_count": "6",
+        "thread_count": "12",
+        "base_clock": "3.7",
+        "boost_clock": "4.7",
+        "tdp": "65",
+        "l1_cache": "384",
+        "l2_cache": "6",
+        "l3_cache": "32",
+        "total_cache": "38",
+        "socket": "AMD Socket AM5",
+        "memory_support": "DDR5"
+      },
+      {
+        "name": "AMD Ryzen 5 7500F",
+        "core_count": "6",
+        "thread_count": "12",
+        "base_clock": "3.7",
+        "boost_clock": "5",
+        "tdp": "65",
+        "l1_cache": "384",
+        "l2_cache": "6",
+        "l3_cache": "32",
+        "total_cache": "38",
+        "socket": "AMD Socket AM5",
+        "memory_support": "DDR5"
+      },
+      {
+        "name": "AMD Ryzen 5 7500X3D",
+        "core_count": "6",
+        "thread_count": "12",
+        "base_clock": "4",
+        "boost_clock": "4.5",
+        "tdp": "65",
+        "l1_cache": "384",
+        "l2_cache": "6",
+        "l3_cache": "96",
+        "total_cache": "102",
+        "socket": "AMD Socket AM5",
+        "memory_support": "DDR5"
+      },
+      {
+        "name": "AMD Ryzen 5 7600",
+        "core_count": "6",
+        "thread_count": "12",
+        "base_clock": "3.8",
+        "boost_clock": "5.1",
+        "tdp": "65",
+        "l1_cache": "384",
+        "l2_cache": "6",
+        "l3_cache": "32",
+        "total_cache": "38",
+        "socket": "AMD Socket AM5",
+        "memory_support": "DDR5",
+        "integrated_gpu": "Radeon Graphics"
+      },
+      {
+        "name": "AMD Ryzen 5 7600X",
+        "core_count": "6",
+        "thread_count": "12",
+        "base_clock": "4.7",
+        "boost_clock": "5.3",
+        "tdp": "105",
+        "l1_cache": "384",
+        "l2_cache": "6",
+        "l3_cache": "32",
+        "total_cache": "38",
+        "socket": "AMD Socket AM5",
+        "memory_support": "DDR5",
+        "integrated_gpu": "Radeon Graphics"
+      },
+      {
+        "name": "AMD Ryzen 5 8400F",
+        "core_count": "6",
+        "thread_count": "12",
+        "base_clock": "4.2",
+        "boost_clock": "4.7",
+        "tdp": "65",
+        "l1_cache": "384",
+        "l2_cache": "6",
+        "l3_cache": "16",
+        "total_cache": "22",
+        "socket": "AMD Socket AM5",
+        "memory_support": "DDR5"
+      },
+      {
+        "name": "AMD Ryzen 5 8500G",
+        "core_count": "6",
+        "thread_count": "12",
+        "base_clock": "3.5",
+        "boost_clock": "5",
+        "tdp": "65",
+        "l1_cache": "384",
+        "l2_cache": "6",
+        "l3_cache": "16",
+        "total_cache": "22",
+        "socket": "AMD Socket AM5",
+        "memory_support": "DDR5",
+        "integrated_gpu": "Radeon 740M"
+      },
+      {
+        "name": "AMD Ryzen 5 8600G",
+        "core_count": "6",
+        "thread_count": "12",
+        "base_clock": "4.3",
+        "boost_clock": "5",
+        "tdp": "65",
+        "l1_cache": "448",
+        "l2_cache": "6",
+        "l3_cache": "16",
+        "total_cache": "22",
+        "socket": "AMD Socket AM5",
+        "memory_support": "DDR5",
+        "integrated_gpu": "Radeon 760M"
+      },
+      {
+        "name": "AMD Ryzen 5 9600",
+        "core_count": "6",
+        "thread_count": "12",
+        "base_clock": "3.8",
+        "boost_clock": "5.2",
+        "tdp": "65",
+        "l1_cache": "480",
+        "l2_cache": "6",
+        "l3_cache": "32",
+        "total_cache": "38",
+        "socket": "AMD Socket AM5",
+        "memory_support": "DDR5",
+        "integrated_gpu": "Radeon Graphics"
+      },
+      {
+        "name": "AMD Ryzen 5 9600X",
+        "core_count": "6",
+        "thread_count": "12",
+        "base_clock": "3.9",
+        "boost_clock": "5.4",
+        "tdp": "65",
+        "l1_cache": "480",
+        "l2_cache": "6",
+        "l3_cache": "32",
+        "total_cache": "38",
+        "socket": "AMD Socket AM5",
+        "memory_support": "DDR5",
+        "integrated_gpu": "Radeon Graphics"
+      },
+      {
+        "name": "AMD Ryzen 5 PRO 220",
+        "integrated_gpu": "Radeon 740M"
+      },
+      {
+        "name": "AMD Ryzen 5 PRO 5650G",
+        "core_count": "6",
+        "thread_count": "12",
+        "base_clock": "3.9",
+        "boost_clock": "4.4",
+        "tdp": "65",
+        "l1_cache": "384",
+        "l2_cache": "3",
+        "l3_cache": "16",
+        "total_cache": "19",
+        "socket": "AMD Socket AM4",
+        "memory_support": "DDR4",
+        "integrated_gpu": "Radeon Vega 7"
+      },
+      {
+        "name": "AMD Ryzen 5 PRO 5650GE",
+        "core_count": "6",
+        "thread_count": "12",
+        "base_clock": "3.4",
+        "boost_clock": "4.4",
+        "tdp": "35",
+        "l1_cache": "384",
+        "l2_cache": "3",
+        "l3_cache": "16",
+        "total_cache": "19",
+        "socket": "AMD Socket AM4",
+        "memory_support": "DDR4",
+        "integrated_gpu": "Radeon Vega 7"
+      },
+      {
+        "name": "AMD Ryzen 5 PRO 5655G",
+        "core_count": "6",
+        "thread_count": "12",
+        "base_clock": "3.9",
+        "boost_clock": "4.4",
+        "tdp": "65",
+        "l1_cache": "384",
+        "l2_cache": "3",
+        "l3_cache": "16",
+        "total_cache": "19",
+        "socket": "AMD Socket AM4",
+        "memory_support": "DDR4",
+        "integrated_gpu": "Radeon Vega 7"
+      },
+      {
+        "name": "AMD Ryzen 5 3500U"
+      },
+      {
+        "name": "AMD Ryzen 5 4600H"
+      },
+      {
+        "name": "AMD Ryzen 5 5500H"
+      },
+      {
+        "name": "AMD Ryzen 5 5600H"
+      },
+      {
+        "name": "AMD Ryzen 5 5625U"
+      },
+      {
+        "name": "AMD Ryzen 5 6600H"
+      },
+      {
+        "name": "AMD Ryzen 5 7235HS",
+        "integrated_gpu": "Radeon 660M"
+      },
+      {
+        "name": "AMD Ryzen 5 7430U"
+      },
+      {
+        "name": "AMD Ryzen 5 7520U"
+      },
+      {
+        "name": "AMD Ryzen 5 7530U"
+      },
+      {
+        "name": "AMD Ryzen 5 7533HS"
+      },
+      {
+        "name": "AMD Ryzen 5 7535HS"
+      },
+      {
+        "name": "AMD Ryzen 5 7640HS"
+      },
+      {
+        "name": "AMD Ryzen 5 8645HS"
+      },
+      {
+        "name": "AMD Ryzen 5 PRO 7535U"
+      },
+      {
+        "name": "AMD Ryzen 5 4500U"
+      },
+      {
+        "name": "AMD Ryzen 5 5500U"
+      }
+    ],
+    "AMD Ryzen 7": [
+      {
+        "name": "AMD Ryzen 7 170",
+        "integrated_gpu": "Radeon 680M"
+      },
+      {
+        "name": "AMD Ryzen 7 260",
+        "integrated_gpu": "Radeon 780M"
+      },
+      {
+        "name": "AMD Ryzen 7 3700X",
+        "core_count": "8",
+        "thread_count": "16",
+        "base_clock": "3.6",
+        "boost_clock": "4.4",
+        "tdp": "65",
+        "l1_cache": "512",
+        "l2_cache": "4",
+        "l3_cache": "32",
+        "total_cache": "37",
+        "socket": "AMD Socket AM4",
+        "memory_support": "DDR4"
+      },
+      {
+        "name": "AMD Ryzen 7 3800X",
+        "core_count": "8",
+        "thread_count": "16",
+        "base_clock": "3.9",
+        "boost_clock": "4.5",
+        "tdp": "105",
+        "l1_cache": "512",
+        "l2_cache": "4",
+        "l3_cache": "32",
+        "total_cache": "37",
+        "socket": "AMD Socket AM4",
+        "memory_support": "DDR4"
+      },
+      {
+        "name": "AMD Ryzen 7 5700",
+        "core_count": "8",
+        "thread_count": "16",
+        "base_clock": "3.7",
+        "boost_clock": "4.6",
+        "tdp": "65",
+        "l1_cache": "512",
+        "l2_cache": "4",
+        "l3_cache": "16",
+        "total_cache": "21",
+        "socket": "AMD Socket AM4",
+        "memory_support": "DDR4"
+      },
+      {
+        "name": "AMD Ryzen 7 5700G",
+        "core_count": "8",
+        "thread_count": "16",
+        "base_clock": "3.8",
+        "boost_clock": "4.6",
+        "tdp": "65",
+        "l1_cache": "512",
+        "l2_cache": "4",
+        "l3_cache": "16",
+        "total_cache": "21",
+        "socket": "AMD Socket AM4",
+        "memory_support": "DDR4",
+        "integrated_gpu": "Radeon Graphics 512SP"
+      },
+      {
+        "name": "AMD Ryzen 7 5700X",
+        "core_count": "8",
+        "thread_count": "16",
+        "base_clock": "3.4",
+        "boost_clock": "4.6",
+        "tdp": "65",
+        "l1_cache": "512",
+        "l2_cache": "4",
+        "l3_cache": "32",
+        "total_cache": "37",
+        "socket": "AMD Socket AM4",
+        "memory_support": "DDR4"
+      },
+      {
+        "name": "AMD Ryzen 7 5800X",
+        "core_count": "8",
+        "thread_count": "16",
+        "base_clock": "3.8",
+        "boost_clock": "4.7",
+        "tdp": "105",
+        "l1_cache": "512",
+        "l2_cache": "4",
+        "l3_cache": "32",
+        "total_cache": "37",
+        "socket": "AMD Socket AM4",
+        "memory_support": "DDR4"
+      },
+      {
+        "name": "AMD Ryzen 7 7700",
+        "core_count": "8",
+        "thread_count": "16",
+        "base_clock": "3.8",
+        "boost_clock": "5.3",
+        "tdp": "65",
+        "l1_cache": "512",
+        "l2_cache": "8",
+        "l3_cache": "32",
+        "total_cache": "41",
+        "socket": "AMD Socket AM5",
+        "memory_support": "DDR5",
+        "integrated_gpu": "Radeon Graphics"
+      },
+      {
+        "name": "AMD Ryzen 7 7700X",
+        "core_count": "8",
+        "thread_count": "16",
+        "base_clock": "4.5",
+        "boost_clock": "5.4",
+        "tdp": "105",
+        "l1_cache": "512",
+        "l2_cache": "8",
+        "l3_cache": "32",
+        "total_cache": "41",
+        "socket": "AMD Socket AM5",
+        "memory_support": "DDR5",
+        "integrated_gpu": "Radeon Graphics"
+      },
+      {
+        "name": "AMD Ryzen 7 7800X3D",
+        "core_count": "8",
+        "thread_count": "16",
+        "base_clock": "4.2",
+        "boost_clock": "5",
+        "tdp": "120",
+        "l1_cache": "512",
+        "l2_cache": "8",
+        "l3_cache": "96",
+        "total_cache": "105",
+        "socket": "AMD Socket AM5",
+        "memory_support": "DDR5",
+        "integrated_gpu": "Radeon Graphics"
+      },
+      {
+        "name": "AMD Ryzen 7 8700F",
+        "core_count": "8",
+        "thread_count": "16",
+        "base_clock": "4.1",
+        "boost_clock": "5",
+        "tdp": "65",
+        "l1_cache": "512",
+        "l2_cache": "8",
+        "l3_cache": "16",
+        "total_cache": "25",
+        "socket": "AMD Socket AM5",
+        "memory_support": "DDR5"
+      },
+      {
+        "name": "AMD Ryzen 7 8700G",
+        "core_count": "8",
+        "thread_count": "16",
+        "base_clock": "4.2",
+        "boost_clock": "5.1",
+        "tdp": "65",
+        "l1_cache": "512",
+        "l2_cache": "8",
+        "l3_cache": "16",
+        "total_cache": "25",
+        "socket": "AMD Socket AM5",
+        "memory_support": "DDR5",
+        "integrated_gpu": "Radeon 780M"
+      },
+      {
+        "name": "AMD Ryzen 7 9700X",
+        "core_count": "8",
+        "thread_count": "16",
+        "base_clock": "3.8",
+        "boost_clock": "5.5",
+        "tdp": "65",
+        "l1_cache": "640",
+        "l2_cache": "8",
+        "l3_cache": "32",
+        "total_cache": "41",
+        "socket": "AMD Socket AM5",
+        "memory_support": "DDR5",
+        "integrated_gpu": "Radeon Graphics"
+      },
+      {
+        "name": "AMD Ryzen 7 9800X3D",
+        "core_count": "8",
+        "thread_count": "16",
+        "base_clock": "4.7",
+        "boost_clock": "5.2",
+        "tdp": "120",
+        "l1_cache": "640",
+        "l2_cache": "8",
+        "l3_cache": "96",
+        "total_cache": "105",
+        "socket": "AMD Socket AM5",
+        "memory_support": "DDR5",
+        "integrated_gpu": "Radeon Graphics"
+      },
+      {
+        "name": "AMD Ryzen 7 PRO 5750G",
+        "core_count": "8",
+        "thread_count": "16",
+        "base_clock": "3.8",
+        "boost_clock": "4.6",
+        "tdp": "65",
+        "l1_cache": "512",
+        "l2_cache": "4",
+        "l3_cache": "16",
+        "total_cache": "21",
+        "socket": "AMD Socket AM4",
+        "memory_support": "DDR4",
+        "integrated_gpu": "Radeon Vega 8"
+      },
+      {
+        "name": "AMD Ryzen 7 4800H"
+      },
+      {
+        "name": "AMD Ryzen 7 5800H"
+      },
+      {
+        "name": "AMD Ryzen 7 5800HS"
+      },
+      {
+        "name": "AMD Ryzen 7 5825U"
+      },
+      {
+        "name": "AMD Ryzen 7 6800H"
+      },
+      {
+        "name": "AMD Ryzen 7 6800HS"
+      },
+      {
+        "name": "AMD Ryzen 7 7435HS"
+      },
+      {
+        "name": "AMD Ryzen 7 7445H"
+      },
+      {
+        "name": "AMD Ryzen 7 7445HS"
+      },
+      {
+        "name": "AMD Ryzen 7 7730U"
+      },
+      {
+        "name": "AMD Ryzen 7 7735H"
+      },
+      {
+        "name": "AMD Ryzen 7 7735HS"
+      },
+      {
+        "name": "AMD Ryzen 7 7735U"
+      },
+      {
+        "name": "AMD Ryzen 7 7745HX"
+      },
+      {
+        "name": "AMD Ryzen 7 7840HS"
+      },
+      {
+        "name": "AMD Ryzen 7 8840HS"
+      },
+      {
+        "name": "AMD Ryzen 7 8845HS"
+      },
+      {
+        "name": "AMD Ryzen 7 PRO 6850U"
+      },
+      {
+        "name": "AMD Ryzen 7 5700U"
+      }
+    ],
+    "AMD Ryzen 9": [
+      {
+        "name": "AMD Ryzen 9 270",
+        "integrated_gpu": "Radeon 780M"
+      },
+      {
+        "name": "AMD Ryzen 9 3900X",
+        "core_count": "12",
+        "thread_count": "24",
+        "base_clock": "3.8",
+        "boost_clock": "4.6",
+        "tdp": "105",
+        "l1_cache": "768",
+        "l2_cache": "6",
+        "l3_cache": "64",
+        "total_cache": "71",
+        "socket": "AMD Socket AM4",
+        "memory_support": "DDR4"
+      },
+      {
+        "name": "AMD Ryzen 9 5900X",
+        "core_count": "12",
+        "thread_count": "24",
+        "base_clock": "3.7",
+        "boost_clock": "4.8",
+        "tdp": "105",
+        "l1_cache": "768",
+        "l2_cache": "6",
+        "l3_cache": "64",
+        "total_cache": "71",
+        "socket": "AMD Socket AM4",
+        "memory_support": "DDR4"
+      },
+      {
+        "name": "AMD Ryzen 9 5950X",
+        "core_count": "16",
+        "thread_count": "32",
+        "base_clock": "3.4",
+        "boost_clock": "4.9",
+        "tdp": "105",
+        "l1_cache": "1024",
+        "l2_cache": "8",
+        "l3_cache": "64",
+        "total_cache": "73",
+        "socket": "AMD Socket AM4",
+        "memory_support": "DDR4"
+      },
+      {
+        "name": "AMD Ryzen 9 7900",
+        "core_count": "12",
+        "thread_count": "24",
+        "base_clock": "3.7",
+        "boost_clock": "5.4",
+        "tdp": "65",
+        "l1_cache": "768",
+        "l2_cache": "12",
+        "l3_cache": "64",
+        "total_cache": "77",
+        "socket": "AMD Socket AM5",
+        "memory_support": "DDR5",
+        "integrated_gpu": "Radeon Graphics"
+      },
+      {
+        "name": "AMD Ryzen 9 7900X",
+        "core_count": "12",
+        "thread_count": "24",
+        "base_clock": "4.7",
+        "boost_clock": "5.6",
+        "tdp": "170",
+        "l1_cache": "768",
+        "l2_cache": "12",
+        "l3_cache": "64",
+        "total_cache": "77",
+        "socket": "AMD Socket AM5",
+        "memory_support": "DDR5",
+        "integrated_gpu": "Radeon Graphics"
+      },
+      {
+        "name": "AMD Ryzen 9 7900X3D",
+        "core_count": "12",
+        "thread_count": "24",
+        "base_clock": "4.4",
+        "boost_clock": "5.6",
+        "tdp": "120",
+        "l1_cache": "768",
+        "l2_cache": "12",
+        "l3_cache": "128",
+        "total_cache": "141",
+        "socket": "AMD Socket AM5",
+        "memory_support": "DDR5",
+        "integrated_gpu": "Radeon Graphics"
+      },
+      {
+        "name": "AMD Ryzen 9 7950X",
+        "core_count": "16",
+        "thread_count": "32",
+        "base_clock": "4.5",
+        "boost_clock": "5.7",
+        "tdp": "170",
+        "l1_cache": "1024",
+        "l2_cache": "16",
+        "l3_cache": "64",
+        "total_cache": "81",
+        "socket": "AMD Socket AM5",
+        "memory_support": "DDR5",
+        "integrated_gpu": "Radeon Graphics"
+      },
+      {
+        "name": "AMD Ryzen 9 7950X3D",
+        "core_count": "16",
+        "thread_count": "32",
+        "base_clock": "4.2",
+        "boost_clock": "5.7",
+        "tdp": "120",
+        "l1_cache": "1024",
+        "l2_cache": "16",
+        "l3_cache": "128",
+        "total_cache": "145",
+        "socket": "AMD Socket AM5",
+        "memory_support": "DDR5",
+        "integrated_gpu": "Radeon Graphics"
+      },
+      {
+        "name": "AMD Ryzen 9 9900X",
+        "core_count": "12",
+        "thread_count": "24",
+        "base_clock": "4.4",
+        "boost_clock": "5.6",
+        "tdp": "120",
+        "l1_cache": "960",
+        "l2_cache": "12",
+        "l3_cache": "64",
+        "total_cache": "77",
+        "socket": "AMD Socket AM5",
+        "memory_support": "DDR5",
+        "integrated_gpu": "Radeon Graphics"
+      },
+      {
+        "name": "AMD Ryzen 9 9900X3D",
+        "core_count": "12",
+        "thread_count": "24",
+        "base_clock": "4.4",
+        "boost_clock": "5.5",
+        "tdp": "120",
+        "l1_cache": "960",
+        "l2_cache": "12",
+        "l3_cache": "128",
+        "total_cache": "141",
+        "socket": "AMD Socket AM5",
+        "memory_support": "DDR5",
+        "integrated_gpu": "Radeon Graphics"
+      },
+      {
+        "name": "AMD Ryzen 9 9950X",
+        "core_count": "16",
+        "thread_count": "32",
+        "base_clock": "4.3",
+        "boost_clock": "5.7",
+        "tdp": "170",
+        "l1_cache": "1280",
+        "l2_cache": "16",
+        "l3_cache": "64",
+        "total_cache": "81",
+        "socket": "AMD Socket AM5",
+        "memory_support": "DDR5",
+        "integrated_gpu": "Radeon Graphics"
+      },
+      {
+        "name": "AMD Ryzen 9 9950X3D",
+        "core_count": "16",
+        "thread_count": "32",
+        "base_clock": "4.3",
+        "boost_clock": "5.7",
+        "tdp": "170",
+        "l1_cache": "1280",
+        "l2_cache": "16",
+        "l3_cache": "128",
+        "total_cache": "145",
+        "socket": "AMD Socket AM5",
+        "memory_support": "DDR5",
+        "integrated_gpu": "Radeon Graphics"
+      },
+      {
+        "name": "AMD Ryzen 9 5900HX"
+      },
+      {
+        "name": "AMD Ryzen 9 6900HX"
+      },
+      {
+        "name": "AMD Ryzen 9 7845HX"
+      },
+      {
+        "name": "AMD Ryzen 9 7940HS"
+      },
+      {
+        "name": "AMD Ryzen 9 7945HX"
+      },
+      {
+        "name": "AMD Ryzen 9 8940HX"
+      },
+      {
+        "name": "AMD Ryzen 9 8945H"
+      },
+      {
+        "name": "AMD Ryzen 9 8945HS"
+      }
+    ],
+    "AMD Ryzen AI 5": [
+      {
+        "name": "AMD Ryzen AI 5 330",
+        "integrated_gpu": "Radeon 820M"
+      },
+      {
+        "name": "AMD Ryzen AI 5 340",
+        "integrated_gpu": "Radeon 840M"
+      }
+    ],
+    "AMD Ryzen AI 7": [
+      {
+        "name": "AMD Ryzen AI 7 350",
+        "integrated_gpu": "Radeon 860M"
+      }
+    ],
+    "AMD Ryzen AI 9": [
+      {
+        "name": "AMD Ryzen AI 9 365",
+        "integrated_gpu": "Radeon 880M"
+      },
+      {
+        "name": "AMD Ryzen AI 9 HX 370",
+        "integrated_gpu": "Radeon 890M"
+      },
+      {
+        "name": "AMD Ryzen AI 9 465",
+        "integrated_gpu": "Radeon 880M"
+      }
+    ],
+    "AMD Ryzen AI MAX": [
+      {
+        "name": "AMD Ryzen AI MAX 390",
+        "integrated_gpu": "Radeon 8050S"
+      },
+      {
+        "name": "AMD Ryzen AI MAX+ 395",
+        "integrated_gpu": "Radeon 8060S"
+      }
+    ],
+    "AMD Ryzen Threadripper": [
+      {
+        "name": "AMD Ryzen Threadripper 2950X",
+        "core_count": "16",
+        "thread_count": "32",
+        "base_clock": "3.5",
+        "boost_clock": "4.4",
+        "tdp": "180",
+        "l1_cache": "1536",
+        "l2_cache": "8",
+        "l3_cache": "32",
+        "total_cache": "42",
+        "socket": "AMD Socket SP3r2",
+        "memory_support": "DDR4"
+      }
+    ],
+    "AMD Athlon": [
+      {
+        "name": "AMD Athlon"
+      },
+      {
+        "name": "AMD Athlon Gold"
+      },
+      {
+        "name": "AMD Athlon Silver"
+      },
+      {
+        "name": "AMD Athlon Silver 10"
+      },
+      {
+        "name": "AMD Athlon Silver 3050U"
+      },
+      {
+        "name": "AMD Athlon Silver 7120U"
+      },
+      {
+        "name": "AMD Athlon Silver 3050U"
+      }
+    ]
+  }
+}

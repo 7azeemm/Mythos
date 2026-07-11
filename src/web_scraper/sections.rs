@@ -1,24 +1,22 @@
 use crate::utils::file_loader::FileLoader;
+use crate::utils::regex_cache::RegexCache;
 use crate::web_scraper::parsers::gpu_parser::GPUParser;
 use crate::web_scraper::parsers::memory_parser::MemoryParser;
+use crate::web_scraper::parsers::monitor_parser::MonitorParser;
+use crate::web_scraper::parsers::pc_parser::PCParser;
 use crate::web_scraper::parsers::storage_parser::StorageParser;
 use crate::web_scraper::parsers::{GenericSectionParser, SectionParser};
 use once_cell::sync::OnceCell;
 use serde::{Deserialize, Serialize};
-use serde_json::Value;
 use std::collections::HashMap;
-use std::error::Error;
-use std::path::Path;
 use std::str::FromStr;
 use std::sync::Arc;
 use strum_macros::{Display, EnumIter, EnumString};
-use crate::utils::regex_cache::RegexCache;
-use crate::web_scraper::parsers::pc_parser::PCParser;
+use crate::web_scraper::dataset::Dataset;
 
 pub static SECTION_PARSERS: OnceCell<HashMap<Section, Arc<dyn SectionParser>>> = OnceCell::new();
 
 #[derive(Copy, Clone, Debug, Hash, PartialEq, Eq, Serialize, Deserialize, EnumString, Display, EnumIter)]
-#[strum(serialize_all = "snake_case")]
 pub enum Section {
     PC,
     GamingPC,
@@ -30,37 +28,53 @@ pub enum Section {
     MacBook,
 
     Monitor,
-    Mouse,
-    Keyboard,
-    AccessoriesCombo,
-    UpgradeKit,
 
     CPU,
     GPU,
     Memory,
-    Motherboard,
     Storage,
-    Case,
-    PowerSupply,
+    Motherboard,
     Cooler,
+    PowerSupply,
+    Case,
 
-    Trash
+    Mouse,
+    Keyboard,
+    MousePad,
+    Headphones,
+    GamingChair,
+    AccessoriesCombo,
+    UpgradeKit,
+
+    Console,
+    Controller,
+    ConsoleGame,
+    ConsoleAccessories,
+
+    Smartphone,
+    Tablet,
+    Smartwatch,
+    Television,
+
+    Others
+}
+
+impl Default for Section {
+    fn default() -> Self {
+        Self::Others
+    }
 }
 
 impl Section {
-    pub fn list() -> Vec<Section> {
-        vec![
-            Self::Case, Self::PowerSupply,
-            Self::MiniPC, Self::AllInOnePC, Self::UpgradeKit,
-            Self::MacBook, Self::GamingLaptop, Self::Laptop,
-            Self::GamingPC, Self::PC, Self::Monitor,
-            Self::AccessoriesCombo, Self::Mouse, Self::Keyboard,
-            Self::CPU, Self::GPU, Self::Memory, Self::Motherboard, Self::Storage, Self::Cooler
-        ]
-    }
-
     pub fn is_low_priority(&self) -> bool {
         matches!(self, Self::PC | Self::Laptop | Self::AccessoriesCombo)
+    }
+    
+    pub fn requires_desc(&self) -> bool {
+        matches!(self,
+            Self::PC | Self::GamingPC | Self::AllInOnePC | Self::MiniPC | Self::Laptop |
+            Self::GamingLaptop | Self::MacBook | Self::MacBook
+        )
     }
 
     pub fn from_str(s: &str) -> Result<Self, String> {
@@ -80,29 +94,54 @@ impl Section {
 #[derive(Debug, Clone, Serialize, Deserialize, Default)]
 #[serde(default)]
 pub struct SectionConfig {
-    pub id: String,
+    pub id: Section,
     pub force_include: Vec<String>,
-    pub include: Vec<String>,
-    pub include_description: Vec<String>,
-    pub exclude: Vec<String>,
-    pub exclude_description: Vec<String>,
-    pub switchable_to: Vec<String>,
-    pub unswitchable: bool,
-    pub skip_include_check: bool,
-    pub has_chipsets_dataset: bool,
-    pub requires_description: bool,
-    pub optional_dataset_words: Vec<String>,
+    pub move_rules: Vec<Vec<String>>,
+    pub move_by_description_rules: Vec<Vec<String>>,
+    pub min_price: i32,
     pub title_cleaner: TitleCleanerConfig,
     pub brands: Vec<String>,
     pub filters: Vec<String>,
-    pub render_specs: Vec<String>
+    pub components: Vec<String>,
+    pub group: Vec<String>,
+    #[serde(default = "default_id_field_name")]
+    pub id_field_name: String
+}
+
+fn default_id_field_name() -> String {
+    "name".to_string()
+}
+
+impl SectionConfig {
+    pub async fn load() {
+        let mut parsers: HashMap<Section, Arc<dyn SectionParser>> = HashMap::new();
+
+        for config in FileLoader::load_or_default::<Vec<SectionConfig>>("config/sections.json").await.unwrap() {
+            let section = config.id;
+            let config = Arc::new(config);
+            let dataset = Dataset::load(section).await.unwrap();
+
+            let parser: Arc<dyn SectionParser> = match section {
+                Section::GPU => Arc::new(GPUParser { config, dataset }),
+                Section::Memory => Arc::new(MemoryParser { config, dataset }),
+                Section::Storage => Arc::new(StorageParser { config, dataset }),
+                Section::PC | Section::GamingPC | Section::AllInOnePC | Section::MiniPC |
+                Section::Laptop | Section::GamingLaptop | Section::MacBook => Arc::new(PCParser { config, dataset }),
+                Section::Monitor => Arc::new(MonitorParser { config, dataset }),
+                _ => Arc::new(GenericSectionParser { config, dataset })
+            };
+
+            parsers.insert(section, parser);
+        }
+
+        SECTION_PARSERS.set(parsers).ok();
+    }
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, Default)]
 #[serde(default)]
 pub struct TitleCleanerConfig {
     pub remove_words: Vec<String>,
-    pub remove_patterns: Vec<String>,
     pub replace_words: Vec<Vec<String>>,
     pub add_brands_by_models: Vec<Vec<String>>
 }
@@ -117,106 +156,5 @@ impl TitleCleanerConfig {
             }
         }
         text
-    }
-}
-
-#[derive(Debug, Clone, Serialize, Deserialize, Default)]
-pub struct DatasetEntry {
-    pub name: String,
-    pub data: Value,
-    pub chipset: Option<ChipsetEntry>,
-}
-
-#[derive(Debug, Clone, Serialize, Deserialize, Default)]
-pub struct ChipsetEntry {
-    pub name: String,
-    pub data: Value,
-}
-
-impl SectionConfig {
-    pub async fn load() {
-        let mut parsers: HashMap<Section, Arc<dyn SectionParser>> = HashMap::new();
-
-        for config in FileLoader::load_or_default::<Vec<SectionConfig>>("config/sections.json").await.unwrap() {
-            let section = Section::from_str(&config.id).unwrap();
-            let config = Arc::new(config);
-            let (dataset, chipsets) = config.load_datasets().await.unwrap();
-
-            let parser: Arc<dyn SectionParser> = match section {
-                Section::GPU => Arc::new(GPUParser { config, dataset, chipsets }),
-                Section::Memory => Arc::new(MemoryParser { config, dataset }),
-                Section::Storage => Arc::new(StorageParser { config, dataset }),
-                Section::PC | Section::GamingPC | Section::AllInOnePC | Section::MiniPC |
-                Section::Laptop | Section::GamingLaptop | Section::MacBook => Arc::new(PCParser { config, dataset }),
-                _ => Arc::new(GenericSectionParser { config, dataset })
-            };
-
-            parsers.insert(section, parser);
-        }
-
-        SECTION_PARSERS.set(parsers).ok();
-    }
-
-    async fn load_datasets(&self) -> Result<(Vec<DatasetEntry>, Vec<ChipsetEntry>), String> {
-        let mut dataset_entries = Vec::new();
-        let mut chipset_entries = Vec::new();
-
-        let dataset_path = format!("config/datasets/{}.csv", self.id);
-        if Path::new(&dataset_path).exists() {
-            for entry in FileLoader::load_csv(&dataset_path)? {
-                let name = entry.get("name").unwrap().as_str().unwrap().to_string();
-                if name.is_empty() {
-                    continue
-                }
-                dataset_entries.push(DatasetEntry {
-                    name,
-                    data: entry,
-                    chipset: None
-                });
-            }
-        }
-
-        // For GPUs only
-        if self.has_chipsets_dataset {
-            let chipsets_path = format!("config/datasets/{}-chipsets.csv", self.id);
-            if Path::new(&chipsets_path).exists() {
-                for entry in FileLoader::load_csv(&chipsets_path)? {
-                    let chipset_name = entry.get("name").unwrap().as_str().unwrap().to_string();
-                    if chipset_name.is_empty() {
-                        continue
-                    }
-
-                    for dataset_entry in dataset_entries.iter_mut() {
-                        if dataset_entry.name.contains(&chipset_name) {
-                            match entry.get("memory_size").and_then(|v| v.as_str()) {
-                                None => break,
-                                Some(size) => if dataset_entry.name.contains(&format!("{size}GB")) {
-                                    dataset_entry.chipset = Some(ChipsetEntry {
-                                        name: chipset_name.clone(),
-                                        data: entry.clone()
-                                    });
-                                },
-                            }
-                        }
-                    }
-
-                    chipset_entries.push(ChipsetEntry {
-                        name: chipset_name,
-                        data: entry
-                    });
-                }
-            }
-
-            for entry in &dataset_entries {
-                if entry.chipset.is_none() {
-                    eprintln!("GPU Chipset not found: `{}`", entry.name);
-                }
-            }
-        }
-
-        dataset_entries.sort_by(|a, b| b.name.cmp(&a.name));
-        chipset_entries.sort_by(|a, b| b.name.cmp(&a.name));
-
-        Ok((dataset_entries, chipset_entries))
     }
 }

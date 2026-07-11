@@ -1,192 +1,219 @@
-// use std::collections::{HashMap, HashSet};
-// use axum::{extract::{Path, Query}, Json};
-// use chrono::{DateTime, Utc};
-// use serde::{Deserialize, Serialize};
-// use serde_json::Value;
-// use sqlx::FromRow;
-// use crate::api::error::{ApiError, ApiResult};
-// use crate::utils::database::get_db_pool;
-//
-// pub const PRODUCTS_PER_PAGE: i32 = 24;
-//
-// #[derive(Debug, Serialize, Deserialize, FromRow)]
-// pub struct ProductMinimalResponse {
-//     pub id: String,
-//     pub p_ref: String,
-//     pub section: String,
-//     pub source: String,
-//     pub title: String,
-//     pub description: String,
-//     pub url: String,
-//     pub image: String,
-//     pub status: String,
-//     pub price: i32,
-// }
-//
-// #[derive(Debug, Serialize, Deserialize, FromRow)]
-// pub struct ProductDetailedResponse {
-//     id: String,
-//     p_ref: String,
-//     section: String,
-//     source: String,
-//     title: String,
-//     description: String,
-//     url: String,
-//     image: String,
-//     status: String,
-//     price: i32,
-//     history: Value,
-//     #[sqlx(skip)]
-//     specs: Option<ProductSpecs>,
-//     added_at: Option<DateTime<Utc>>,
-//     updated_at: Option<DateTime<Utc>>,
-// }
-//
-// #[derive(Deserialize)]
-// pub struct ListQuery {
-//     section: String,
-//     page: Option<i32>,
-//     sort: Option<String>,
-//     min_price: Option<i32>,
-//     max_price: Option<i32>,
-//     options: Option<HashMap<String, Vec<String>>>,
-// }
-//
-// impl ListQuery {
-//     fn validate(&self) -> ApiResult<()> {
-//         if let Some(page) = self.page {
-//             if page < 1 {
-//                 return Err(ApiError::InvalidQuery("page must be >= 1".to_string()));
-//             }
-//         }
-//         if let Some(sort) = &self.sort {
-//             if sort != "price_asc" && sort != "price_desc" {
-//                 return Err(ApiError::InvalidQuery(
-//                     "sort must be 'price_asc' or 'price_desc'".to_string(),
-//                 ));
-//             }
-//         }
-//         if let Some(min) = self.min_price {
-//             if min < 0 {
-//                 return Err(ApiError::InvalidQuery(
-//                     "min_price must be >= 0".to_string(),
-//                 ));
-//             }
-//         }
-//         if let Some(max) = self.max_price {
-//             if max < 0 {
-//                 return Err(ApiError::InvalidQuery(
-//                     "max_price must be >= 0".to_string(),
-//                 ));
-//             }
-//         }
-//         Ok(())
-//     }
-// }
-//
-// pub async fn list(Query(query): Query<ListQuery>) -> ApiResult<Json<Vec<ProductMinimalResponse>>> {
-//     query.validate()?;
-//
-//     let page = query.page.unwrap_or(1);
-//     let sort = query.sort.unwrap_or_else(|| "price_asc".to_string());
-//     let offset = (page - 1) * PRODUCTS_PER_PAGE;
-//
-//     let mut matching_ids: Option<HashSet<String>> = None;
-//     if let Some(options) = query.options {
-//         let cache = SPECS_CACHE.read().await;
-//
-//         // Iterate over each filter category provided in query.options
-//         for (filter_type, filter_values) in options {
-//             let mut current_filter_set: HashSet<String> = HashSet::new();
-//
-//             // 1. Gather all products matching ANY of the values for this specific filter (OR logic)
-//             for value in filter_values {
-//                 let products = cache.filter_products(&query.section, &filter_type, &value);
-//                 current_filter_set.extend(products);
-//             }
-//
-//             // 2. Intersect this category's results with the overall matching_ids (AND logic across categories)
-//             matching_ids = Some(match matching_ids {
-//                 None => current_filter_set,
-//                 Some(existing) => existing.intersection(&current_filter_set).cloned().collect(),
-//             });
-//
-//             // 3. If at any point the intersection is empty, stop checking further filters
-//             if let Some(ref ids) = matching_ids {
-//                 if ids.is_empty() {
-//                     break;
-//                 }
-//             }
-//         }
-//     }
-//
-//     let mut query_builder: sqlx::QueryBuilder<sqlx::Postgres> = sqlx::QueryBuilder::new(
-//         r#"
-//         SELECT id, p_ref, section, source, title, description, url, image, status, price
-//         FROM products
-//         WHERE 1=1
-//         "#
-//     );
-//
-//     query_builder.push(" AND section = ");
-//     query_builder.push_bind(query.section);
-//
-//     if let Some(min_price) = query.min_price {
-//         query_builder.push(" AND price >= ");
-//         query_builder.push_bind(min_price);
-//     }
-//
-//     if let Some(max_price) = query.max_price {
-//         query_builder.push(" AND price <= ");
-//         query_builder.push_bind(max_price);
-//     }
-//
-//     if let Some(ids) = &matching_ids {
-//         if ids.is_empty() {
-//             return Ok(Json(vec![]));
-//         }
-//
-//         query_builder.push(" AND id IN (");
-//         let mut separated = query_builder.separated(", ");
-//         for id in ids {
-//             separated.push_bind(id);
-//         }
-//         separated.push_unseparated(")");
-//     }
-//
-//     let sort_clause = match sort.as_str() {
-//         "price_desc" => " ORDER BY price DESC",
-//         _ => " ORDER BY price ASC",
-//     };
-//
-//     query_builder.push(sort_clause);
-//     query_builder.push(" LIMIT ");
-//     query_builder.push_bind(PRODUCTS_PER_PAGE as i64);
-//     query_builder.push(" OFFSET ");
-//     query_builder.push_bind(offset as i64);
-//
-//     let products: Vec<ProductMinimalResponse> = query_builder
-//         .build_query_as()
-//         .fetch_all(get_db_pool())
-//         .await
-//         .map_err(|e| ApiError::DatabaseError(format!("Failed to fetch products: {}", e)))?;
-//
-//     Ok(Json(products))
-// }
-//
-// pub async fn get_by_id(Path(id): Path<String>) -> ApiResult<Json<ProductDetailedResponse>> {
-//     let mut product: ProductDetailedResponse = sqlx::query_as(
-//         "SELECT * FROM products WHERE id = $1"
-//     )
-//         .bind(&id)
-//         .fetch_optional(get_db_pool())
-//         .await
-//         .map_err(|e| ApiError::DatabaseError(format!("Failed to fetch product: {}", e)))?
-//         .ok_or_else(|| ApiError::NotFound(format!("Product '{}' not found", id)))?;
-//
-//     if let Some(specs) = SPECS_CACHE.read().await.specs.get(&id).cloned() {
-//         product.specs = Some(specs)
-//     }
-//
-//     Ok(Json(product))
-// }
+use crate::api::error::ApiError::InvalidQuery;
+use crate::api::error::ApiResult;
+use crate::api::filters::{build_all_filters, product_matches_key, FilterGroup};
+use crate::storage::{ProductStorage, PRODUCT_STORAGE};
+use crate::utils::serde_ext::JsonExt;
+use crate::web_scraper::product::Product;
+use crate::web_scraper::sections::Section;
+use crate::web_scraper::sites::Site;
+use axum::{extract::Path, Json};
+use axum_extra::extract::Query;
+use serde::{Deserialize, Serialize};
+use std::collections::HashMap;
+use std::str::FromStr;
+use strum::IntoEnumIterator;
+
+const PAGE_SIZE: usize = 60;
+
+#[derive(Serialize, Debug)]
+pub struct PageResponse {
+    pub section_info: Option<SectionInfo>,
+    pub products: Vec<Product>,
+    pub groups: Vec<(String, Vec<Product>)>,
+    pub total_products: usize,
+    pub total_pages: usize,
+    pub page: usize,
+}
+
+#[derive(Serialize, Debug)]
+pub struct SectionInfo {
+    pub filters: Vec<FilterGroup>,
+    pub sites: Vec<String>,
+    pub components: Vec<String>,
+    pub group_by: Vec<String>,
+    pub min_price: i32,
+    pub max_price: i32,
+}
+
+#[derive(Debug, Deserialize, Default)]
+#[serde(default)]
+pub struct PageQuery {
+    pub require_section_info: Option<bool>,
+    pub grouping_mode: bool,
+    pub page: Option<usize>,
+    pub search: Option<String>,
+    pub min_price: Option<i64>,
+    pub max_price: Option<i64>,
+    pub site: Vec<String>,
+    pub stock: Vec<String>,
+    pub sort: Option<String>,
+    pub filters: Option<String>
+}
+
+pub async fn get_products(Path(section): Path<String>, Query(params): Query<PageQuery>) -> ApiResult<Json<PageResponse>> {
+    let section = Section::from_str(&section).map_err(|err| InvalidQuery(err))?;
+    let page = params.page.unwrap_or(1).max(1);
+    let filters = params.filters.as_ref().map(|f| serde_json::from_str::<HashMap<String, Vec<String>>>(f))
+        .transpose().map_err(|err| InvalidQuery(err.to_string()))?.unwrap_or_default();
+
+    // Get Section Details if necessary
+    let section_info = match params.require_section_info == Some(true) {
+        true => {
+            let (filters, min_price, max_price) = {
+                let storage = PRODUCT_STORAGE.read().await;
+                let products = storage.products.values().filter(|p| p.section == section).collect::<Vec<_>>();
+                let filters = build_all_filters(products.as_slice(), &filters);
+                let min = products.iter().map(|p| p.price).min().unwrap_or(0);
+                let max = products.iter().map(|p| p.price).max().unwrap_or(0);
+                (filters, min, max)
+            };
+            Some(SectionInfo {
+                filters,
+                sites: ProductStorage::get_sites(section).await,
+                components: section.config().components.clone(),
+                group_by: section.config().group.clone(),
+                min_price,
+                max_price
+            })
+        },
+        false => None
+    };
+
+    // Get Filtered Products
+    let mut products = get_filtered_products(section, &params, filters).await;
+    let total_products = products.len();
+
+    // Sort Products
+    match params.sort.as_deref() {
+        Some("price_desc") => products.sort_by(|a, b| b.price.cmp(&a.price)),
+        _ => products.sort_by(|a, b| a.price.cmp(&b.price))
+    }
+
+    // Return paginated pages or groups if enabled
+    let (products, groups, total_pages) = if params.grouping_mode {
+        let all_groups = group_products(section, products);
+        let total_groups = all_groups.len();
+        let total_pages = (total_groups + PAGE_SIZE - 1) / PAGE_SIZE;
+        let offset = (page - 1) * PAGE_SIZE;
+
+        let groups: Vec<(String, Vec<Product>)> = all_groups
+            .into_iter()
+            .skip(offset)
+            .take(PAGE_SIZE)
+            .collect();
+
+        (Vec::new(), groups, total_pages)
+    } else {
+        let total_pages = (total_products + PAGE_SIZE - 1) / PAGE_SIZE;
+        let offset = (page - 1) * PAGE_SIZE;
+
+        let products: Vec<Product> = products
+            .into_iter()
+            .skip(offset)
+            .take(PAGE_SIZE)
+            .collect();
+
+        (products, Vec::new(), total_pages)
+    };
+
+    Ok(Json(PageResponse {
+        section_info,
+        products,
+        groups,
+        page,
+        total_products,
+        total_pages,
+    }))
+}
+
+async fn get_filtered_products(section: Section, params: &PageQuery, filters: HashMap<String, Vec<String>>) -> Vec<Product> {
+    PRODUCT_STORAGE.read().await.products
+        .iter()
+        .filter_map(|(_, p)| {
+            // section filter
+            if p.section != section {
+                return None;
+            }
+
+            // search filter
+            if let Some(ref search) = params.search {
+                let mut s = search.to_lowercase();
+                let mut should_match = false;
+                if let Some(str) = s.strip_prefix("!=") {
+                    should_match = true;
+                    s = str.to_string();
+                }
+
+                let matches = p.title.to_lowercase().contains(&s)
+                    || p.description.as_ref().unwrap_or(&String::default()).to_lowercase().contains(&s);
+
+                if matches == should_match {
+                    return None;
+                }
+            }
+
+            // site filter
+            if !params.site.is_empty() && !params.site.contains(&p.site.as_str().to_string()) {
+                return None;
+            }
+
+            // stock filter
+            if !params.stock.is_empty() && !params.stock.contains(&p.status.to_string()) {
+                return None;
+            }
+
+            // price filters
+            if let Some(min) = params.min_price {
+                if p.price < min as i32 {
+                    return None;
+                }
+            }
+
+            if let Some(max) = params.max_price {
+                if p.price > max as i32 {
+                    return None;
+                }
+            }
+
+            // filters
+            if !filters.iter().all(|(key, ids)| ids.is_empty() || product_matches_key(p, key, ids)) {
+                return None
+            }
+
+            Some(p.clone())
+        })
+        .collect()
+}
+
+fn group_products(section: Section, products: Vec<Product>) -> Vec<(String, Vec<Product>)> {
+    let mut group_indices: HashMap<String, usize> = HashMap::new();
+    let mut groups: Vec<(String, Vec<Product>)> = Vec::new();
+
+    for mut product in products {
+        let mut fields = Vec::new();
+        for field in &section.config().group {
+            if let Some(value) = product.specs.get_str(field) {
+                fields.push(value);
+            }
+        }
+
+        let name = match fields.len() {
+            0 => product.title.clone(),
+            _ => fields.join(" | ")
+        };
+
+        match group_indices.get(&name) {
+            Some(&index) => {
+                // Group already exists, push product to the existing group
+                groups[index].1.push(product);
+            }
+            None => {
+                // New group encountered, record its index and push to results
+                group_indices.insert(name.clone(), groups.len());
+                groups.push((name, vec![product]));
+            }
+        }
+    }
+
+    groups
+}

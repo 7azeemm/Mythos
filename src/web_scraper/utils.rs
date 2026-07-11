@@ -1,34 +1,7 @@
 use once_cell::sync::Lazy;
 use scraper::{ElementRef, Selector};
 use std::error::Error;
-
-pub trait ElementRefExt {
-    fn get_text(&self) -> String;
-    fn select_elem(&self, selector: &Selector, element: &str) -> Result<ElementRef, String>;
-    fn select_text(&self, selector: &Selector, element: &str) -> Result<String, String>;
-    fn select_attr(&self, attr: &str, element: &str) -> Result<String, String>;
-}
-
-impl<'a> ElementRefExt for ElementRef<'a> {
-    fn get_text(&self) -> String {
-        self.text()
-            .flat_map(|s| s.split_whitespace())
-            .collect::<Vec<_>>()
-            .join(" ")
-    }
-
-    fn select_elem(&self, selector: &Selector, element: &str) -> Result<ElementRef, String> {
-        self.select(selector).next().ok_or(format!("{element} not found"))
-    }
-
-    fn select_text(&self, selector: &Selector, element: &str) -> Result<String, String> {
-        Ok(self.select(selector).next().ok_or(format!("{element} not found"))?.get_text())
-    }
-
-    fn select_attr(&self, attr: &str, element: &str) -> Result<String, String> {
-        Ok(self.attr(attr).ok_or(format!("{element} not found"))?.to_string())
-    }
-}
+use crate::utils::scraper_ext::ElementRefExt;
 
 pub fn extract_basics(
     element: ElementRef,
@@ -36,14 +9,14 @@ pub fn extract_basics(
     image_sel: &Selector
 ) -> Result<(String, String, String), String> {
     let title_elem = element.select_elem(title_sel, "title")?;
-    let mut url = title_elem.select_attr("href", "url")?;
+    let url = title_elem.select_attr("href", "url")?;
     let title = title_elem.get_text();
     
     let image_elem = element.select_elem(image_sel, "image")?.value();
     let mut image_opt = None;
     for image_attr in vec!["data-full-size-image-url", "src", "data-original", "data-src", "data-lazy-src", "data-nectar-img-src"] {
         if let Some(value) = image_elem.attr(image_attr) {
-            if value.starts_with("http") && !value.ends_with(".gif") {
+            if value.starts_with("http") {
                 image_opt = Some(value.to_string());
                 break;
             }

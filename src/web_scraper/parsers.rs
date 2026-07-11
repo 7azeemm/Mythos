@@ -2,92 +2,51 @@ pub mod gpu_parser;
 pub mod memory_parser;
 pub mod storage_parser;
 pub mod pc_parser;
+pub mod monitor_parser;
 
 use crate::utils::regex_cache::RegexCache;
+use crate::utils::serde_ext::JsonExt;
+use crate::web_scraper::dataset::{Dataset, SearchResult};
 use crate::web_scraper::errors::ParseErrorKind;
-use crate::web_scraper::product::Product;
-use crate::web_scraper::sections::{ChipsetEntry, DatasetEntry, Section, SectionConfig};
+use crate::web_scraper::product::{Product, Specs};
+use crate::web_scraper::sections::{Section, SectionConfig};
 use serde::{Deserialize, Serialize};
-use serde_json::{json, Value};
+use serde_json::Value;
 use std::collections::HashSet;
 use std::str::FromStr;
 use std::sync::Arc;
-
-static COLORS: &[&[&str]] = &[
-    &["Blanc", "White"], &["Noir", "Black"], &["Bleu", "Blue"], &["Rouge", "Red"], &["Jeune", "Yellow"],
-    &["Verte", "Green"], &["Gris", "Gray"]
-];
+use crate::web_scraper::utils::remove_words;
 
 pub trait SectionParser: Send + Sync {
     fn config(&self) -> Arc<SectionConfig>;
     
-    fn dataset(&self) -> &Vec<DatasetEntry>;
+    fn dataset(&self) -> &Dataset;
     
-    fn chipsets(&self) -> &[ChipsetEntry] {
-        &[]
-    }
-
-    fn matches(&self, title: &str, desc: &Option<String>, skip_include_check: bool) -> bool {
-        let config = self.config();
-
-        for include in &config.force_include {
-            if RegexCache::custom_match(include, title) {
-                return true;
-            }
-        }
-
-        if !skip_include_check && !self.matches_include(title) {
-            match desc {
-                None => return false,
-                Some(desc) => {
-                    let text = format!("{title} {desc}");
-                    if !config.include_description.iter().any(|include| RegexCache::custom_match(include, &text)) {
-                        return false
-                    }
-                }
-            }
-        }
-
-        if config.exclude.iter().any(|exclude| RegexCache::custom_match(exclude, title)) {
-            return false
-        }
-
-        if let Some(desc) = desc {
-            let text = format!("{title} {desc}");
-            if config.exclude_description.iter().any(|exclude| RegexCache::custom_match(exclude, &text)) {
-                return false
-            }
-        }
-
-        true
-    }
-    
-    fn matches_include(&self, text: &str) -> bool {
-        self.config().include.iter().any(|include| RegexCache::custom_match(include, text))
-    }
-
     fn parse(&self, product: &mut Product) -> Result<(), ParseErrorKind> {
-        product.name = self.clean_title(&product.title);
-        self.parse_specs(product);
-        self.parse_brand(product);
+        let cleaned_title = self.clean_title(&product.title);
+        self.parse_specs(product, &cleaned_title);
+        self.parse_brand(product, &cleaned_title);
 
-        match self.lookup_dataset(product) {
+        let name = self.lookup_dataset(product, &cleaned_title);
+        let details = self.post_processing(product);
+
+        match name {
             Some(name) => {
-                product.name = name;
-                self.post_processing(product);
+                let value = details.map(|text| format!("{name} {text}")).unwrap_or(name);
+                product.components.insert(self.config().id_field_name.clone(), value);
                 Ok(())
             },
             None => Err(ParseErrorKind::NotInDataset)
         }
     }
 
-    fn parse_specs(&self, _product: &mut Product) {
+    fn parse_specs(&self, _product: &mut Product, _text: &str) {
     }
 
-    fn parse_brand(&self, product: &mut Product) {
+    fn parse_brand(&self, product: &mut Product, text: &str) {
         for brand in &self.config().brands {
-            if RegexCache::matches(&format!("(?i)\\b{brand}\\b"), &product.name) {
-                product.specs["brand"] = Value::String(brand.clone());
+            if RegexCache::matches(&format!("(?i)\\b{brand}\\b"), text) {
+                // product.specs.set("brand", brand.as_str());
                 return
             }
         }
@@ -96,25 +55,12 @@ pub trait SectionParser: Send + Sync {
 
     fn clean_title(&self, title: &str) -> String {
         let cleaner = &self.config().title_cleaner;
-        let mut text = title.replace("®", "").replace("™", "");
-
-        // Replace Colors
-        // for color in COLORS {
-        //     if let (Some(from), Some(to)) = (color.first(), color.get(1)) {
-        //         let pattern = format!("(?i)\\b{}\\b", regex::escape(from));
-        //         text = RegexCache::replace_all(&pattern, &text, to).to_string();
-        //     }
-        // }
+        let mut text = remove_words(title, &["®", "™"]);
 
         // Remove Words
         for word in &cleaner.remove_words {
             let pattern = format!("(?i)\\b{}\\b", regex::escape(word));
             text = RegexCache::replace_all(&pattern, &text, "").to_string();
-        }
-
-        // Remove Patterns
-        for pattern in &cleaner.remove_patterns {
-            text = RegexCache::replace_all(pattern, &text, "").to_string();
         }
 
         // Replace Words
@@ -145,107 +91,69 @@ pub trait SectionParser: Send + Sync {
         deduplicated.join(" ").trim().to_string()
     }
 
-    fn post_processing(&self, _product: &mut Product) {
-    }
-
-    fn lookup_dataset(&self, product: &mut Product) -> Option<String> {
-        let dataset = self.dataset();
-        if dataset.is_empty() {
-            return Some(product.name.clone())
-        }
-
-        let specs = &mut product.specs;
-        let text = match &product.description {
-            Some(desc) => format!("{} {desc}", product.name),
-            None => product.name.clone()
-        };
-
-        let result = match self.extract_from_dataset(&text, dataset, specs, false) {
-            Some(res) => Some(res),
-            None => self.extract_from_dataset(&text, dataset, specs, true)
-        };
-
-        if let Some((name, entry)) = result {
-            for (key, value) in entry.as_object().unwrap() {
-                if key == "name" {
-                    continue;
-                }
-                specs[key] = value.clone();
-            }
-            return Some(name)
-        }
-
+    fn post_processing(&self, _product: &mut Product) -> Option<String> {
         None
     }
 
-    fn extract_from_dataset(
-        &self,
-        text: &str,
-        dataset: &Vec<DatasetEntry>,
-        _specs: &mut Value,
-        remove_optionals: bool
-    ) -> Option<(String, Value)> {
-        let text = match remove_optionals {
-            true => self.remove_optional_words(text).to_uppercase(),
-            false => text.to_uppercase()
-        };
+    fn lookup_dataset(&self, product: &mut Product, title: &str) -> Option<String> {
+        if self.dataset().nodes.is_empty() {
+            return Some(title.to_string())
+        }
 
-        for entry in dataset {
-            let entry_name = match remove_optionals {
-                true => self.remove_optional_words(&entry.name).to_uppercase(),
-                false => entry.name.to_uppercase()
-            };
-            
-            let mut matched = true;
-            // To avoid false checks with memory
-            if entry_name.ends_with(" 16") {
-                if !text.contains(&entry_name) {
-                    matched = false;
-                }
-            } else {
-                for word in entry_name.split_whitespace() {
-                    if !text.contains(word) {
-                        matched = false;
-                        break;
+        let text = product.description.clone()
+            .map(|desc| format!("{title} {desc}"))
+            .unwrap_or(title.to_string())
+            .to_uppercase();
+
+        if let Some(result) = self.search_in_dataset(&text, &mut product.specs) {
+            product.filter_ids.insert(self.config().id_field_name.clone(), result.id);
+            if let Some(Value::Object(obj)) = result.data {
+                for (key, value) in obj {
+                    if let Some(value) = value.as_str() && !value.is_empty() {
+                        product.filter_ids.insert(key, value.to_string());
                     }
                 }
             }
-
-            if matched {
-                return Some((entry.name.clone(), entry.data.clone()));
-            }
+            return Some(result.label)
         }
 
         None
     }
 
-    fn remove_optional_words(&self, text: &str) -> String {
-        let mut text = text.to_string();
+    fn search_in_dataset(&self, text: &str, specs: &mut Specs) -> Option<SearchResult> {
+        let memory_size = specs.get_str("memory_size");
 
-        let words: Vec<String> = self.config()
-            .optional_dataset_words
-            .iter()
-            .map(|w| regex::escape(w))
-            .collect();
+        for node in &self.dataset().nodes {
+            if !words_match(&text, &node.label.to_uppercase(), &node.optional_words, false) {
+                continue;
+            }
 
-        if !words.is_empty() {
-            let pattern = format!(r"(?i)(?:{})", words.join("|"));
-            text = RegexCache::replace_all(&pattern, &text, "").to_string();
+            if self.config().id != Section::GPU {
+                return Some(SearchResult {
+                    id: node.id.clone(),
+                    label: node.label.clone(),
+                    data: node.data.clone()
+                })
+            }
 
-            return text.split_whitespace()
-                .collect::<Vec<_>>()
-                .join(" ")
-                .trim()
-                .to_string()
+            let Some(chipset_data) = &node.data else { continue };
+            let chipset_size = chipset_data.get_str("memory_size");
+            if chipset_size == memory_size || memory_size.is_none() {
+                return Some(SearchResult {
+                    id: node.id.clone(),
+                    label: node.label.clone(),
+                    data: Some(chipset_data.clone())
+                })
+            }
         }
-
-        text
+        
+        None
     }
 }
 
 pub struct GenericSectionParser {
     pub config: Arc<SectionConfig>,
-    pub dataset: Vec<DatasetEntry>
+    pub dataset: Dataset
 }
 
 impl SectionParser for GenericSectionParser {
@@ -253,7 +161,16 @@ impl SectionParser for GenericSectionParser {
         self.config.clone()
     }
 
-    fn dataset(&self) -> &Vec<DatasetEntry> {
+    fn dataset(&self) -> &Dataset {
         &self.dataset
     }
+}
+
+pub fn words_match<T: AsRef<str>>(text: &str, candidate: &str, optionals: &[T], eq_check: bool) -> bool {
+    candidate.split_whitespace().all(|word| {
+         eq_check && RegexCache::matches(&format!("\\b{word}\\b"), text)
+             || !eq_check && text.contains(word)
+             || (word.len() <= 4 && word.ends_with("GB"))
+             || optionals.iter().any(|o| o.as_ref().eq_ignore_ascii_case(word))
+    })
 }

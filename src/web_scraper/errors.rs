@@ -65,6 +65,12 @@ pub struct PageReport {
     pub errors: Vec<ScrapeError>
 }
 
+#[derive(Debug, Serialize, Deserialize)]
+pub struct PageFetchResult {
+    pub products: Vec<Product>,
+    pub report: PageReport
+}
+
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct ScrapeError {
     pub error: ScrapeErrorKind,
@@ -74,11 +80,24 @@ pub struct ScrapeError {
     pub timestamp: DateTime<Utc>,
 }
 
+impl ScrapeError {
+    pub fn new(error: ScrapeErrorKind, section: Section, site: &str, url: &str) -> Self {
+        ScrapeError {
+            error,
+            section,
+            site: site.to_string(),
+            url: url.to_string(),
+            timestamp: Utc::now()
+        }
+    }
+}
+
 #[derive(Debug, Clone, Hash, Serialize, Deserialize)]
 pub enum ScrapeErrorKind {
     FetchFailed(String),
-    ParseFailed(String),
-    ZeroProducts
+    PageCountParseFailed(String),
+    ParseFailed { position: usize, error: String },
+    DescriptionFetchFailed { url: String, title: String, error: String },
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
