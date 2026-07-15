@@ -1488,8 +1488,9 @@ checksum = "19f132c84eca552bf34cab8ec81f1c1dcc229b811638f9d283dceabe58c5569e"
 
 [[package]]
 name = "playwright-rs"
-version = "0.14.0"
-source = "git+https://github.com/padamson/playwright-rust.git#b7ddc46ccf4f7693ac3179bf42b5f60ab819486b"
+version = "0.14.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "3317d37f816d9fbd550ba155a146068575a0c97e5af969f5d0895199344fa0b5"
 dependencies = [
  "async-trait",
  "base64",
@@ -1517,7 +1518,8 @@ dependencies = [
 [[package]]
 name = "playwright-rs-macros"
 version = "0.1.0"
-source = "git+https://github.com/padamson/playwright-rust.git#b7ddc46ccf4f7693ac3179bf42b5f60ab819486b"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "0dacee5a7346e793f1a4ca72db4b1c0e698c1e21626cdef409e6ec295629c4cd"
 dependencies = [
  "proc-macro2",
  "quote",

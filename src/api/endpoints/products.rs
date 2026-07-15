@@ -1,7 +1,7 @@
 use crate::api::error::ApiError::InvalidQuery;
 use crate::api::error::ApiResult;
 use crate::api::filters::{build_all_filters, product_matches_key, FilterGroup};
-use crate::storage::{ProductStorage, PRODUCT_STORAGE};
+use crate::storage::PRODUCT_STORAGE;
 use crate::utils::serde_ext::JsonExt;
 use crate::web_scraper::product::Product;
 use crate::web_scraper::sections::Section;
@@ -9,7 +9,7 @@ use crate::web_scraper::sites::Site;
 use axum::{extract::Path, Json};
 use axum_extra::extract::Query;
 use serde::{Deserialize, Serialize};
-use std::collections::HashMap;
+use std::collections::{HashMap, HashSet};
 use std::str::FromStr;
 use strum::IntoEnumIterator;
 
@@ -56,31 +56,33 @@ pub async fn get_products(Path(section): Path<String>, Query(params): Query<Page
     let filters = params.filters.as_ref().map(|f| serde_json::from_str::<HashMap<String, Vec<String>>>(f))
         .transpose().map_err(|err| InvalidQuery(err.to_string()))?.unwrap_or_default();
 
+    let mut products = get_filtered_products(section, &params).await;
+
     // Get Section Details if necessary
-    let section_info = match params.require_section_info == Some(true) {
-        true => {
-            let (filters, min_price, max_price) = {
-                let storage = PRODUCT_STORAGE.read().await;
-                let products = storage.products.values().filter(|p| p.section == section).collect::<Vec<_>>();
-                let filters = build_all_filters(products.as_slice(), &filters);
+    let section_info = match params.require_section_info {
+        Some(true) => {
+            let (sites, min_price, max_price, filters) = {
+                let sites: HashSet<String> = products.iter().map(|p| p.site.clone()).collect();
+                let sites: Vec<String> = sites.into_iter().collect();
                 let min = products.iter().map(|p| p.price).min().unwrap_or(0);
                 let max = products.iter().map(|p| p.price).max().unwrap_or(0);
-                (filters, min, max)
+                let filters = build_all_filters(section, products.as_slice(), &filters);
+                (sites, min, max, filters)
             };
             Some(SectionInfo {
+                sites,
                 filters,
-                sites: ProductStorage::get_sites(section).await,
                 components: section.config().components.clone(),
                 group_by: section.config().group.clone(),
                 min_price,
                 max_price
             })
         },
-        false => None
+        _ => None
     };
 
-    // Get Filtered Products
-    let mut products = get_filtered_products(section, &params, filters).await;
+    // Apply Filters
+    products.retain(|p| filters.iter().all(|(key, ids)| ids.is_empty() || product_matches_key(p, key, ids)));
     let total_products = products.len();
 
     // Sort Products
@@ -126,7 +128,7 @@ pub async fn get_products(Path(section): Path<String>, Query(params): Query<Page
     }))
 }
 
-async fn get_filtered_products(section: Section, params: &PageQuery, filters: HashMap<String, Vec<String>>) -> Vec<Product> {
+async fn get_filtered_products(section: Section, params: &PageQuery) -> Vec<Product> {
     PRODUCT_STORAGE.read().await.products
         .iter()
         .filter_map(|(_, p)| {
@@ -175,11 +177,6 @@ async fn get_filtered_products(section: Section, params: &PageQuery, filters: Ha
                 }
             }
 
-            // filters
-            if !filters.iter().all(|(key, ids)| ids.is_empty() || product_matches_key(p, key, ids)) {
-                return None
-            }
-
             Some(p.clone())
         })
         .collect()
@@ -190,12 +187,12 @@ fn group_products(section: Section, products: Vec<Product>) -> Vec<(String, Vec<
     let mut groups: Vec<(String, Vec<Product>)> = Vec::new();
 
     for mut product in products {
-        let mut fields = Vec::new();
-        for field in &section.config().group {
-            if let Some(value) = product.specs.get_str(field) {
-                fields.push(value);
-            }
-        }
+        let mut fields: Vec<&str> = Vec::new();
+        // for field in &section.config().group {
+        //     if let Some(value) = product.specs.get_str(field) {
+        //         fields.push(value);
+        //     }
+        // }
 
         let name = match fields.len() {
             0 => product.title.clone(),

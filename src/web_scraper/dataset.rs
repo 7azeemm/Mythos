@@ -3,6 +3,7 @@ use crate::web_scraper::sections::Section;
 use serde::Serialize;
 use serde_json::Value;
 use std::path::Path;
+use crate::utils::serde_ext::JsonExt;
 
 const OPTIONALS_KEY: &str = "optionals";
 const NAME_FIELD: &str = "name";
@@ -21,7 +22,6 @@ pub struct FilterNode {
 
 #[derive(Default)]
 pub struct Dataset {
-    pub tree: Vec<FilterNode>,
     pub nodes: Vec<FilterNode>,
 }
 
@@ -40,7 +40,7 @@ impl Dataset {
         let mut nodes = collect_nodes(&tree);
         nodes.sort_by(|a, b| b.label.len().cmp(&a.label.len()).then_with(|| b.label.cmp(&a.label)));
 
-        Ok(Dataset { tree, nodes })
+        Ok(Dataset { nodes })
     }
 
     fn attach_chipsets(tree: &mut Vec<FilterNode>) {
@@ -64,17 +64,17 @@ impl Dataset {
 
         for brand in tree.iter_mut() {
             for model in brand.children.iter_mut() {
-                let chipsets_snapshot: Vec<FilterNode> = model.children.iter()
-                    .filter(|c| c.data.as_ref().map(|d| d.as_object().map(|o| o.len() > 1)).flatten().unwrap_or(false))
+                let snapshot: Vec<FilterNode> = model.children.iter()
+                    .filter(|c| c.data.as_ref().map(|d| d.as_object().map(|o| o.len() > 2)).flatten().unwrap_or(false))
                     .cloned().collect();
 
                 for variant in model.children.iter_mut() {
-                    if let Some(chipset) = chipsets_snapshot.iter()
-                        .find(|chipset| variant.label != chipset.label && variant.label.contains(&chipset.label)) {
-                        let mut merged = merge_objects(variant.data.as_ref(), chipset.data.as_ref());
-                        merged.entry("chipset".to_string()).or_insert_with(|| Value::String(chipset.label.clone()));
-                        merged.insert("vendor_card".to_string(), true.into());
-                        variant.data = Some(Value::Object(merged));
+                    if let Some(chipset_label) = variant.data.get_str("chipset") {
+                        if let Some(chipset) = snapshot.iter().find(|c| c.label == chipset_label) {
+                            let mut merged = merge_objects(variant.data.as_ref(), chipset.data.as_ref());
+                            merged.insert("vendor_card".to_string(), true.into());
+                            variant.data = Some(Value::Object(merged));
+                        }
                     }
                 }
             }

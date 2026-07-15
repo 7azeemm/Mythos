@@ -19,9 +19,6 @@ pub struct Product {
     pub status: ProductStatus,
     pub price: i32,
     pub old_price: Option<i32>,
-    // #[serde(skip_deserializing)]
-    #[serde(skip)]
-    pub specs: Specs,
     #[serde(skip_deserializing)]
     pub filter_ids: HashMap<String, String>,
     #[serde(skip_deserializing)]
@@ -55,7 +52,6 @@ impl Product {
             status,
             price,
             old_price,
-            specs: Specs(Map::new()),
             filter_ids: Default::default(),
             components: Default::default(),
             history: Default::default(),

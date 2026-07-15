@@ -1,7 +1,10 @@
 {
-  "optionals": ["Gaming", "Thin"],
   "ASUS": {
-    "ASUS ROG Flow": ["ASUS ROG Flow Z13"],
+    "optionals": ["Gaming"],
+    "ASUS ROG Flow": [
+      "ASUS ROG Flow Z13",
+      "ASUS ROG Flow X13"
+    ],
     "ASUS ROG Strix": [
       "ASUS ROG Strix G15",
       "ASUS ROG Strix G16",
@@ -13,30 +16,39 @@
       "ASUS ROG Zephyrus G14",
       "ASUS ROG Zephyrus G15",
       "ASUS ROG Zephyrus G16",
-      "ASUS ROG Zephyrus M16"
+      "ASUS ROG Zephyrus M16",
+      "ASUS ROG Zephyrus"
     ],
     "ASUS TUF Gaming": [
-      "ASUS TUF Gaming Dash F15",
       "ASUS TUF Gaming A14",
       "ASUS TUF Gaming A15",
+      "ASUS TUF Gaming F15",
       "ASUS TUF Gaming A16",
       "ASUS TUF Gaming F16",
-      "ASUS TUF Gaming F17"
+      "ASUS TUF Gaming F17",
+      "ASUS TUF Gaming"
     ],
     "ASUS V16": [],
+    "ASUS K16": [],
     "ASUS Vivobook": [
       "ASUS Vivobook Pro 15 OLED",
       "ASUS Vivobook 16X"
     ],
-    "ASUS Zenbook": [
-      "ASUS Zenbook Pro 14 Duo OLED"
-    ]
+    "ASUS ZenBook": [
+      "ASUS ZenBook Pro 14 Duo OLED"
+    ],
+    "ASUS ProArt P16": []
   },
   "Dell": {
+    "optionals": ["G15"],
     "Dell Alienware": [
-      "Dell Alienware 16 Aurora"
+      "Dell Alienware 16 Aurora",
+      "Dell Alienware"
     ],
     "Dell G3": [],
+    "Dell G5": [
+      "Dell 5500 G5"
+    ],
     "Dell G15": [
       "Dell G15 5510",
       "Dell G15 5511",
@@ -65,7 +77,9 @@
   },
   "HP": {
     "HP OMEN": [
-      "HP OMEN MAX 16"
+      "HP OMEN Gaming 16",
+      "HP OMEN MAX 16",
+      "HP OMEN"
     ],
     "HP Victus": [
       "HP Victus 15",
@@ -73,6 +87,7 @@
     ]
   },
   "Lenovo": {
+    "optionals": ["Gaming", "Pro"],
     "Lenovo IdeaPad Gaming 3": [],
     "Lenovo LOQ": [
       "Lenovo LOQ Essential 15IRX11",
@@ -85,7 +100,8 @@
       "Lenovo LOQ 15IRH8",
       "Lenovo LOQ 15IRX10",
       "Lenovo LOQ 15IRX9",
-      "Lenovo LOQ 17IRX10"
+      "Lenovo LOQ 17IRX10",
+      "Lenovo LOQ"
     ],
     "Lenovo Legion": [
       "Lenovo Legion Pro 5",
@@ -93,10 +109,17 @@
     ],
     "Lenovo ThinkPad": [
       "Lenovo ThinkPad P16S Gen2",
-      "Lenovo ThinkPad P16S Gen3"
+      "Lenovo ThinkPad P16S Gen3",
+      "Lenovo ThinkPad P16V Gen2",
+      "Lenovo ThinkPad P16V Gen3"
+    ],
+    "Lenovo ThinkBook": [
+      "Lenovo ThinkBook 16P",
+      "Lenovo ThinkBook 16P G6 IRX"
     ]
   },
   "MSI": {
+    "optionals": ["Thin"],
     "MSI Creator": ["MSI Creator Z16"],
     "MSI CreatorPro": ["MSI CreatorPro M16"],
     "MSI Crosshair": ["MSI Crosshair 18 HX AI A2XW"],
@@ -105,10 +128,12 @@
     "MSI Prestige": ["MSI Prestige 14"],
     "MSI Stealth": ["MSI Stealth 17M"],
     "MSI Thin": ["MSI Thin GF63", "MSI Thin 15"],
-    "MSI Vector": ["MSI Vector 16 HX AI A2XW", "MSI Vector GP68 HX 13V"]
+    "MSI Vector": ["MSI Vector 16 HX AI A2XW", "MSI Vector GP68 HX 13V"],
+    "MSI Raider": ["MSI Raider GE68 HX 13V"]
   },
   "YATAGAN": {
     "YATAGAN SPIKE": [],
     "YATAGAN VARSAK": []
-  }
+  },
+  "Chuwi": {}
 }

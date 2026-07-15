@@ -66,6 +66,10 @@ impl Default for Section {
 }
 
 impl Section {
+    pub fn is_laptop(&self) -> bool {
+        matches!(self, Self::Laptop | Self::GamingLaptop | Self::MacBook)
+    }
+
     pub fn is_low_priority(&self) -> bool {
         matches!(self, Self::PC | Self::Laptop | Self::AccessoriesCombo)
     }
@@ -104,6 +108,7 @@ pub struct SectionConfig {
     pub filters: Vec<String>,
     pub components: Vec<String>,
     pub group: Vec<String>,
+    pub datasets: HashMap<String, Section>,
     #[serde(default = "default_id_field_name")]
     pub id_field_name: String
 }

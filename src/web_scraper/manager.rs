@@ -98,7 +98,7 @@ impl ProductManager {
 
         let sites = &[];
         // let sections = Section::iter().collect::<Vec<_>>();
-        let sections = vec![Section::CPU, Section::GPU, Section::GamingLaptop];
+        let sections = vec![Section::CPU, Section::GPU, Section::GamingPC, Section::Laptop, Section::GamingLaptop];
 
         let mut products = self.fetch_sites(&sections, sites).await;
         products.retain(|p| sections.contains(&p.section));
@@ -235,6 +235,9 @@ impl ProductManager {
     }
 
     fn verify_section(&self, product: &mut Product) {
+        // store count of moved/fixed section products for statistics
+        product.components.insert("original_section".to_string(), product.section.to_string());
+
         if product.price == 0 {
             product.section = Section::Others;
             return;

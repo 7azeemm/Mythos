@@ -31,6 +31,9 @@ impl SectionParser for PCParser {
         let desc = product.description.clone().unwrap_or_default();
         let text: String = format!("{} | {desc}", cleaned_title).to_uppercase();
         let text = product.section.config().title_cleaner.replace_words(&text, true);
+        let text = text.replace(" .6\"", ".6\"").replace(".,", ".").replace("GRAPHIQUE", "GRAPHICS")
+            .replace("GRAPHIC ", "GRAPHICS ").replace("ᵉ", "E").replace("‑", "-").replace("™", "")
+            .replace("®", "").replace("(TM)", "").replace("–", "").replace("PROCESSOR ", "");
         let text = text.split_whitespace().collect::<Vec<_>>().join(" ");
 
         let cpu = extract_cpu(&text);
@@ -219,27 +222,14 @@ fn extract_cpu(text: &str) -> Option<SearchResult> {
     let text = section.config().title_cleaner.replace_words(&text, true);
     let optionals = &["AMD", "Intel", "Core", "Gold", "Silver", "Processor", "Gemini Lake", "Jasper Lake"];
 
-    let should_skip = |node: &FilterNode| -> bool {
-        // Skip if cpu found is from AMD and product description contains a reference to an intel cpu
-        node.label.contains("AMD") && text.contains("INTEL CORE")
-    };
-
-    // First Search
+    // Dataset Search
     for node in &section.parser().dataset().nodes {
-        if text.contains(&node.label.to_uppercase()) {
-            if !should_skip(&node) && words_match::<String>(&text, &node.label.to_uppercase(), &[], true) {
-                return Some(SearchResult {
-                    id: node.id.clone(),
-                    label: node.label.clone(),
-                    data: node.data.clone()
-                })
-            }
+        // Skip if cpu is AMD and product desc contains a reference to an Intel cpu
+        if node.label.contains("AMD") && text.contains("INTEL CORE") {
+            continue
         }
-    }
 
-    // Second Search with optionals and no equal word check
-    for node in &section.parser().dataset().nodes {
-        if !should_skip(&node) && words_match(&text, &node.label.to_uppercase(), optionals, false) {
+        if words_match(&text, &node.label.to_uppercase(), optionals) {
             return Some(SearchResult {
                 id: node.id.clone(),
                 label: node.label.clone(),
@@ -260,7 +250,7 @@ fn extract_cpu(text: &str) -> Option<SearchResult> {
                 let generation_pattern = r"(?i)\b([2-9]|1[0-4])\s*(?:th|é|e|è|éme|ème|eme|gén|gen)\s*(?:gen|gén|generation|génération)?\b";
                 if let Some(caps) = RegexCache::captures(&generation_pattern, &text) {
                     if let Some(generation) = caps.get(1).and_then(|v| v.as_str().parse::<i32>().ok()) {
-                        label.push_str(&format!(" {generation}th Generation"));
+                        label.push_str(&format!(" {generation}th Gen"));
                     }
                 }
             }
@@ -310,38 +300,34 @@ fn extract_cpu(text: &str) -> Option<SearchResult> {
 fn extract_gpu(id: Section, text: &str, cpu_entry: &Option<Value>) -> Option<SearchResult> {
     let section = Section::GPU;
     let text = section.config().title_cleaner.replace_words(&text, true);
-    let has_dedicated_gpu = vec!["RTX", "RX", "ARC", "GTX", "GT "].into_iter().any(|w| text.contains(w));
+    let has_dedicated_gpu = vec!["RTX", "RX", "GTX", " GT "].into_iter().any(|w| text.contains(w));
     let optionals = &["GeForce", "Radeon", "Nvidia", "Intel", "Graphics"];
 
-    let remove_memory = |text: &str| -> String {
-        text.split_whitespace().filter(|w| !(w.len() <= 4 && w.contains("GB"))).collect::<Vec<_>>().join(" ")
-    };
-
-    let should_skip = |node: &FilterNode| -> bool {
-        // Skip if (chips is vendor card) or (chip is IGPU and product has dGPU)
-        node.data.get_bool("vendor_card") == Some(true) || (has_dedicated_gpu && node.label.contains("Graphics"))
-    };
-
-    // First Search
+    // Dataset Search
     for node in &section.parser().dataset().nodes {
-        if !should_skip(node) && words_match::<String>(&text, &node.label.to_uppercase(), &[], true) {
+        // Skip if: gpu is a vendor card
+        // or product is laptop and chip is not mobile compatible
+        // or chip is IGPU and product has dGPU
+        if node.data.get_bool("vendor_card") == Some(true) ||
+            (id.is_laptop() && node.data.get_bool("laptop_support") != Some(true)) ||
+            (has_dedicated_gpu && node.label.contains("Graphics")) {
+            continue
+        }
+
+        if words_match(&text, &node.label.to_uppercase(), optionals) {
+            let label = node.label.split_whitespace()
+                .filter(|w| !(w.len() <= 4 && w.contains("GB")))
+                .collect::<Vec<_>>().join(" ");
             return Some(SearchResult {
                 id: node.id.clone(),
-                label: remove_memory(&node.label),
+                label,
                 data: node.data.clone(),
             })
         }
     }
 
-    // Second Search with optionals and no equal word check
-    for node in &section.parser().dataset().nodes {
-        if !should_skip(node) && words_match(&text, &node.label.to_uppercase(), optionals, false) {
-            return Some(SearchResult {
-                id: node.id.clone(),
-                label: remove_memory(&node.label),
-                data: node.data.clone(),
-            })
-        }
+    if has_dedicated_gpu {
+        return None
     }
 
     if id != Section::GamingLaptop {
@@ -349,11 +335,12 @@ fn extract_gpu(id: Section, text: &str, cpu_entry: &Option<Value>) -> Option<Sea
         if let Some(entry) = &cpu_entry {
             if let Some(iGPU) = entry.get_str("integrated_gpu") {
                 if !iGPU.is_empty() {
-                    let id = if iGPU.contains("UHD ") {
-                        format!("Others/Intel UHD Graphics/{iGPU}")
-                    } else if iGPU.contains("Radeon ") {
-                        format!("Others/AMD/{iGPU}")
+                    let id = if iGPU.contains("UHD") {
+                        format!("Intel/Intel UHD Graphics/{iGPU}")
+                    } else if iGPU.contains("Radeon") {
+                        format!("AMD/{iGPU}")
                     } else {
+                        eprintln!("Unknown Integrated GPU: {iGPU}");
                         "Others".to_string()
                     };
                     return Some(SearchResult {
@@ -369,18 +356,18 @@ fn extract_gpu(id: Section, text: &str, cpu_entry: &Option<Value>) -> Option<Sea
     // Fallback checks
     let gpu = if text.contains("INTEL ") {
         if text.contains(" ARC ") {
-            Some(("Others/Arc", "Intel Arc Graphics"))
+            Some(("Arc/Intel Arc Graphics", "Intel Arc Graphics"))
         } else if text.contains("UHD GRAPHICS") {
-            Some(("Others/Intel UHD Graphics/Others", "Intel UHD Graphics"))
+            Some(("Intel/Intel UHD Graphics/Intel UHD Graphics", "Intel UHD Graphics"))
         } else if text.contains("HD GRAPHICS") {
-            Some(("Others/Intel HD Graphics/Others", "Intel HD Graphics"))
+            Some(("Intel/Intel HD Graphics/Intel HD Graphics", "Intel HD Graphics"))
         } else if text.contains("GRAPHICS") {
-            Some(("Others/Intel Graphics", "Intel Graphics"))
+            Some(("Intel/Intel Graphics", "Intel Graphics"))
         } else {
             None
         }
-    } else if text.contains("AMD RADEON GRAPHICS") {
-        Some(("Others/AMD", "AMD Radeon Graphics"))
+    } else if text.contains("AMD RADEON") {
+        Some(("AMD/AMD Radeon Graphics", "AMD Radeon Graphics"))
     } else {
         None
     };

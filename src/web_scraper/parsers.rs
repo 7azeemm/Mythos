@@ -8,14 +8,15 @@ use crate::utils::regex_cache::RegexCache;
 use crate::utils::serde_ext::JsonExt;
 use crate::web_scraper::dataset::{Dataset, SearchResult};
 use crate::web_scraper::errors::ParseErrorKind;
-use crate::web_scraper::product::{Product, Specs};
+use crate::web_scraper::product::Product;
 use crate::web_scraper::sections::{Section, SectionConfig};
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
 use std::collections::HashSet;
 use std::str::FromStr;
 use std::sync::Arc;
-use crate::web_scraper::utils::remove_words;
+
+//TODO: reset button does not register a send_section_info request
 
 pub trait SectionParser: Send + Sync {
     fn config(&self) -> Arc<SectionConfig>;
@@ -55,7 +56,7 @@ pub trait SectionParser: Send + Sync {
 
     fn clean_title(&self, title: &str) -> String {
         let cleaner = &self.config().title_cleaner;
-        let mut text = remove_words(title, &["®", "™"]);
+        let mut text = title.replace("®", "").replace("™", "");
 
         // Remove Words
         for word in &cleaner.remove_words {
@@ -105,7 +106,12 @@ pub trait SectionParser: Send + Sync {
             .unwrap_or(title.to_string())
             .to_uppercase();
 
-        if let Some(result) = self.search_in_dataset(&text, &mut product.specs) {
+        let memory_size = match product.section {
+            Section::GPU => product.filter_ids.get("memory_size").map(String::as_str),
+            _ => None
+        };
+
+        if let Some(result) = self.search_in_dataset(&text, memory_size) {
             product.filter_ids.insert(self.config().id_field_name.clone(), result.id);
             if let Some(Value::Object(obj)) = result.data {
                 for (key, value) in obj {
@@ -120,11 +126,9 @@ pub trait SectionParser: Send + Sync {
         None
     }
 
-    fn search_in_dataset(&self, text: &str, specs: &mut Specs) -> Option<SearchResult> {
-        let memory_size = specs.get_str("memory_size");
-
+    fn search_in_dataset(&self, text: &str, memory_size: Option<&str>) -> Option<SearchResult> {
         for node in &self.dataset().nodes {
-            if !words_match(&text, &node.label.to_uppercase(), &node.optional_words, false) {
+            if !words_match(&text, &node.label.to_uppercase(), &node.optional_words) {
                 continue;
             }
 
@@ -166,11 +170,10 @@ impl SectionParser for GenericSectionParser {
     }
 }
 
-pub fn words_match<T: AsRef<str>>(text: &str, candidate: &str, optionals: &[T], eq_check: bool) -> bool {
+pub fn words_match<T: AsRef<str>>(text: &str, candidate: &str, optionals: &[T]) -> bool {
     candidate.split_whitespace().all(|word| {
-         eq_check && RegexCache::matches(&format!("\\b{word}\\b"), text)
-             || !eq_check && text.contains(word)
-             || (word.len() <= 4 && word.ends_with("GB"))
-             || optionals.iter().any(|o| o.as_ref().eq_ignore_ascii_case(word))
+        optionals.iter().any(|o| o.as_ref().eq_ignore_ascii_case(word))
+            || word.len() <= 4 && word.ends_with("GB")
+            || RegexCache::matches(&format!("\\b{word}\\b"), text)
     })
 }

@@ -1,11 +1,7 @@
-use crate::api::endpoints::products;
-use crate::api::filters::FilterGroup;
 use crate::utils::file_loader::FileLoader;
-use crate::utils::serde_ext::JsonExt;
 use crate::web_scraper::manager::ProductManager;
 use crate::web_scraper::product::Product;
 use crate::web_scraper::sections::Section;
-use crate::web_scraper::sites::Site;
 use chrono::Utc;
 use once_cell::sync::Lazy;
 use serde::Serialize;
@@ -21,7 +17,6 @@ pub static PRODUCT_STORAGE: Lazy<RwLock<ProductStorage>> = Lazy::new(|| RwLock::
 #[derive(Default)]
 pub struct ProductStorage {
     pub products: HashMap<String, Product>,
-    pub sites: HashMap<Section, Vec<String>>,
     pub removed_products: Vec<Product>
 }
 
@@ -40,7 +35,7 @@ impl ProductStorage {
         println!("Loaded Products in {:.2?}", start_time.elapsed());
     }
 
-    async fn save() -> Vec<Section> {
+    async fn save() {
         let start_time = Instant::now();
         let storage = PRODUCT_STORAGE.read().await;
 
@@ -49,8 +44,6 @@ impl ProductStorage {
         for (id, product) in storage.products.iter() {
             by_section.entry(product.section).or_default().insert(id, product);
         }
-
-        let affected_sections = by_section.keys().cloned().collect();
 
         // 2. Write each section to its file
         for (section, data) in by_section {
@@ -61,24 +54,15 @@ impl ProductStorage {
         }
 
         println!("Saved Products in {:.2?}", start_time.elapsed());
-
-        affected_sections
     }
 
     pub async fn insert(products: Vec<Product>) {
         let products: HashMap<String, Product> = products.into_iter().map(|p| (p.id.clone(), p)).collect();
         PRODUCT_STORAGE.write().await.products.extend(products);
 
-        let sections = Self::save().await;
-        for section in sections {
-            Self::builder_cache(section).await;
-        }
+        Self::save().await;
     }
 
-    pub async fn get_sites(section: Section) -> Vec<String> {
-        PRODUCT_STORAGE.read().await.sites.get(&section).cloned().unwrap_or_default()
-    }
-    
     pub async fn update(products: Vec<Product>, sections: &[Section], sites: &[&'static str]) -> Vec<Product> {
         let start_time = Instant::now();
         let now = Utc::now();
@@ -169,45 +153,5 @@ impl ProductStorage {
         println!("Synced products in {:.2?}", start_time.elapsed());
 
         added_products
-    }
-
-    async fn builder_cache(section: Section) {
-        // let filters = &section.config().filters;
-        let mut sites = HashSet::new();
-        // let mut map = HashMap::new();
-
-        for product in PRODUCT_STORAGE.read().await.products.values().filter(|p| section == p.section) {
-            sites.insert(product.site.clone());
-            // for filter in filters {
-            //     if let Some(value) = product.specs.get_str(filter) {
-            //         if !value.is_empty() {
-            //             map.entry(filter)
-            //                 .or_insert_with(HashSet::new)
-            //                 .insert(value.to_string());
-            //         }
-            //     }
-            // }
-        }
-
-        // let mut list = Vec::new();
-        // for filter in filters {
-        //     if let Some(values) = map.get(filter) {
-        //         let mut values = values.iter().map(|s| s.clone()).collect::<Vec<String>>();
-        //         values.sort_by(|a, b| {
-        //             match (a.parse::<f64>(), b.parse::<f64>()) {
-        //                 (Ok(na), Ok(nb)) => na.partial_cmp(&nb).unwrap_or(std::cmp::Ordering::Equal),
-        //                 _ => a.cmp(b),
-        //             }
-        //         });
-        //         values.push(products::OTHERS_LABEL.to_string());
-        //         list.push(FilterOption {
-        //             option: filter.clone(),
-        //             values
-        //         });
-        //     }
-        // }
-
-        // PRODUCT_STORAGE.write().await.filters.insert(section, list);
-        PRODUCT_STORAGE.write().await.sites.insert(section, sites.into_iter().collect());
     }
 }

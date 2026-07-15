@@ -14,7 +14,11 @@
   {
     "id": "GamingPC",
     "min_price": 200,
-    "filters": ["cpu", "gpu_chipset", "memory_size", "memory_type", "storage_size"],
+    "filters": ["cpu", "gpu", "memory_size", "memory_type", "storage_size"],
+    "datasets": {
+      "cpu": "CPU",
+      "gpu": "GPU"
+    },
     "components": ["cpu", "gpu", "memory", "storage"]
   },
   {
@@ -34,40 +38,54 @@
   },
   {
     "id": "Laptop",
-    "force_include": ["elitebook"],
+    "force_include": ["EliteBook|ExpertBook|Envy"],
     "move_rules": [
-      ["GamingLaptop", "gamer|gaming|gtx||#rtx"],
+      ["GamingLaptop", "gamer|gaming||#gtx||#rtx"],
       ["MacBook", "macbook|apple"]
     ],
     "move_by_description_rules": [
       ["GamingLaptop", "#rtx||radeon rx&asus tuf"]
     ],
+    "title_cleaner": {
+      "replace_words": [
+        ["HP15", "HP 15"], ["HP14", "HP 14"]
+      ]
+    },
     "filters": [
-      "cpu", "gpu_chipset", "memory_size", "memory_type", "storage_size", "display_size", "resolution", "panel_type",
+      "model", "cpu", "gpu", "memory_size", "memory_type", "storage_size", "display_size", "resolution", "panel_type",
       "refresh_rate"
     ],
-    "components": ["display", "cpu", "gpu", "memory", "storage"]
+    "datasets": {
+      "model": "Laptop",
+      "cpu": "CPU",
+      "gpu": "GPU"
+    },
+    "components": ["model", "display", "cpu", "gpu", "memory", "storage"],
+    "id_field_name": "model"
   },
   {
     "id": "GamingLaptop",
     "move_rules": [
       ["Others", "STATION ACCUEIL|Station D'accueil|Station d’accueil|Station deaccueil"],
-      ["Monitor", "#^ecran||#^Écran"],
       ["Motherboard", "carte mere"],
-      ["PC", "PC de bureau"]
+      ["PC", "PC de bureau"],
+      ["Laptop", "Snapdragon|HP Envy"],
+      ["Monitor", "#^ecran||#^Écran"]
     ],
     "move_by_description_rules": [
-      ["Laptop", "!=rtx&iris|ThinkPad|Dell Pro|HP 15"]
+      ["Laptop", "!=rtx&iris|ThinkPad|Dell Pro|HP 15|latitude|dell 14"]
     ],
     "title_cleaner": {
       "replace_words": [
-        ["Idea Pad", "IdeaPad"], ["Légion", "Legion"], ["GF 63", "GF63"], ["Cybrorg", "Cyborg"],
-        [" .6\"", ".6\""], [".,", "."], ["Graphique", "Graphics"], ["Graphic ", "Graphics "],
-        ["ᵉ", "E"], ["‑", "-"], ["™", ""], ["®", ""], ["(TM)", ""], ["–", ""], ["Processor ", ""]
+        ["Idea Pad", "IdeaPad"], ["Légion", "Legion"], ["Cybrorg", "Cyborg"], ["GE68HX", "GE68 HX"], ["GP68HX", "GP68 HX"],
+        ["V16X", "Vivobook 16X"], ["GF 63", "GF63"], [" 15-F", " 15 F"], [" G5M", " G5 M"], [" G6K", " G6 K"],
+        [" TUF5", " TUF 5"], [" TUF6", " TUF 6"], [" TUF7", " TUF 7"], ["A2XWG", "A2XW G"], ["A2XWI", "A2XW I"],
+        ["Gen 2 ", "Gen2 "], ["Gen 3 ", "Gen3 "], ["P16V G3", "P16V Gen3"], [" 13VG ", " 13V "], [" 13VF ", " 13V "],
+        ["HX13V", "HX 13V "], [" 18HX ", " 18 HX "]
       ],
       "add_brands_by_models": [
-        ["V16", "V3607"], ["ROG", "Zephyrus"], ["TUF", "ASUS Dash"], ["MSI", "Katana"], ["Gigabyte", "Aorus"],
-        ["Lenovo", "Legion"]
+        ["V16", "V3607"], ["ROG", "Zephyrus"], ["MSI", "Katana"], ["Gigabyte", "Aorus"],
+        ["Lenovo", "Legion"], ["Dell", "Alienware"], ["HP", "Victus"]
       ]
     },
     "filters": [
@@ -76,6 +94,11 @@
     ],
     "components": ["model", "display", "cpu", "gpu", "memory", "storage"],
     "group": ["model", "cpu", "gpu"],
+    "datasets": {
+      "model": "GamingLaptop",
+      "cpu": "CPU",
+      "gpu": "GPU"
+    },
     "id_field_name": "model"
   },
   {
@@ -84,7 +107,7 @@
       ["MiniPC", "mini|mac studio"],
       ["AllInOnePC", "imac"]
     ],
-    "filters": ["cpu", "memory_size", "memory_type", "storage_size", "display_size", "resolution"],
+    "filters": ["cpu", "memory_size", "storage_size", "display_size"],
     "components": ["display", "cpu", "memory", "storage"]
   },
   {
@@ -119,34 +142,38 @@
         ["Intel ultra 5", "Intel Core Ultra 5"], ["Intel ultra 7", "Intel Core Ultra 7"],
         ["Intel ultra 9", "Intel Core Ultra 9"],
         ["Core i 3 ", "Core i3"], ["Core i 5", "Core i5"], ["Core i 7", "Core i7"], ["Core i 9 ", "Core i9"],
-        ["Ulta ", "Ultra "], ["Ryzen AL", "Ryzen AI"], [" 258 V ", " 258V "], [" 256 V ", " 256V "],
+        ["Ulta ", "Ultra "], ["Ryzen AL", "Ryzen AI"], [" 258 V", " 258V"], [" 256 V", " 256V"],
         ["RYZENTM5", "RYZEN 5"], ["RYZEN 9 AI", "RYZEN AI 9"], [", HEXA-CORE", ""], ["Penitum", "Pentium"],
-        [" HS", "HS"], ["Inte ", "Intel "], ["I ntel", "Intel"], [" A4- ", " A4-"], ["Ryzen 9 AI", "Ryzen AI 9"],
-        ["275 HX", "275HX"], ["0 H (", "0H ("]
+        [" HS", "HS"], ["450 HX ", "450HX "], ["Inte ", "Intel "], ["I ntel", "Intel"], [" A4- ", " A4-"],
+        ["Ryzen 9 AI", "Ryzen AI 9"], ["275 HX", "275HX"], ["0 H (", "0H ("], ["i7-240H", "7 240H"], ["i5–210H", "5 210H"]
       ]
     },
-    "filters": ["chipset", "brand", "socket", "memory_support", "core_count", "thread_count"],
-    "id_field_name": "chipset"
+    "filters": ["cpu", "socket", "memory_support", "core_count", "thread_count"],
+    "datasets": {
+      "cpu": "CPU"
+    },
+    "id_field_name": "cpu"
   },
   {
     "id": "GPU",
     "move_rules": [
       ["Others", "support|usb|board|nvlink"],
+      ["Laptop", "pc portable"],
       ["PowerSupply", "#alimentation"],
       ["Case", "Boetier|Boitier"],
       ["Motherboard", "mere"]
     ],
     "title_cleaner": {
-      "remove_words": ["carte graphique"],
       "replace_words": [
-        ["0Ti", "0 Ti"], ["0TI", "0 Ti"], ["Overclocked", "OC"], ["GIGABAYTE", "Gigabyte"], ["Fual", "Dual"], ["RTX350", "RTX 3050"],
-        ["GT7", "GT 7"], ["GT6", "GT 6"], ["GT-", "GT "], ["GTX1", "GTX 1"], ["GTX9", "GTX 9"],
+        ["0Ti", "0 Ti"], ["0TI", "0 Ti"], ["Overclocked", "OC"], ["GIGABAYTE", "Gigabyte"], ["Fual", "Dual"],
+        ["GT7", "GT 7"], ["GT6", "GT 6"], ["GT-", "GT "], ["GTX1", "GTX 1"], ["GTX9", "GTX 9"], ["RTX350", "RTX 3050"],
         ["RTX2", "RTX 2"], ["RTX3", "RTX 3"], ["RTX4", "RTX 4"], ["RTX5", "RTX 5"], ["0XT", "0 XT"],
         ["RX5", "RX 5"], ["RX6", "RX 6"], ["RX7", "RX 7"], ["RX9", "RX 9"], ["TRIX", "STRIX"],
         ["sStrix", "STRIX"], ["X STORM", "XSTORM"], ["T16Go", "16GB"], ["O24G", "24GB"], ["4080SUP", "4080 SUPER"],
         ["1660S", "1660 SUPER"], ["Dual Fans", "Dual Fan"], ["Triple Fans", "Triple Fan"], ["3GT", "3GB"],
         ["2000E", "2000"], ["RTXe", "RTX"], [" MX ", " MX"], ["130 V", "130V"], ["140 V", "140V"], ["GTX 20", "RTX 20"],
-        ["GTX 30", "RTX 30"], ["GTX 40", "RTX 40"], ["GTX 50", "RTX 50"], ["IRISE", "IRIS"], ["GT 920M", "920M"]
+        ["GTX 30", "RTX 30"], ["GTX 40", "RTX 40"], ["GTX 50", "RTX 50"], ["IRISE", "IRIS"], ["GT 920M", "920M"],
+        ["PRO1000", "PRO 1000 "], ["3070Q", "3070 Max-Q"], ["3080Q", "3080 Max-Q"], [" MQ ", " Max-Q "]
       ],
       "add_brands_by_models": [
         ["Gigabyte", "AORUS"], ["MSI", "VENTUS"], ["MSI ROG", "STRIX"], ["Gigabyte", "EAGLE"],
@@ -157,9 +184,12 @@
       "ASRock", "ASUS", "AXLE", "Arktek", "Gigabyte", "INNO3D", "MANLI", "MSI", "OCPC", "PNY", "Palit",
       "PowerColor", "Sapphire", "WINNFOX", "XFX", "XStorm", "ZEPHYR", "ZOTAC", "Biostar", "EVGA", "NVIDIA", "AMD"
     ],
-    "filters": ["brand", "chipset", "memory_size"],
-    "group": ["name"],
-    "id_field_name": "chipset"
+    "filters": ["gpu", "name", "memory_size"],
+    "group": ["gpu"],
+    "datasets": {
+      "gpu": "GPU"
+    },
+    "id_field_name": "gpu"
   },
   {
     "id": "Memory",
@@ -314,7 +344,7 @@
     "move_rules": [
       ["Others", "cable|câble"],
       ["Headphones", "casque|Écouteurs"],
-      ["ConsoleAccessories", "pistolet|ventilateur|film|chargeur|stand|volant|vitesses|panneau|streamdeck|thrustmaster|ecran||joystick&logitech"],
+      ["ConsoleAccessories", "pistolet|film|chargeur|stand|volant|vitesses|panneau|streamdeck|thrustmaster|ecran||joystick&logitech||ventilateur&!=manette"],
       ["ConsoleGame", "jeux|jeu&vidéo|Mario"]
     ]
   },

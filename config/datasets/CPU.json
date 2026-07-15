@@ -1,5 +1,5 @@
 {
-  "optionals": ["Intel", "Core", "AMD", "Pro"],
+  "optionals": ["Intel", "Core", "Processor", "AMD", "Pro"],
   "Intel": {
     "Intel Core i3": [
       {
@@ -666,6 +666,9 @@
         "name": "Intel Core i5-12450H"
       },
       {
+        "name": "Intel Core i5-12450HX"
+      },
+      {
         "name": "Intel Core i5-1250P"
       },
       {
@@ -721,6 +724,9 @@
       },
       {
         "name": "Intel Core i5-7200U"
+      },
+      {
+        "name": "Intel Core i5-7300U"
       },
       {
         "name": "Intel Core i5-7400"
@@ -817,6 +823,20 @@
         "socket": "Intel Socket 1200",
         "memory_support": "DDR4",
         "integrated_gpu": "UHD Graphics 750"
+      },
+      {
+        "name": "Intel Core i7-11700KF",
+        "core_count": "8",
+        "thread_count": "16",
+        "base_clock": "3.6",
+        "boost_clock": "5",
+        "tdp": "125",
+        "l1_cache": "640",
+        "l2_cache": "4",
+        "l3_cache": "16",
+        "total_cache": "21",
+        "socket": "Intel Socket 1200",
+        "memory_support": "DDR4"
       },
       {
         "name": "Intel Core i7-12700",
@@ -1038,6 +1058,9 @@
         "name": "Intel Core i7-12650H"
       },
       {
+        "name": "Intel Core i7-12650HX"
+      },
+      {
         "name": "Intel Core i7-1265U"
       },
       {
@@ -1054,6 +1077,9 @@
       },
       {
         "name": "Intel Core i7-13620H"
+      },
+      {
+        "name": "Intel Core i7-13645HX"
       },
       {
         "name": "Intel Core i7-13650HX"
@@ -1144,6 +1170,9 @@
       },
       {
         "name": "Intel Core i9-11900"
+      },
+      {
+        "name": "Intel Core i9-11900F"
       },
       {
         "name": "Intel Core i9-11900K",
@@ -1297,7 +1326,16 @@
         "name": "Intel Core i9-12900H"
       },
       {
+        "name": "Intel Core i9-12900HK"
+      },
+      {
         "name": "Intel Core i9-13900H"
+      },
+      {
+        "name": "Intel Core i9-13900HK"
+      },
+      {
+        "name": "Intel Core i9-13900HX"
       }
     ],
     "Intel Core Ultra 5": [
@@ -1369,7 +1407,13 @@
         "name": "Intel Core Ultra 5 226V"
       },
       {
+        "name": "Intel Core Ultra 5 228V"
+      },
+      {
         "name": "Intel Core Ultra 5 235U"
+      },
+      {
+        "name": "Intel Core Ultra 5 236V"
       },
       {
         "name": "Intel Core Ultra 5 225H"
@@ -1378,6 +1422,9 @@
     "Intel Core Ultra 7": [
       {
         "name": "Intel Core Ultra 7 265"
+      },
+      {
+        "name": "Intel Core Ultra 7 265F"
       },
       {
         "name": "Intel Core Ultra 7 265K",
@@ -1422,6 +1469,9 @@
       },
       {
         "name": "Intel Core Ultra 7 255H"
+      },
+      {
+        "name": "Intel Core Ultra 7 255HX"
       },
       {
         "name": "Intel Core Ultra 7 255U"
@@ -1522,6 +1572,9 @@
         "name": "Intel Celeron N4020"
       },
       {
+        "name": "Intel Celeron N4120"
+      },
+      {
         "name": "Intel Celeron J4025"
       },
       {
@@ -1613,15 +1666,15 @@
         "name": "Intel Xeon W-2104"
       }
     ],
-    "Others": [
+    "Intel Processor": [
+      {
+        "name": "Intel Processor N95"
+      },
       {
         "name": "Intel Processor N100"
       },
       {
         "name": "Intel Processor N150"
-      },
-      {
-        "name": "Intel Processor N95"
       }
     ]
   },
@@ -1699,7 +1752,7 @@
         "total_cache": "6",
         "socket": "AMD Socket AM4",
         "memory_support": "DDR4",
-        "integrated_gpu": "Radeon Vega 8"
+        "integrated_gpu": "AMD Radeon Vega 8"
       },
       {
         "name": "AMD Ryzen 3 3300X",
@@ -1731,11 +1784,11 @@
       },
       {
         "name": "AMD Ryzen 3 5300G",
-        "integrated_gpu": "Radeon Vega 6"
+        "integrated_gpu": "AMD Radeon Vega 6"
       },
       {
         "name": "AMD Ryzen 3 PRO 4350G",
-        "integrated_gpu": "Radeon Vega 6"
+        "integrated_gpu": "AMD Radeon Vega 6"
       },
       {
         "name": "AMD Ryzen 3 3250U"
@@ -1766,8 +1819,11 @@
         "memory_support": "DDR4"
       },
       {
+        "name": "AMD Ryzen 5 150"
+      },
+      {
         "name": "AMD Ryzen 5 220",
-        "integrated_gpu": "Radeon 740M"
+        "integrated_gpu": "AMD Radeon 740M"
       },
       {
         "name": "AMD Ryzen 5 2600X",
@@ -1796,7 +1852,7 @@
         "total_cache": "6",
         "socket": "AMD Socket AM4",
         "memory_support": "DDR4",
-        "integrated_gpu": "Radeon Vega 11"
+        "integrated_gpu": "AMD Radeon Vega 11"
       },
       {
         "name": "AMD Ryzen 5 3400GE",
@@ -1811,7 +1867,7 @@
         "total_cache": "6",
         "socket": "AMD Socket AM4",
         "memory_support": "DDR4",
-        "integrated_gpu": "Radeon Vega 11"
+        "integrated_gpu": "AMD Radeon Vega 11"
       },
       {
         "name": "AMD Ryzen 5 3500X",
@@ -1910,7 +1966,7 @@
         "total_cache": "19",
         "socket": "AMD Socket AM4",
         "memory_support": "DDR4",
-        "integrated_gpu": "Radeon Vega 7"
+        "integrated_gpu": "AMD Radeon Vega 7"
       },
       {
         "name": "AMD Ryzen 5 5600",
@@ -1939,7 +1995,7 @@
         "total_cache": "19",
         "socket": "AMD Socket AM4",
         "memory_support": "DDR4",
-        "integrated_gpu": "Radeon Vega 7"
+        "integrated_gpu": "AMD Radeon Vega 7"
       },
       {
         "name": "AMD Ryzen 5 5600GT",
@@ -1954,7 +2010,7 @@
         "total_cache": "19",
         "socket": "AMD Socket AM4",
         "memory_support": "DDR4",
-        "integrated_gpu": "Radeon Vega 7"
+        "integrated_gpu": "AMD Radeon Vega 7"
       },
       {
         "name": "AMD Ryzen 5 5600X",
@@ -2025,7 +2081,7 @@
         "total_cache": "38",
         "socket": "AMD Socket AM5",
         "memory_support": "DDR5",
-        "integrated_gpu": "Radeon Graphics"
+        "integrated_gpu": "AMD Radeon Graphics"
       },
       {
         "name": "AMD Ryzen 5 7600X",
@@ -2040,7 +2096,7 @@
         "total_cache": "38",
         "socket": "AMD Socket AM5",
         "memory_support": "DDR5",
-        "integrated_gpu": "Radeon Graphics"
+        "integrated_gpu": "AMD Radeon Graphics"
       },
       {
         "name": "AMD Ryzen 5 8400F",
@@ -2069,7 +2125,7 @@
         "total_cache": "22",
         "socket": "AMD Socket AM5",
         "memory_support": "DDR5",
-        "integrated_gpu": "Radeon 740M"
+        "integrated_gpu": "AMD Radeon 740M"
       },
       {
         "name": "AMD Ryzen 5 8600G",
@@ -2084,7 +2140,7 @@
         "total_cache": "22",
         "socket": "AMD Socket AM5",
         "memory_support": "DDR5",
-        "integrated_gpu": "Radeon 760M"
+        "integrated_gpu": "AMD Radeon 760M"
       },
       {
         "name": "AMD Ryzen 5 9600",
@@ -2099,7 +2155,7 @@
         "total_cache": "38",
         "socket": "AMD Socket AM5",
         "memory_support": "DDR5",
-        "integrated_gpu": "Radeon Graphics"
+        "integrated_gpu": "AMD Radeon Graphics"
       },
       {
         "name": "AMD Ryzen 5 9600X",
@@ -2114,14 +2170,14 @@
         "total_cache": "38",
         "socket": "AMD Socket AM5",
         "memory_support": "DDR5",
-        "integrated_gpu": "Radeon Graphics"
+        "integrated_gpu": "AMD Radeon Graphics"
       },
       {
-        "name": "AMD Ryzen 5 PRO 220",
-        "integrated_gpu": "Radeon 740M"
+        "name": "AMD Ryzen 5 Pro 220",
+        "integrated_gpu": "AMD Radeon 740M"
       },
       {
-        "name": "AMD Ryzen 5 PRO 5650G",
+        "name": "AMD Ryzen 5 Pro 5650G",
         "core_count": "6",
         "thread_count": "12",
         "base_clock": "3.9",
@@ -2133,7 +2189,7 @@
         "total_cache": "19",
         "socket": "AMD Socket AM4",
         "memory_support": "DDR4",
-        "integrated_gpu": "Radeon Vega 7"
+        "integrated_gpu": "AMD Radeon Vega 7"
       },
       {
         "name": "AMD Ryzen 5 PRO 5650GE",
@@ -2148,7 +2204,7 @@
         "total_cache": "19",
         "socket": "AMD Socket AM4",
         "memory_support": "DDR4",
-        "integrated_gpu": "Radeon Vega 7"
+        "integrated_gpu": "AMD Radeon Vega 7"
       },
       {
         "name": "AMD Ryzen 5 PRO 5655G",
@@ -2163,7 +2219,7 @@
         "total_cache": "19",
         "socket": "AMD Socket AM4",
         "memory_support": "DDR4",
-        "integrated_gpu": "Radeon Vega 7"
+        "integrated_gpu": "AMD Radeon Vega 7"
       },
       {
         "name": "AMD Ryzen 5 3500U"
@@ -2185,7 +2241,7 @@
       },
       {
         "name": "AMD Ryzen 5 7235HS",
-        "integrated_gpu": "Radeon 660M"
+        "integrated_gpu": "AMD Radeon 660M"
       },
       {
         "name": "AMD Ryzen 5 7430U"
@@ -2221,11 +2277,11 @@
     "AMD Ryzen 7": [
       {
         "name": "AMD Ryzen 7 170",
-        "integrated_gpu": "Radeon 680M"
+        "integrated_gpu": "AMD Radeon 680M"
       },
       {
         "name": "AMD Ryzen 7 260",
-        "integrated_gpu": "Radeon 780M"
+        "integrated_gpu": "AMD Radeon 780M"
       },
       {
         "name": "AMD Ryzen 7 3700X",
@@ -2282,7 +2338,7 @@
         "total_cache": "21",
         "socket": "AMD Socket AM4",
         "memory_support": "DDR4",
-        "integrated_gpu": "Radeon Graphics 512SP"
+        "integrated_gpu": "AMD Radeon Graphics 512SP"
       },
       {
         "name": "AMD Ryzen 7 5700X",
@@ -2295,6 +2351,20 @@
         "l2_cache": "4",
         "l3_cache": "32",
         "total_cache": "37",
+        "socket": "AMD Socket AM4",
+        "memory_support": "DDR4"
+      },
+      {
+        "name": "AMD Ryzen 7 5700X3D",
+        "core_count": "8",
+        "thread_count": "16",
+        "base_clock": "3",
+        "boost_clock": "4.1",
+        "tdp": "105",
+        "l1_cache": "512",
+        "l2_cache": "4",
+        "l3_cache": "96",
+        "total_cache": "101",
         "socket": "AMD Socket AM4",
         "memory_support": "DDR4"
       },
@@ -2325,7 +2395,7 @@
         "total_cache": "41",
         "socket": "AMD Socket AM5",
         "memory_support": "DDR5",
-        "integrated_gpu": "Radeon Graphics"
+        "integrated_gpu": "AMD Radeon Graphics"
       },
       {
         "name": "AMD Ryzen 7 7700X",
@@ -2340,7 +2410,7 @@
         "total_cache": "41",
         "socket": "AMD Socket AM5",
         "memory_support": "DDR5",
-        "integrated_gpu": "Radeon Graphics"
+        "integrated_gpu": "AMD Radeon Graphics"
       },
       {
         "name": "AMD Ryzen 7 7800X3D",
@@ -2355,7 +2425,7 @@
         "total_cache": "105",
         "socket": "AMD Socket AM5",
         "memory_support": "DDR5",
-        "integrated_gpu": "Radeon Graphics"
+        "integrated_gpu": "AMD Radeon Graphics"
       },
       {
         "name": "AMD Ryzen 7 8700F",
@@ -2384,7 +2454,7 @@
         "total_cache": "25",
         "socket": "AMD Socket AM5",
         "memory_support": "DDR5",
-        "integrated_gpu": "Radeon 780M"
+        "integrated_gpu": "AMD Radeon 780M"
       },
       {
         "name": "AMD Ryzen 7 9700X",
@@ -2399,7 +2469,7 @@
         "total_cache": "41",
         "socket": "AMD Socket AM5",
         "memory_support": "DDR5",
-        "integrated_gpu": "Radeon Graphics"
+        "integrated_gpu": "AMD Radeon Graphics"
       },
       {
         "name": "AMD Ryzen 7 9800X3D",
@@ -2414,7 +2484,22 @@
         "total_cache": "105",
         "socket": "AMD Socket AM5",
         "memory_support": "DDR5",
-        "integrated_gpu": "Radeon Graphics"
+        "integrated_gpu": "AMD Radeon Graphics"
+      },
+      {
+        "name": "AMD Ryzen 7 9850X3D",
+        "core_count": "8",
+        "thread_count": "16",
+        "base_clock": "4.7",
+        "boost_clock": "5.6",
+        "tdp": "120",
+        "l1_cache": "640",
+        "l2_cache": "8",
+        "l3_cache": "96",
+        "total_cache": "105",
+        "socket": "AMD Socket AM5",
+        "memory_support": "DDR5",
+        "integrated_gpu": "AMD Radeon Graphics"
       },
       {
         "name": "AMD Ryzen 7 PRO 5750G",
@@ -2429,7 +2514,22 @@
         "total_cache": "21",
         "socket": "AMD Socket AM4",
         "memory_support": "DDR4",
-        "integrated_gpu": "Radeon Vega 8"
+        "integrated_gpu": "AMD Radeon Vega 8"
+      },
+      {
+        "name": "AMD Ryzen 7 PRO 4750GE",
+        "core_count": "8",
+        "thread_count": "16",
+        "base_clock": "3.1",
+        "boost_clock": "4.3",
+        "tdp": "35",
+        "l1_cache": "512",
+        "l2_cache": "4",
+        "l3_cache": "8",
+        "total_cache": "13",
+        "socket": "AMD Socket AM4",
+        "memory_support": "DDR4",
+        "integrated_gpu": "AMD Radeon Vega 8"
       },
       {
         "name": "AMD Ryzen 7 4800H"
@@ -2492,7 +2592,7 @@
     "AMD Ryzen 9": [
       {
         "name": "AMD Ryzen 9 270",
-        "integrated_gpu": "Radeon 780M"
+        "integrated_gpu": "AMD Radeon 780M"
       },
       {
         "name": "AMD Ryzen 9 3900X",
@@ -2549,7 +2649,7 @@
         "total_cache": "77",
         "socket": "AMD Socket AM5",
         "memory_support": "DDR5",
-        "integrated_gpu": "Radeon Graphics"
+        "integrated_gpu": "AMD Radeon Graphics"
       },
       {
         "name": "AMD Ryzen 9 7900X",
@@ -2564,7 +2664,7 @@
         "total_cache": "77",
         "socket": "AMD Socket AM5",
         "memory_support": "DDR5",
-        "integrated_gpu": "Radeon Graphics"
+        "integrated_gpu": "AMD Radeon Graphics"
       },
       {
         "name": "AMD Ryzen 9 7900X3D",
@@ -2579,7 +2679,7 @@
         "total_cache": "141",
         "socket": "AMD Socket AM5",
         "memory_support": "DDR5",
-        "integrated_gpu": "Radeon Graphics"
+        "integrated_gpu": "AMD Radeon Graphics"
       },
       {
         "name": "AMD Ryzen 9 7950X",
@@ -2594,7 +2694,7 @@
         "total_cache": "81",
         "socket": "AMD Socket AM5",
         "memory_support": "DDR5",
-        "integrated_gpu": "Radeon Graphics"
+        "integrated_gpu": "AMD Radeon Graphics"
       },
       {
         "name": "AMD Ryzen 9 7950X3D",
@@ -2609,7 +2709,7 @@
         "total_cache": "145",
         "socket": "AMD Socket AM5",
         "memory_support": "DDR5",
-        "integrated_gpu": "Radeon Graphics"
+        "integrated_gpu": "AMD Radeon Graphics"
       },
       {
         "name": "AMD Ryzen 9 9900X",
@@ -2624,7 +2724,7 @@
         "total_cache": "77",
         "socket": "AMD Socket AM5",
         "memory_support": "DDR5",
-        "integrated_gpu": "Radeon Graphics"
+        "integrated_gpu": "AMD Radeon Graphics"
       },
       {
         "name": "AMD Ryzen 9 9900X3D",
@@ -2639,7 +2739,7 @@
         "total_cache": "141",
         "socket": "AMD Socket AM5",
         "memory_support": "DDR5",
-        "integrated_gpu": "Radeon Graphics"
+        "integrated_gpu": "AMD Radeon Graphics"
       },
       {
         "name": "AMD Ryzen 9 9950X",
@@ -2654,7 +2754,7 @@
         "total_cache": "81",
         "socket": "AMD Socket AM5",
         "memory_support": "DDR5",
-        "integrated_gpu": "Radeon Graphics"
+        "integrated_gpu": "AMD Radeon Graphics"
       },
       {
         "name": "AMD Ryzen 9 9950X3D",
@@ -2669,7 +2769,7 @@
         "total_cache": "145",
         "socket": "AMD Socket AM5",
         "memory_support": "DDR5",
-        "integrated_gpu": "Radeon Graphics"
+        "integrated_gpu": "AMD Radeon Graphics"
       },
       {
         "name": "AMD Ryzen 9 5900HX"
@@ -2699,41 +2799,41 @@
     "AMD Ryzen AI 5": [
       {
         "name": "AMD Ryzen AI 5 330",
-        "integrated_gpu": "Radeon 820M"
+        "integrated_gpu": "AMD Radeon 820M"
       },
       {
         "name": "AMD Ryzen AI 5 340",
-        "integrated_gpu": "Radeon 840M"
+        "integrated_gpu": "AMD Radeon 840M"
       }
     ],
     "AMD Ryzen AI 7": [
       {
         "name": "AMD Ryzen AI 7 350",
-        "integrated_gpu": "Radeon 860M"
+        "integrated_gpu": "AMD Radeon 860M"
       }
     ],
     "AMD Ryzen AI 9": [
       {
         "name": "AMD Ryzen AI 9 365",
-        "integrated_gpu": "Radeon 880M"
+        "integrated_gpu": "AMD Radeon 880M"
       },
       {
         "name": "AMD Ryzen AI 9 HX 370",
-        "integrated_gpu": "Radeon 890M"
+        "integrated_gpu": "AMD Radeon 890M"
       },
       {
         "name": "AMD Ryzen AI 9 465",
-        "integrated_gpu": "Radeon 880M"
+        "integrated_gpu": "AMD Radeon 880M"
       }
     ],
     "AMD Ryzen AI MAX": [
       {
         "name": "AMD Ryzen AI MAX 390",
-        "integrated_gpu": "Radeon 8050S"
+        "integrated_gpu": "AMD Radeon 8050S"
       },
       {
         "name": "AMD Ryzen AI MAX+ 395",
-        "integrated_gpu": "Radeon 8060S"
+        "integrated_gpu": "AMD Radeon 8060S"
       }
     ],
     "AMD Ryzen Threadripper": [
@@ -2769,10 +2869,10 @@
         "name": "AMD Athlon Silver 3050U"
       },
       {
-        "name": "AMD Athlon Silver 7120U"
+        "name": "AMD Athlon Silver 3050E"
       },
       {
-        "name": "AMD Athlon Silver 3050U"
+        "name": "AMD Athlon Silver 7120U"
       }
     ]
   }
