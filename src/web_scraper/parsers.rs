@@ -16,7 +16,7 @@ use std::collections::HashSet;
 use std::str::FromStr;
 use std::sync::Arc;
 
-//TODO: reset button does not register a send_section_info request
+const PROXIMITY_THRESHOLD: usize = 40;
 
 pub trait SectionParser: Send + Sync {
     fn config(&self) -> Arc<SectionConfig>;
@@ -171,9 +171,48 @@ impl SectionParser for GenericSectionParser {
 }
 
 pub fn words_match<T: AsRef<str>>(text: &str, candidate: &str, optionals: &[T]) -> bool {
-    candidate.split_whitespace().all(|word| {
-        optionals.iter().any(|o| o.as_ref().eq_ignore_ascii_case(word))
-            || word.len() <= 4 && word.ends_with("GB")
-            || RegexCache::matches(&format!("\\b{word}\\b"), text)
-    })
+    let mut positions: Vec<Vec<usize>> = Vec::new();
+
+    for word in candidate.split_whitespace() {
+        if optionals.iter().any(|o| o.as_ref().eq_ignore_ascii_case(word)) {
+            continue;
+        }
+        if word.len() <= 4 && word.ends_with("GB") {
+            continue;
+        }
+
+        let found = RegexCache::find_starts(&format!(r"\b{}\b", regex::escape(word)), text);
+        if found.is_empty() {
+            return false; // required word not found at all
+        }
+        positions.push(found);
+    }
+
+    match positions.len() {
+        0 | 1 => true,
+        _ => min_span(&positions),
+    }
+}
+
+fn min_span(lists: &[Vec<usize>]) -> bool {
+    let mut idx = vec![0usize; lists.len()];
+    let mut current_max = lists.iter().map(|l| l[0]).max().unwrap();
+
+    loop {
+        let (min_i, min_val) = idx.iter()
+            .enumerate()
+            .map(|(i, &p)| (i, lists[i][p]))
+            .min_by_key(|&(_, v)| v)
+            .unwrap();
+
+        if current_max - min_val <= PROXIMITY_THRESHOLD {
+            return true; // found a good enough window, no need to keep scanning
+        }
+
+        idx[min_i] += 1;
+        if idx[min_i] == lists[min_i].len() {
+            return false; // that list exhausted, can't shrink further
+        }
+        current_max = current_max.max(lists[min_i][idx[min_i]]);
+    }
 }

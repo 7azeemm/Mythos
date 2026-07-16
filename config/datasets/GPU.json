@@ -4,32 +4,32 @@
     "Arc 130T": [
       {
         "name": "Arc 130T",
-        "laptop_support": true
+        "platform": "laptop"
       }
     ],
     "Arc 130V": [
       {
         "name": "Arc 130V",
-        "laptop_support": true
+        "platform": "laptop"
       }
     ],
     "Arc 140T": [
       {
         "name": "Arc 140T",
-        "laptop_support": true
+        "platform": "laptop"
       }
     ],
     "Arc 140V": [
       {
         "name": "Arc 140V",
-        "laptop_support": true
+        "platform": "laptop"
       }
     ],
     "Arc A370M": [
       {
         "name": "Arc A370M 4GB",
         "memory_size": "4",
-        "laptop_support": true
+        "platform": "laptop"
       }
     ],
     "Arc B570": [
@@ -286,7 +286,7 @@
       },
       {
         "name": "GeForce GTX 1050 2GB",
-        "laptop_support": true,
+        "platform": "laptop",
         "memory_size": "2",
         "transistors": "3.3",
         "bus_interface": "PCIe 3.0 x16",
@@ -347,7 +347,7 @@
       },
       {
         "name": "GeForce GTX 1060 6GB",
-        "laptop_support": true,
+        "platform": "laptop",
         "memory_size": "6",
         "transistors": "4.4",
         "bus_interface": "PCIe 3.0 x16",
@@ -482,7 +482,7 @@
       },
       {
         "name": "GeForce GTX 1650 4GB",
-        "laptop_support": true,
+        "platform": "laptop",
         "memory_size": "4",
         "transistors": "4.7",
         "bus_interface": "PCIe 3.0 x16",
@@ -501,7 +501,7 @@
     "GeForce GTX 1650 Max-Q": [
       {
         "name": "GeForce GTX 1650 Max-Q 4GB",
-        "laptop_support": true,
+        "platform": "laptop",
         "memory_size": "4",
         "transistors": "4.7",
         "bus_interface": "PCIe 3.0 x16",
@@ -594,7 +594,7 @@
     "GeForce GTX 1660 Ti Max-Q": [
       {
         "name": "GeForce GTX 1660 Ti Max-Q 6GB",
-        "laptop_support": true,
+        "platform": "laptop",
         "memory_size": "6",
         "transistors": "6.6",
         "bus_interface": "PCIe 3.0 x16",
@@ -651,7 +651,7 @@
     "GeForce RTX 2050": [
       {
         "name": "GeForce RTX 2050 4GB",
-        "laptop_support": true,
+        "platform": "laptop",
         "memory_size": "4",
         "transistors": "8.7",
         "bus_interface": "PCIe 3.0 x8",
@@ -714,7 +714,7 @@
       },
       {
         "name": "GeForce RTX 2060 6GB",
-        "laptop_support": true,
+        "platform": "laptop",
         "memory_size": "6",
         "transistors": "10.8",
         "bus_interface": "PCIe 3.0 x16",
@@ -973,7 +973,7 @@
       },
       {
         "name": "GeForce RTX 3050 4GB",
-        "laptop_support": true,
+        "platform": "laptop",
         "memory_size": "4",
         "transistors": "8.7",
         "bus_interface": "PCIe 4.0 x8",
@@ -987,12 +987,29 @@
         "rt_cores": "16",
         "t_flops": "5.501",
         "tdp": "45"
+      },
+      {
+        "name": "GeForce RTX 3050 6GB",
+        "platform": "laptop",
+        "memory_size": "6",
+        "transistors": "8.7",
+        "bus_interface": "PCIe 4.0 x8",
+        "base_clock": "1237",
+        "boost_clock": "1492",
+        "memory_type": "GDDR6",
+        "memory_bus": "96",
+        "memory_bandwidth": "168",
+        "cores": "2560",
+        "tensor_cores": "80",
+        "rt_cores": "20",
+        "t_flops": "7.639",
+        "tdp": "75"
       }
     ],
     "GeForce RTX 3050 Ti": [
       {
         "name": "GeForce RTX 3050 Ti 4GB",
-        "laptop_support": true,
+        "platform": "laptop",
         "memory_size": "4",
         "transistors": "8.7",
         "bus_interface": "PCIe 4.0 x8",
@@ -1083,7 +1100,7 @@
       },
       {
         "name": "GeForce RTX 3060 6GB",
-        "laptop_support": true,
+        "platform": "laptop",
         "memory_size": "6",
         "transistors": "12",
         "bus_interface": "PCIe 4.0 x16",
@@ -1144,7 +1161,7 @@
       },
       {
         "name": "GeForce RTX 3070 8GB",
-        "laptop_support": true,
+        "platform": "laptop",
         "memory_size": "8",
         "transistors": "17.4",
         "bus_interface": "PCIe 4.0 x16",
@@ -1163,7 +1180,7 @@
     "GeForce RTX 3070 Max-Q": [
       {
         "name": "GeForce RTX 3070 Max-Q 8GB",
-        "laptop_support": true,
+        "platform": "laptop",
         "memory_size": "8",
         "transistors": "17.4",
         "bus_interface": "PCIe 4.0 x16",
@@ -1222,7 +1239,7 @@
       },
       {
         "name": "GeForce RTX 3070 Ti 8GB",
-        "laptop_support": true,
+        "platform": "laptop",
         "memory_size": "8",
         "transistors": "17.4",
         "bus_interface": "PCIe 4.0 x16",
@@ -1281,7 +1298,7 @@
       },
       {
         "name": "GeForce RTX 3080 8GB",
-        "laptop_support": true,
+        "platform": "laptop",
         "memory_size": "8",
         "transistors": "17.4",
         "bus_interface": "PCIe 4.0 x16",
@@ -1300,7 +1317,7 @@
     "GeForce RTX 3080 Max-Q": [
       {
         "name": "GeForce RTX 3080 Max-Q 8GB",
-        "laptop_support": true,
+        "platform": "laptop",
         "memory_size": "8",
         "transistors": "17.4",
         "bus_interface": "PCIe 4.0 x16",
@@ -1339,7 +1356,7 @@
       },
       {
         "name": "GeForce RTX 3080 Ti 16GB",
-        "laptop_support": true,
+        "platform": "laptop",
         "memory_size": "16",
         "transistors": "22",
         "bus_interface": "PCIe 4.0 x16",
@@ -1430,7 +1447,7 @@
       },
       {
         "name": "GeForce RTX 4050 6GB",
-        "laptop_support": true,
+        "platform": "laptop",
         "memory_size": "6",
         "transistors": "18.9",
         "bus_interface": "PCIe 4.0 x8",
@@ -1521,7 +1538,7 @@
       },
       {
         "name": "GeForce RTX 4060 8GB",
-        "laptop_support": true,
+        "platform": "laptop",
         "memory_size": "8",
         "transistors": "18.9",
         "bus_interface": "PCIe 4.0 x8",
@@ -1686,7 +1703,7 @@
       },
       {
         "name": "GeForce RTX 4070 8GB",
-        "laptop_support": true,
+        "platform": "laptop",
         "memory_size": "8",
         "transistors": "22.9",
         "bus_interface": "PCIe 4.0 x8",
@@ -1871,7 +1888,7 @@
       },
       {
         "name": "GeForce RTX 4080 12GB",
-        "laptop_support": true,
+        "platform": "laptop",
         "memory_size": "12",
         "transistors": "35.8",
         "bus_interface": "PCIe 4.0 x16",
@@ -1976,7 +1993,7 @@
       },
       {
         "name": "GeForce RTX 4090 16GB",
-        "laptop_support": true,
+        "platform": "laptop",
         "memory_size": "16",
         "transistors": "45.9",
         "bus_interface": "PCIe 4.0 x16",
@@ -2063,7 +2080,7 @@
       },
       {
         "name": "GeForce RTX 5050 8GB",
-        "laptop_support": true,
+        "platform": "laptop",
         "memory_size": "8",
         "transistors": "16.9",
         "bus_interface": "PCIe 5.0 x16",
@@ -2190,7 +2207,7 @@
       },
       {
         "name": "GeForce RTX 5060 8GB",
-        "laptop_support": true,
+        "platform": "laptop",
         "memory_size": "8",
         "transistors": "21.9",
         "bus_interface": "PCIe 5.0 x16",
@@ -2483,7 +2500,7 @@
       },
       {
         "name": "GeForce RTX 5070 8GB",
-        "laptop_support": true,
+        "platform": "laptop",
         "memory_size": "8",
         "transistors": "21.9",
         "bus_interface": "PCIe 5.0 x16",
@@ -2632,7 +2649,7 @@
       },
       {
         "name": "GeForce RTX 5070 Ti 12GB",
-        "laptop_support": true,
+        "platform": "laptop",
         "memory_size": "12",
         "transistors": "31.1",
         "bus_interface": "PCIe 5.0 x16",
@@ -2761,7 +2778,7 @@
       },
       {
         "name": "GeForce RTX 5080 16GB",
-        "laptop_support": true,
+        "platform": "laptop",
         "memory_size": "16",
         "transistors": "15.6",
         "bus_interface": "PCIe 5.0 x16",
@@ -2854,7 +2871,7 @@
       },
       {
         "name": "GeForce RTX 5090 24GB",
-        "laptop_support": true,
+        "platform": "laptop",
         "memory_size": "24",
         "transistors": "45.6",
         "bus_interface": "PCIe 5.0 x16",
@@ -3075,7 +3092,7 @@
     "Radeon RX 6850M XT": [
       {
         "name": "Radeon RX 6850M XT 12GB",
-        "laptop_support": true,
+        "platform": "laptop",
         "memory_size": "12",
         "transistors": "17.2",
         "bus_interface": "PCIe 4.0 x16",
@@ -3154,7 +3171,7 @@
       },
       {
         "name": "Radeon RX 7600S 8GB",
-        "laptop_support": true,
+        "platform": "laptop",
         "memory_size": "8",
         "transistors": "13.3",
         "bus_interface": "PCIe 4.0 x16",
@@ -3449,95 +3466,95 @@
     "Intel HD Graphics": [
       {
         "name": "Intel HD Graphics 4400",
-        "laptop_support": true
+        "platform": "both"
       },
       {
         "name": "Intel HD Graphics 5000",
-        "laptop_support": true
+        "platform": "both"
       },
       {
         "name": "Intel HD Graphics 630",
-        "laptop_support": true
+        "platform": "both"
       },
       {
         "name": "Intel HD Graphics 2000",
-        "laptop_support": true
+        "platform": "both"
       },
       {
         "name": "Intel HD Graphics 530",
-        "laptop_support": true
+        "platform": "both"
       },
       {
         "name": "Intel HD Graphics 510",
-        "laptop_support": true
+        "platform": "both"
       },
       {
         "name": "Intel HD Graphics 4600",
-        "laptop_support": true
+        "platform": "both"
       },
       {
         "name": "Intel HD Graphics 3000",
-        "laptop_support": true
+        "platform": "both"
       },
       {
         "name": "Intel HD Graphics 620",
-        "laptop_support": true
+        "platform": "both"
       },
       {
         "name": "Intel HD Graphics 4000",
-        "laptop_support": true
+        "platform": "both"
       }
     ],
     "Intel UHD Graphics": [
       {
         "name": "Intel UHD Graphics 750",
-        "laptop_support": true
+        "platform": "both"
       },
       {
         "name": "Intel UHD Graphics 730",
-        "laptop_support": true
+        "platform": "both"
       },
       {
         "name": "Intel UHD Graphics 610",
-        "laptop_support": true
+        "platform": "both"
       },
       {
         "name": "Intel UHD Graphics 710",
-        "laptop_support": true
+        "platform": "both"
       },
       {
         "name": "Intel UHD Graphics 630",
-        "laptop_support": true
+        "platform": "both"
       },
       {
         "name": "Intel UHD Graphics 770",
-        "laptop_support": true
+        "platform": "both"
       }
     ],
     "Intel Iris": [
       {
         "name": "Intel Iris Pro",
-        "laptop_support": true
+        "platform": "both"
       },
       {
         "name": "Intel Iris Plus Graphics 655",
-        "laptop_support": true
+        "platform": "both"
       },
       {
         "name": "Intel Iris Plus Graphics 645",
-        "laptop_support": true
+        "platform": "both"
       },
       {
         "name": "Intel Iris Plus",
-        "laptop_support": true
+        "platform": "both"
       },
       {
         "name": "Intel Iris Xe",
-        "laptop_support": true
+        "platform": "both"
       },
       {
         "name": "Intel Iris",
-        "laptop_support": true
+        "platform": "both"
       }
     ]
   },
@@ -3545,7 +3562,7 @@
     "NVIDIA RTX PRO 1000": [
       {
         "name": "NVIDIA RTX PRO 1000 8GB",
-        "laptop_support": true,
+        "platform": "laptop",
         "memory_size": "8",
         "transistors": "16.9",
         "bus_interface": "PCIe 5.0 x16",
@@ -3603,98 +3620,98 @@
       {
         "name": "GeForce MX550 2GB",
         "memory_size": "2",
-        "laptop_support": true
+        "platform": "laptop"
       }
     ],
     "GeForce MX570": [
       {
         "name": "GeForce MX570 2GB",
         "memory_size": "2",
-        "laptop_support": true
+        "platform": "laptop"
       }
     ],
     "GeForce MX150": [
       {
         "name": "GeForce MX150 2GB",
         "memory_size": "2",
-        "laptop_support": true
+        "platform": "laptop"
       }
     ],
     "GeForce MX570A": [
       {
         "name": "GeForce MX570A 2GB",
         "memory_size": "2",
-        "laptop_support": true
+        "platform": "laptop"
       }
     ],
     "GeForce MX130": [
       {
         "name": "GeForce MX130 2GB",
         "memory_size": "2",
-        "laptop_support": true
+        "platform": "laptop"
       }
     ],
     "GeForce MX150": [
       {
         "name": "GeForce MX150 4GB",
         "memory_size": "4",
-        "laptop_support": true
+        "platform": "laptop"
       }
     ],
     "GeForce MX110": [
       {
         "name": "GeForce MX110 2GB",
         "memory_size": "2",
-        "laptop_support": true
+        "platform": "laptop"
       }
     ],
     "GeForce MX350": [
       {
         "name": "GeForce MX350 2GB",
         "memory_size": "2",
-        "laptop_support": true
+        "platform": "laptop"
       }
     ],
     "GeForce MX450": [
       {
         "name": "GeForce MX450 2GB",
         "memory_size": "2",
-        "laptop_support": true
+        "platform": "laptop"
       }
     ],
     "GeForce MX230": [
       {
         "name": "GeForce MX230 2GB",
         "memory_size": "2",
-        "laptop_support": true
+        "platform": "laptop"
       }
     ],
     "GeForce MX330": [
       {
         "name": "GeForce MX330 2GB",
         "memory_size": "2",
-        "laptop_support": true
+        "platform": "laptop"
       }
     ],
     "GeForce 940MX": [
       {
         "name": "GeForce 940MX 2GB",
         "memory_size": "2",
-        "laptop_support": true
+        "platform": "laptop"
       }
     ],
     "GeForce 920MX": [
       {
         "name": "GeForce 920MX 2GB",
         "memory_size": "2",
-        "laptop_support": true
+        "platform": "laptop"
       }
     ],
     "GeForce 920M": [
       {
         "name": "GeForce 920M 2GB",
         "memory_size": "2",
-        "laptop_support": true
+        "platform": "laptop"
       }
     ],
     "NVIDIA RTX 2000": [
@@ -3718,7 +3735,7 @@
     "NVIDIA RTX 500": [
       {
         "name": "NVIDIA RTX 500 4GB",
-        "laptop_support": true,
+        "platform": "laptop",
         "memory_size": "4",
         "transistors": "18.9",
         "bus_interface": "PCIe 4.0 x8",
@@ -3731,6 +3748,25 @@
         "tensor_cores": "64",
         "rt_cores": "16",
         "t_flops": "8.294",
+        "tdp": "35"
+      }
+    ],
+    "NVIDIA RTX PRO 500": [
+      {
+        "name": "NVIDIA RTX PRO 500 6GB",
+        "platform": "laptop",
+        "memory_size": "6",
+        "transistors": "16.9",
+        "bus_interface": "PCIe 5.0 x16",
+        "base_clock": "1357",
+        "boost_clock": "1792",
+        "memory_type": "GDDR7",
+        "memory_bus": "96",
+        "memory_bandwidth": "288",
+        "cores": "1792",
+        "tensor_cores": "56",
+        "rt_cores": "14",
+        "t_flops": "6.423",
         "tdp": "35"
       }
     ],
@@ -3773,7 +3809,7 @@
     "NVIDIA RTX A3000": [
       {
         "name": "NVIDIA RTX A3000 6GB",
-        "laptop_support": true,
+        "platform": "laptop",
         "memory_size": "6",
         "transistors": "17.4",
         "bus_interface": "PCIe 4.0 x16",
@@ -3815,53 +3851,53 @@
     },
     {
       "name": "AMD XDNA",
-      "laptop_support": true
+      "platform": "laptop"
     },
     {
       "name": "AMD Radeon 530 2GB",
-      "laptop_support": true,
+      "platform": "laptop",
       "memory_size": "2"
     },
     {
       "name": "AMD Radeon 530 4GB",
-      "laptop_support": true,
+      "platform": "laptop",
       "memory_size": "4"
     },
     {
       "name": "AMD Radeon 610M",
-      "laptop_support": true
+      "platform": "laptop"
     },
     {
       "name": "AMD Radeon 660M",
-      "laptop_support": true
+      "platform": "laptop"
     },
     {
       "name": "AMD Radeon 680M",
-      "laptop_support": true
+      "platform": "laptop"
     },
     {
       "name": "AMD Radeon 740M",
-      "laptop_support": true
+      "platform": "laptop"
     },
     {
       "name": "AMD Radeon 760M",
-      "laptop_support": true
+      "platform": "laptop"
     },
     {
       "name": "AMD Radeon 840M",
-      "laptop_support": true
+      "platform": "laptop"
     },
     {
       "name": "AMD Radeon 860M",
-      "laptop_support": true
+      "platform": "laptop"
     },
     {
       "name": "AMD Radeon 880M",
-      "laptop_support": true
+      "platform": "laptop"
     },
     {
       "name": "AMD Radeon Vega 11",
-      "laptop_support": true,
+      "platform": "both",
       "transistors": "4.9",
       "base_clock": "300",
       "boost_clock": "1400",
@@ -3873,7 +3909,7 @@
     },
     {
       "name": "AMD Radeon Vega 6",
-      "laptop_support": true,
+      "platform": "both",
       "transistors": "4.9",
       "base_clock": "300",
       "boost_clock": "1101",
@@ -3885,7 +3921,7 @@
     },
     {
       "name": "AMD Radeon Vega 7",
-      "laptop_support": true,
+      "platform": "both",
       "transistors": "9.8",
       "base_clock": "300",
       "boost_clock": "1900",
@@ -3897,7 +3933,7 @@
     },
     {
       "name": "AMD Radeon Vega 8",
-      "laptop_support": true,
+      "platform": "both",
       "transistors": "4.9",
       "base_clock": "300",
       "boost_clock": "1250",
@@ -3911,7 +3947,7 @@
   "Qualcomm Adreno": [
     {
       "name": "Qualcomm Adreno",
-      "laptop_support": true
+      "platform": "laptop"
     }
   ]
 }

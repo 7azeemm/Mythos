@@ -1,6 +1,6 @@
 use crate::utils::regex_cache::RegexCache;
 use crate::utils::serde_ext::JsonExt;
-use crate::web_scraper::dataset::{Dataset, FilterNode, SearchResult};
+use crate::web_scraper::dataset::{Dataset, SearchResult};
 use crate::web_scraper::parsers::monitor_parser::extract_display_specs;
 use crate::web_scraper::parsers::{words_match, SectionConfig, SectionParser};
 use crate::web_scraper::product::Product;
@@ -28,7 +28,7 @@ impl SectionParser for PCParser {
     }
 
     fn parse_specs(&self, product: &mut Product, cleaned_title: &str) {
-        let desc = product.description.clone().unwrap_or_default();
+        let desc = product.description.clone().unwrap_or_default().replace("(5G)", "").replace("2.4", "");
         let text: String = format!("{} | {desc}", cleaned_title).to_uppercase();
         let text = product.section.config().title_cleaner.replace_words(&text, true);
         let text = text.replace(" .6\"", ".6\"").replace(".,", ".").replace("GRAPHIQUE", "GRAPHICS")
@@ -37,24 +37,26 @@ impl SectionParser for PCParser {
         let text = text.split_whitespace().collect::<Vec<_>>().join(" ");
 
         let cpu = extract_cpu(&text);
-        let gpu = extract_gpu(self.config.id, &text, &cpu.as_ref().map(|s| s.data.clone()).flatten());
+        let gpus = extract_gpu(self.config.id, &text, &cpu.as_ref().map(|s| s.data.clone()).flatten());
 
-        let gpu_has_memory = gpu.as_ref()
-            .map(|s| s.data.get_str("memory_size").map(|s| !s.is_empty()))
-            .flatten().unwrap_or(false);
+        let gpu_memories = gpus.iter()
+            .filter_map(|g| g.data.get_str("memory_size").map(|s| s.parse::<i32>().ok()).flatten())
+            .collect::<Vec<i32>>();
+        let gpu_has_memory = !gpu_memories.is_empty();
 
         let mut memory: Option<i32> = None;
         let mut storage: Option<i32> = None;
         let mut gpu_memory: Option<i32> = None;
 
-        // Extract Sizes from Title and Description
-        let mut desc_sizes = get_sizes(desc.clone(), false);
+        // Extract Sizes from title and description
+        let desc_sizes = get_sizes(desc.clone(), false);
         let title_sizes = get_sizes(product.title.clone(), true);
-        let (storage_sizes, mut title_sizes): (Vec<_>, Vec<_>) = title_sizes.into_iter()
-            .partition(|(size, unit)| unit == "TB" || *size > 128 || (*size == 128 && product.title.contains("+128")));
-        title_sizes.sort_by_key(|(size, _)| *size);
+        let (storage_sizes, title_sizes): (Vec<_>, Vec<_>) = title_sizes.into_iter()
+            .partition(|(size, unit)| unit == "TB" || *size > 128 || *size == 128 && product.price < 6000);
+        let mut title_sizes: Vec<_> = title_sizes.into_iter().map(|(size, _)| size).collect();
+        title_sizes.sort();
 
-        // Find Storage Size in Title (Additive)
+        // Find Storage Size in title (Additive)
         for (mut size, unit) in storage_sizes {
             if unit == "TB" {
                 size = size * 1024;
@@ -65,7 +67,7 @@ impl SectionParser for PCParser {
             })
         }
 
-        // Find Storage Size in Description if not found
+        // Find Storage Size in description
         if storage.is_none() {
             for (size, unit) in desc_sizes.iter() {
                 let mut size = *size;
@@ -83,25 +85,11 @@ impl SectionParser for PCParser {
             storage = Some(512);
         }
 
-        // Find Sizes in title (Memory, Storage, GPU Memory)
-        match (title_sizes.first(), title_sizes.get(1)) {
-            (Some((size, _)), None) if *size > 128 && storage.is_none() => storage = Some(*size),
-            (Some((size, _)), None) => memory = Some(*size),
-            (Some((size, _)), Some((size_2, _))) => {
-                if storage.is_none() && *size_2 >= 32 {
-                    memory = Some(*size);
-                    storage = Some(*size_2);
-                } else if gpu_has_memory {
-                    gpu_memory = Some(*size);
-                    memory = Some(*size_2);
-                } else if *size_2 <= 32 {
-                    memory = Some(*size_2);
-                }
-            },
-            (None, _) => {}
+        if let [memory] = gpu_memories.as_slice() {
+            gpu_memory = Some(*memory);
         }
 
-        // Find GPU Memory
+        // Find GPU Memory in description using a pattern
         if gpu_has_memory && gpu_memory.is_none() {
             let text = desc.to_uppercase().replace("AVEC ", "");
             let pattern = r"(?i)(\d+)\s*(?:g|go|gb)\s+(?:(?:de\s+)?m[eé]moire\s+d[eé]di[eé]e|(?:gddr[0-9]|gddr\s*[0-9]))";
@@ -109,12 +97,42 @@ impl SectionParser for PCParser {
             // Using Pattern
             if let Some(caps) = RegexCache::captures(&pattern, &text) {
                 if let Some(size) = caps.get(1).and_then(|v| v.as_str().parse::<i32>().ok()) {
-                    gpu_memory = Some(size);
+                    if gpu_memories.contains(&size) {
+                        gpu_memory = Some(size);
+                    }
                 }
             }
         }
 
-        // Find RAM and GPU Memory if not found from description
+        // Find Sizes in title (Memory, Storage, GPU Memory)
+        match (title_sizes.first().cloned(), title_sizes.get(1).cloned()) {
+            (Some(size), None) => memory = Some(size),
+            (Some(low_size), Some(high_size)) => {
+                if gpu_has_memory {
+                    if gpu_memories.contains(&low_size) {
+                        memory = Some(high_size);
+                        if gpu_memory.is_none() {
+                            gpu_memory = Some(low_size);
+                        }
+                    } else if gpu_memories.contains(&high_size) {
+                        memory = Some(low_size);
+                        if gpu_memory.is_none() {
+                            gpu_memory = Some(high_size);
+                        }
+                    } else {
+                        memory = Some(high_size);
+                    }
+                } else if storage.is_none() && high_size >= 32 {
+                    storage = Some(high_size);
+                    memory = Some(low_size);
+                } else {
+                    memory = Some(high_size);
+                }
+            }
+            _ => {}
+        }
+
+        // Find RAM and GPU Memory in description
         if gpu_memory.is_none() || memory.is_none() {
             let mut sizes = vec![];
             let mut removed = false;
@@ -141,19 +159,29 @@ impl SectionParser for PCParser {
 
             sizes.sort();
 
-            match (sizes.first(), sizes.get(1)) {
-                (Some(size), Some(size_2)) => {
-                    gpu_memory = Some(*size);
-                    memory = Some(*size_2);
-                },
-                (Some(size), _) => {
-                    if memory.is_none() {
-                        memory = Some(*size);
-                    } else if gpu_has_memory && gpu_memory.is_none() {
-                        gpu_memory = Some(*size);
+            match (sizes.first().cloned(), sizes.get(1).cloned()) {
+                (Some(low_size), Some(high_size)) => {
+                    if gpu_has_memory && gpu_memory.is_none() {
+                        if gpu_memories.contains(&low_size) {
+                            gpu_memory = Some(low_size);
+                            if memory.is_none() {
+                                memory = Some(high_size);
+                            }
+                        } else {
+                            memory = Some(low_size);
+                        }
+                    } else if memory.is_none() {
+                        memory = Some(high_size);
                     }
                 }
-                (None, _) => {}
+                (Some(size), _) => {
+                    if memory.is_none() {
+                        memory = Some(size);
+                    } else if gpu_memory.is_none() && gpu_memories.contains(&size) {
+                        gpu_memory = Some(size);
+                    }
+                }
+                _ => {}
             }
         }
 
@@ -167,9 +195,14 @@ impl SectionParser for PCParser {
             product.components.insert("cpu".to_string(), cpu.label);
         }
 
+        let gpu = match gpu_memory {
+            Some(memory) => gpus.into_iter().find(|gpu| gpu.data.get_str("memory_size") == Some(memory.to_string().as_str())),
+            None => gpus.into_iter().next()
+        };
+
         if let Some(gpu) = gpu {
             product.filter_ids.insert("gpu".to_string(), gpu.id);
-            if let Some(memory) = gpu_memory {
+            if let Some(memory) = gpu.data.get_str("memory_size") {
                 let memory = format!("{memory}GB");
                 product.components.insert("gpu".to_string(), format!("{} {memory}", gpu.label));
                 product.filter_ids.insert("gpu_memory".to_string(), memory);
@@ -218,12 +251,11 @@ impl SectionParser for PCParser {
 }
 
 fn extract_cpu(text: &str) -> Option<SearchResult> {
-    let section = Section::CPU;
-    let text = section.config().title_cleaner.replace_words(&text, true);
+    let text = Section::CPU.config().title_cleaner.replace_words(&text, true);
     let optionals = &["AMD", "Intel", "Core", "Gold", "Silver", "Processor", "Gemini Lake", "Jasper Lake"];
 
     // Dataset Search
-    for node in &section.parser().dataset().nodes {
+    for node in &Section::CPU.parser().dataset().nodes {
         // Skip if cpu is AMD and product desc contains a reference to an Intel cpu
         if node.label.contains("AMD") && text.contains("INTEL CORE") {
             continue
@@ -297,40 +329,49 @@ fn extract_cpu(text: &str) -> Option<SearchResult> {
     None
 }
 
-fn extract_gpu(id: Section, text: &str, cpu_entry: &Option<Value>) -> Option<SearchResult> {
-    let section = Section::GPU;
-    let text = section.config().title_cleaner.replace_words(&text, true);
+fn extract_gpu(section: Section, text: &str, cpu_entry: &Option<Value>) -> Vec<SearchResult> {
+    let text = Section::GPU.config().title_cleaner.replace_words(&text, true);
     let has_dedicated_gpu = vec!["RTX", "RX", "GTX", " GT "].into_iter().any(|w| text.contains(w));
     let optionals = &["GeForce", "Radeon", "Nvidia", "Intel", "Graphics"];
+    let mut gpus: Vec<_> = vec![];
 
     // Dataset Search
-    for node in &section.parser().dataset().nodes {
-        // Skip if: gpu is a vendor card
-        // or product is laptop and chip is not mobile compatible
-        // or chip is IGPU and product has dGPU
-        if node.data.get_bool("vendor_card") == Some(true) ||
-            (id.is_laptop() && node.data.get_bool("laptop_support") != Some(true)) ||
-            (has_dedicated_gpu && node.label.contains("Graphics")) {
+    for node in &Section::GPU.parser().dataset().nodes {
+        // Skip if GPU is a vendor card or chip is IGPU and product has dGPU
+        if node.data.get_bool("vendor_card") == Some(true) || (has_dedicated_gpu && node.label.contains("Graphics")) {
             continue
+        }
+
+        // Skip if GPU is not available in that platform
+        let platform = node.data.get_str("platform");
+        match (section.is_laptop(), platform) {
+            (true, Some("laptop" | "both")) => {}
+            (false, Some("both")) => {},
+            (false, None) => {},
+            _ => continue,
         }
 
         if words_match(&text, &node.label.to_uppercase(), optionals) {
             let label = node.label.split_whitespace()
                 .filter(|w| !(w.len() <= 4 && w.contains("GB")))
                 .collect::<Vec<_>>().join(" ");
-            return Some(SearchResult {
-                id: node.id.clone(),
-                label,
-                data: node.data.clone(),
-            })
+            if gpus.is_empty() || gpus.iter().any(|s: &SearchResult| s.label == label) {
+                gpus.push(SearchResult {
+                    id: node.id.clone(),
+                    label: label.clone(),
+                    data: node.data.clone(),
+                });
+            }
         }
     }
 
-    if has_dedicated_gpu {
-        return None
+    if !gpus.is_empty() {
+        return gpus
+    } else if has_dedicated_gpu {
+        return vec![]
     }
 
-    if id != Section::GamingLaptop {
+    if section != Section::GamingLaptop {
         // Extract IGPU from CPU Entry
         if let Some(entry) = &cpu_entry {
             if let Some(iGPU) = entry.get_str("integrated_gpu") {
@@ -343,11 +384,11 @@ fn extract_gpu(id: Section, text: &str, cpu_entry: &Option<Value>) -> Option<Sea
                         eprintln!("Unknown Integrated GPU: {iGPU}");
                         "Others".to_string()
                     };
-                    return Some(SearchResult {
+                    return vec![SearchResult {
                         id,
                         label: iGPU.to_string(),
                         data: None
-                    })
+                    }]
                 }
             }
         }
@@ -372,15 +413,14 @@ fn extract_gpu(id: Section, text: &str, cpu_entry: &Option<Value>) -> Option<Sea
         None
     };
 
-    if let Some((id, label)) = gpu {
-        return Some(SearchResult {
+    match gpu {
+        Some((id, label)) => vec![SearchResult {
             id: id.to_string(),
             label: label.to_string(),
             data: None
-        })
+        }],
+        None => vec![]
     }
-
-    None
 }
 
 fn get_sizes(text: String, title: bool) -> Vec<(i32, String)> {
@@ -403,6 +443,11 @@ fn get_sizes(text: String, title: bool) -> Vec<(i32, String)> {
 
         let match_pos = caps.get(0).unwrap();
         let start = match_pos.start();
+
+        let before = text[..start].trim_end().to_lowercase();
+        if before.ends_with("jusqu'a") || before.ends_with("jusqu’à") || before.ends_with("jusqu'à") {
+            continue
+        }
 
         let mut unit = match_pos.as_str().chars().rev()
             .take_while(|c| c.is_alphabetic() || c.is_whitespace())

@@ -82,6 +82,7 @@ impl Dataset {
     }
 }
 
+#[derive(Debug)]
 pub struct SearchResult {
     pub id: String,
     pub label: String,

@@ -11,6 +11,7 @@ use futures::{stream, StreamExt};
 use std::collections::{HashMap, HashSet};
 use std::error::Error;
 use std::sync::{Arc, OnceLock};
+use std::sync::atomic::{AtomicUsize, Ordering};
 use std::time::{Duration, Instant};
 use rand::seq::SliceRandom;
 use strum::IntoEnumIterator;
@@ -98,10 +99,18 @@ impl ProductManager {
 
         let sites = &[];
         // let sections = Section::iter().collect::<Vec<_>>();
-        let sections = vec![Section::CPU, Section::GPU, Section::GamingPC, Section::Laptop, Section::GamingLaptop];
+        let sections = vec![
+            Section::CPU, Section::GPU, Section::PC, Section::GamingPC, Section::AllInOnePC, Section::MiniPC,
+            Section::Laptop, Section::GamingLaptop, Section::MacBook
+        ];
 
-        let mut products = self.fetch_sites(&sections, sites).await;
-        products.retain(|p| sections.contains(&p.section));
+        // let sections = vec![
+        //     Section::PC, Section::GamingPC, Section::AllInOnePC, Section::MiniPC, Section::Laptop, Section::GamingLaptop,
+        //     Section::MacBook, Section::Monitor, Section::CPU, Section::GPU, Section::Memory, Section::Storage,
+        //     Section::Motherboard, Section::Cooler, Section::PowerSupply, Section::Case
+        // ];
+
+        let products = self.fetch_sites(&sections, sites).await;
         let mut products = ProductStorage::update(products, &sections, sites).await;
         self.parse(&mut products).await;
         ProductStorage::insert(products).await;
@@ -153,8 +162,14 @@ impl ProductManager {
 
         // Fetch the first pages
         let process_first_pages = |tasks: Vec<_>, buffer_size: usize| async move {
+            let total = tasks.len();
+            let done = Arc::new(AtomicUsize::new(0));
             stream::iter(tasks)
                 .buffer_unordered(buffer_size)
+                .inspect(move |_| {
+                    let n = done.fetch_add(1, Ordering::SeqCst) + 1;
+                    println!("First-page {n}/{total} complete");
+                })
                 .collect::<Vec<_>>()
                 .await
         };
@@ -186,8 +201,14 @@ impl ProductManager {
 
         // Fetch the rest
         let process_subsequent_pages = |tasks: Vec<_>, buffer_size: usize| async move {
+            let total = tasks.len();
+            let done = Arc::new(AtomicUsize::new(0));
             stream::iter(tasks)
                 .buffer_unordered(buffer_size)
+                .inspect(move |_| {
+                    let n = done.fetch_add(1, Ordering::SeqCst) + 1;
+                    println!("Subsequent-page {n}/{total} complete");
+                })
                 .collect::<Vec<_>>()
                 .await
         };

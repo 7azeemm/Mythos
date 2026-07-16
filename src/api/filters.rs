@@ -70,8 +70,12 @@ fn sort_options(key: &str, options: &mut [FilterValue]) {
             return an.total_cmp(&bn);
         }
 
-        // 4) Count ordering
-        b.count.cmp(&a.count).then_with(|| a.label.cmp(&b.label))
+        // 4) Count/Alphabetic ordering
+        if key == "model" {
+            b.count.cmp(&a.count).then_with(|| a.label.cmp(&b.label))
+        } else {
+            a.label.cmp(&b.label).then_with(|| b.count.cmp(&a.count))
+        }
     });
 
     for opt in options.iter_mut() {

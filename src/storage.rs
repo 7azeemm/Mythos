@@ -90,7 +90,7 @@ impl ProductStorage {
             should_keep
         });
         println!("Removed {} products", removed_products.len());
-        storage.removed_products = removed_products;
+        storage.removed_products.extend(removed_products);
 
         // report.update.removed += to_archive.len();
         // report.removed_items.extend(to_archive);
@@ -113,7 +113,7 @@ impl ProductStorage {
 
             // Changed Product
             if title_changed | desc_changed | image_changed | status_changed | price_changed | old_price_changed {
-                fn push_change<T: Serialize>(history: &mut Vec<Value>, field: &str, old: T, new: T) {
+                fn push_change<T: Serialize>(history: &mut Vec<Value>, field: &str, new: T, old: T) {
                     history.push(json!({
                         "field": field,
                         "old_value": old,

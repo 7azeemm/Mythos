@@ -64,8 +64,8 @@ impl RegexCache {
         Self::get(pattern).captures(text)
     }
 
-    pub fn find_iter<'a>(pattern: &str, text: &'a str) -> Vec<Match<'a>> {
-        Self::get(pattern).find_iter(text).collect()
+    pub fn find_starts(pattern: &str, text: &str) -> Vec<usize> {
+        Self::get(pattern).find_iter(text).map(|m| m.start()).collect()
     }
 
     pub fn captures_iter<'a>(pattern: &str, text: &'a str) -> Vec<Captures<'a>> {

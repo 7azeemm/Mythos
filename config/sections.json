@@ -14,7 +14,7 @@
   {
     "id": "GamingPC",
     "min_price": 200,
-    "filters": ["cpu", "gpu", "memory_size", "memory_type", "storage_size"],
+    "filters": ["cpu", "gpu", "memory_size", "memory_type", "gpu_memory", "storage_size"],
     "datasets": {
       "cpu": "CPU",
       "gpu": "GPU"
@@ -89,8 +89,8 @@
       ]
     },
     "filters": [
-      "model", "cpu", "gpu", "memory_size", "memory_type", "storage_size", "display_size", "resolution",
-      "panel_type", "refresh_rate"
+      "model", "cpu", "gpu", "memory_size", "memory_type", "gpu_memory", "storage_size",
+      "display_size", "resolution", "panel_type", "refresh_rate"
     ],
     "components": ["model", "display", "cpu", "gpu", "memory", "storage"],
     "group": ["model", "cpu", "gpu"],
