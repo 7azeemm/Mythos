@@ -222,8 +222,8 @@ pub fn build_all_filters(
     let mut groups = Vec::with_capacity(keys.len());
 
     for key in keys {
+        let structured = vec!["cpu", "gpu", "model"].contains(&key.as_str());
         let scoped = scoped_products(products, selections, key);
-        let structured = section.config().datasets.contains_key(key);
         let group = build_filter_group(key, &label_from_key(key, structured), &scoped);
         groups.push(group);
     }

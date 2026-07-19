@@ -3,22 +3,23 @@
     "id": "PC",
     "move_rules": [
       ["Monitor", "#^ecran||#^Écran"],
-      ["MiniPC", "mini&!=tower||studio"],
+      ["MiniPC", "mini&!=tower||studio|IIYama"],
       ["AllInOnePC", "all in one|all-in-one|tout en un|tout-en-un|aio|all in-one|imac"],
       ["Laptop", "portable"],
-      ["GamingPC", "setup|gamer|gaming"]
+      ["GamingPC", "setup|gamer|gaming|OMEN"]
     ],
-    "filters": ["CPU", "gpu_chipset", "memory_size", "memory_type", "storage_size"],
+    "title_cleaner": {
+      "replace_words": [
+        ["Penitum", "Pentium"]
+      ]
+    },
+    "filters": ["cpu", "gpu", "memory_size", "memory_type", "storage_size"],
     "components": ["cpu", "gpu", "memory", "storage"]
   },
   {
     "id": "GamingPC",
     "min_price": 200,
     "filters": ["cpu", "gpu", "memory_size", "memory_type", "gpu_memory", "storage_size"],
-    "datasets": {
-      "cpu": "CPU",
-      "gpu": "GPU"
-    },
     "components": ["cpu", "gpu", "memory", "storage"]
   },
   {
@@ -27,13 +28,18 @@
       ["MiniPC", "mini|barebone"]
     ],
     "filters": [
-      "cpu", "gpu_chipset", "memory_size", "memory_type", "storage_size", "display_size", "resolution", "refresh_rate"
+      "model", "cpu", "gpu", "memory_size", "memory_type", "storage_size", "display_size", "resolution", "refresh_rate"
     ],
-    "components": ["display", "cpu", "gpu", "memory", "storage"]
+    "components": ["model", "display", "cpu", "gpu", "memory", "storage"],
+    "id_field_name": "model"
   },
   {
     "id": "MiniPC",
-    "filters": ["cpu", "gpu_chipset", "memory_size", "memory_type", "storage_size"],
+    "filters": ["cpu", "gpu", "memory_size", "memory_type", "storage_size"],
+    "datasets": {
+      "cpu": "CPU",
+      "gpu": "GPU"
+    },
     "components": ["cpu", "gpu", "memory", "storage"]
   },
   {
@@ -55,11 +61,6 @@
       "model", "cpu", "gpu", "memory_size", "memory_type", "storage_size", "display_size", "resolution", "panel_type",
       "refresh_rate"
     ],
-    "datasets": {
-      "model": "Laptop",
-      "cpu": "CPU",
-      "gpu": "GPU"
-    },
     "components": ["model", "display", "cpu", "gpu", "memory", "storage"],
     "id_field_name": "model"
   },
@@ -94,11 +95,6 @@
     ],
     "components": ["model", "display", "cpu", "gpu", "memory", "storage"],
     "group": ["model", "cpu", "gpu"],
-    "datasets": {
-      "model": "GamingLaptop",
-      "cpu": "CPU",
-      "gpu": "GPU"
-    },
     "id_field_name": "model"
   },
   {
@@ -115,8 +111,14 @@
     "move_rules": [
       ["Others", "support&!=tactile||barre"]
     ],
-    "filters": ["display_size", "resolution", "panel_type", "refresh_rate"],
-    "components": ["display"]
+    "title_cleaner": {
+      "replace_words": [
+        ["CoolerMaster", "Cooler Master"]
+      ]
+    },
+    "filters": ["model", "display_size", "resolution", "panel_type", "refresh_rate"],
+    "components": ["model", "display"],
+    "id_field_name": "model"
   },
   {
     "id": "CPU",
@@ -149,9 +151,7 @@
       ]
     },
     "filters": ["cpu", "socket", "memory_support", "core_count", "thread_count"],
-    "datasets": {
-      "cpu": "CPU"
-    },
+    "components": ["cpu"],
     "id_field_name": "cpu"
   },
   {
@@ -168,7 +168,7 @@
         ["0Ti", "0 Ti"], ["0TI", "0 Ti"], ["Overclocked", "OC"], ["GIGABAYTE", "Gigabyte"], ["Fual", "Dual"],
         ["GT7", "GT 7"], ["GT6", "GT 6"], ["GT-", "GT "], ["GTX1", "GTX 1"], ["GTX9", "GTX 9"], ["RTX350", "RTX 3050"],
         ["RTX2", "RTX 2"], ["RTX3", "RTX 3"], ["RTX4", "RTX 4"], ["RTX5", "RTX 5"], ["0XT", "0 XT"],
-        ["RX5", "RX 5"], ["RX6", "RX 6"], ["RX7", "RX 7"], ["RX9", "RX 9"], ["TRIX", "STRIX"],
+        ["RX5", "RX 5"], ["RX6", "RX 6"], ["RX7", "RX 7"], ["RX9", "RX 9"], ["RX Vega", "Vega"], ["TRIX", "STRIX"],
         ["sStrix", "STRIX"], ["X STORM", "XSTORM"], ["T16Go", "16GB"], ["O24G", "24GB"], ["4080SUP", "4080 SUPER"],
         ["1660S", "1660 SUPER"], ["Dual Fans", "Dual Fan"], ["Triple Fans", "Triple Fan"], ["3GT", "3GB"],
         ["2000E", "2000"], ["RTXe", "RTX"], [" MX ", " MX"], ["130 V", "130V"], ["140 V", "140V"], ["GTX 20", "RTX 20"],
@@ -180,21 +180,15 @@
         ["Gigabyte", "WINDFORCE"]
       ]
     },
-    "brands": [
-      "ASRock", "ASUS", "AXLE", "Arktek", "Gigabyte", "INNO3D", "MANLI", "MSI", "OCPC", "PNY", "Palit",
-      "PowerColor", "Sapphire", "WINNFOX", "XFX", "XStorm", "ZEPHYR", "ZOTAC", "Biostar", "EVGA", "NVIDIA", "AMD"
-    ],
-    "filters": ["gpu", "name", "memory_size"],
+    "filters": ["gpu", "memory_size", "bus_interface", "memory_type", "memory_bus", "memory_bandwidth", "cores"],
+    "components": ["chipset"],
     "group": ["gpu"],
-    "datasets": {
-      "gpu": "GPU"
-    },
     "id_field_name": "gpu"
   },
   {
     "id": "Memory",
     "move_rules": [
-      ["Others", "carte son|chargeur|usb"],
+      ["Others", "carte son|chargeur|usb|batterie"],
       ["PowerSupply", "#alimentation"],
       ["Case", "boitier|Boetier"],
       ["GPU", "graphique"],
@@ -202,37 +196,38 @@
     ],
     "title_cleaner": {
       "replace_words": [
-        ["D4", "DDR4"], ["D5", "DDR5"], ["DDR 4", "DDR4"], ["DDR 5", "DDR5"], ["DRR4", "DDR4"], ["GAMMIG", "GAMMIX"],
-        ["Dominateur", "DOMINATOR"], ["Platine", "PLATINUM"], ["Team Group", "TeamGroup"], ["Sk-Hynix", "SK Hynix"],
-        ["Vulcan-Z", "Vulcan Z"], ["DATOTEK", "Dato"]
+        ["D4", "DDR4"], ["D5", "DDR5"], ["DDR 4", "DDR4"], ["DDR 5", "DDR5"], ["DRR4", "DDR4"], ["DDR3L", "DDR3"],
+        ["Team Group", "TeamGroup"], ["Sk-Hynix", "SK Hynix"], ["DATOTEK", "Dato"]
       ]
     },
-    "filters": ["size", "memory_type", "speed"]
+    "filters": ["brand", "platform", "memory_size", "memory_type", "memory_speed"],
+    "id_field_name": "brand"
   },
   {
     "id": "Storage",
     "move_rules": [
-      ["Others", "externe|usb|caddy|carte|Boitier|Boîtier|dock|argus"]
+      ["Others", "extern|externe|usb|caddy|carte|Boitier|Boîtier|dock|argus|NAS|Led|ASUSTOR|SanDisk"]
     ],
     "title_cleaner": {
       "replace_words": [
         ["Team Group", "TeamGroup"], ["SGAMMIX", "GAMMIX"], ["FUTUREX", "Future"], ["Colorfull", "Colorful"],
-        ["WD", "Western Digital"], ["Patriot/", "Patriot"], ["Gigabayte", "Gigabyte"]
+        ["WD", "Western Digital"], ["Gigabayte", "Gigabyte"], [" SDD ", " SSD "]
       ],
       "add_brands_by_models": [
         ["MSI", "SPATIUM"], ["Seagate", "BarraCuda"]
       ]
     },
-    "filters": ["size"]
+    "filters": ["brand", "storage_type", "storage_size"],
+    "id_field_name": "brand"
   },
   {
     "id": "Motherboard",
     "move_rules": [
-      ["Others", "riser|portable|carte hdd|hp|dell"]
+      ["Others", "riser|portable|carte hdd|hp|dell|toshiba"]
     ],
     "title_cleaner": {
       "replace_words": [
-        ["Wi-Fi", "WiFi"], ["B560-M", "B560M"],
+        ["Gigabite", "Gigabyte"], ["Wi-Fi", "WiFi"], ["B560-M", "B560M"],
         ["WIFI 6E", "WiFi6E"], ["WIFI 6", "WiFi6"], ["WIFI 7", "WiFi7"],  ["STELL", "Steel"],
         ["Creatot", "CREATOR"], ["5 650M", "B650M"], ["AXG11", "AX"], ["HDVM.2", "HDV/M.2"],
         ["CREATOR B550", "B550-CREATOR"], ["ProArt X890", "ProArt Z890"],
@@ -241,23 +236,46 @@
         ["B650 UD AX1.0", "B650 UD AX"], ["B660M A Pro", "B660M AORUS Pro"],
         ["Gigabyte B850 EAGLE WiFi6", "Gigabyte B850 EAGLE WiFi6E"],
         ["Gigabyte B850 EAGLE WiFi", "Gigabyte B850 EAGLE WiFi6E"]
+      ],
+      "add_brands_by_models": [
+        ["Gigabyte", "AORUS"], ["ASUS", "ROG"]
       ]
-    }
+    },
+    "filters": ["brand"],
+    "id_field_name": "brand"
   },
   {
     "id": "Cooler",
     "move_rules": [
-      ["Others", "thermique|Thérmique|pate|Pâte|portable|acer|hp|dell|asus|lenovo|toshiba|usb|table|thermal|noctua||#control||Refroidisseur|Refroidisseurs&SPIRIT OF GAMER airblade|havit|ice|17″ SOG"],
+      ["Others", "thermique|Thérmique|pate|termosthat|support|Pâte|portable|hub|kit de mise|usb|table|thermal||#control"],
+      ["Others", "acer|hp|dell|asus|lenovo|toshiba|noctua"],
+      ["Others", "Refroidisseur|Refroidisseurs&SPIRIT OF GAMER airblade|havit|ice|17″ SOG"],
       ["PowerSupply", "#alimentation"],
       ["GPU", "graphique"]
-    ]
+    ],
+    "title_cleaner": {
+      "replace_words": [
+        ["RAIMAX", "RAIDMAX"], ["Aero Cool", "AeroCool"], ["Inter-Tech", "InterTech"], ["Inter Tech", "InterTech"],
+        ["Master Liquid", "MasterLiquid"]
+      ]
+    },
+    "filters": ["brand"],
+    "id_field_name": "brand"
   },
   {
     "id": "PowerSupply",
     "move_rules": [
       ["Others", "lenovo|hp|dell"],
+      ["Case", "Boitier"],
       ["AccessoriesCombo", "pack"]
-    ]
+    ],
+    "title_cleaner": {
+      "replace_words": [
+        ["Inter-Tech", "InterTech"], ["Inter Tech", "InterTech"], ["Aercool", "AeroCool"], ["Cooler Master"]
+      ]
+    },
+    "filters": ["brand", "wattage"],
+    "id_field_name": "brand"
   },
   {
     "id": "Case",
@@ -267,13 +285,15 @@
     ],
     "title_cleaner": {
       "replace_words": [
-        ["CoolerMaster", "Cooler Master"], ["Aero Cool", "AeroCool"], ["INTERECH", "Inter-Tech"],
-        ["InterTech", "Inter-Tech"]
+        ["CoolerMaster", "Cooler Master"], ["Aero Cool", "AeroCool"], ["INTERECH", "InterTech"],
+        ["Inter-Tech", "InterTech"]
       ],
       "add_brands_by_models": [
         ["Gigabyte", "AORUS"]
       ]
-    }
+    },
+    "filters": ["brand"],
+    "id_field_name": "brand"
   },
   {
     "id": "Mouse",

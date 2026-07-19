@@ -3,6 +3,7 @@ pub mod memory_parser;
 pub mod storage_parser;
 pub mod pc_parser;
 pub mod monitor_parser;
+pub mod power_supply;
 
 use crate::utils::regex_cache::RegexCache;
 use crate::utils::serde_ext::JsonExt;
@@ -35,6 +36,11 @@ pub trait SectionParser: Send + Sync {
             Some(name) => {
                 let value = details.map(|text| format!("{name} {text}")).unwrap_or(name);
                 product.components.insert(self.config().id_field_name.clone(), value);
+                for component in &product.section.config().components {
+                    if !product.components.contains_key(component) && let Some(value) = product.filter_ids.get(component) {
+                        product.components.insert(component.clone(), value.clone());
+                    }
+                }
                 Ok(())
             },
             None => Err(ParseErrorKind::NotInDataset)
@@ -170,11 +176,11 @@ impl SectionParser for GenericSectionParser {
     }
 }
 
-pub fn words_match<T: AsRef<str>>(text: &str, candidate: &str, optionals: &[T]) -> bool {
+pub fn words_match(text: &str, candidate: &str, optionals: &[String]) -> bool {
     let mut positions: Vec<Vec<usize>> = Vec::new();
 
     for word in candidate.split_whitespace() {
-        if optionals.iter().any(|o| o.as_ref().eq_ignore_ascii_case(word)) {
+        if optionals.iter().any(|o| o.eq_ignore_ascii_case(word)) {
             continue;
         }
         if word.len() <= 4 && word.ends_with("GB") {
@@ -189,7 +195,7 @@ pub fn words_match<T: AsRef<str>>(text: &str, candidate: &str, optionals: &[T]) 
     }
 
     match positions.len() {
-        0 | 1 => true,
+        1 => true,
         _ => min_span(&positions),
     }
 }

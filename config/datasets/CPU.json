@@ -1,5 +1,5 @@
 {
-  "optionals": ["Intel", "Core", "Processor", "AMD", "Pro"],
+  "optionals": ["Intel", "Core", "Processor", "AMD", "Pro", "Celeron"],
   "Intel": {
     "Intel Core i3": [
       {
@@ -45,6 +45,9 @@
         "socket": "Intel Socket 1200",
         "memory_support": "DDR4",
         "integrated_gpu": "UHD Graphics 630"
+      },
+      {
+        "name": "Intel Core i3-10105T"
       },
       {
         "name": "Intel Core i3-10105F",
@@ -111,6 +114,9 @@
         "name": "Intel Core i3-13100"
       },
       {
+        "name": "Intel Core i3-13100T"
+      },
+      {
         "name": "Intel Core i3-13100F",
         "core_count": "4",
         "thread_count": "8",
@@ -138,6 +144,9 @@
         "socket": "Intel Socket 1700",
         "memory_support": "DDR4, DDR5",
         "integrated_gpu": "UHD Graphics 730"
+      },
+      {
+        "name": "Intel Core i3-14100T"
       },
       {
         "name": "Intel Core i3-14100F",
@@ -281,6 +290,9 @@
         "integrated_gpu": "UHD Graphics 630"
       },
       {
+        "name": "Intel Core i5-10500T"
+      },
+      {
         "name": "Intel Core i5-10600"
       },
       {
@@ -355,6 +367,9 @@
         "socket": "Intel Socket 1200",
         "memory_support": "DDR4",
         "integrated_gpu": "UHD Graphics 750"
+      },
+      {
+        "name": "Intel Core i5-11500B"
       },
       {
         "name": "Intel Core i5-11600"
@@ -475,6 +490,9 @@
         "integrated_gpu": "UHD Graphics 730"
       },
       {
+        "name": "Intel Core i5-13400T"
+      },
+      {
         "name": "Intel Core i5-13400F",
         "core_count": "10",
         "thread_count": "16",
@@ -505,6 +523,9 @@
         "socket": "Intel Socket 1700",
         "memory_support": "DDR4, DDR5",
         "integrated_gpu": "UHD Graphics 770"
+      },
+      {
+        "name": "Intel Core i5-13500T"
       },
       {
         "name": "Intel Core i5-13600K",
@@ -578,6 +599,9 @@
         "socket": "Intel Socket 1700",
         "memory_support": "DDR4, DDR5",
         "integrated_gpu": "UHD Graphics 770"
+      },
+      {
+        "name": "Intel Core i5-14500T"
       },
       {
         "name": "Intel Core i5-14600"
@@ -775,6 +799,9 @@
         "memory_support": "DDR4"
       },
       {
+        "name": "Intel Core i7-10700T"
+      },
+      {
         "name": "Intel Core i7-11700",
         "core_count": "8",
         "thread_count": "16",
@@ -920,6 +947,9 @@
         "memory_support": "DDR4, DDR5"
       },
       {
+        "name": "Intel Core i7-13700T"
+      },
+      {
         "name": "Intel Core i7-13700K",
         "core_count": "16",
         "thread_count": "24",
@@ -976,6 +1006,9 @@
         "total_cache": "75",
         "socket": "Intel Socket 1700",
         "memory_support": "DDR4, DDR5"
+      },
+      {
+        "name": "Intel Core i7-14700T"
       },
       {
         "name": "Intel Core i7-14700K",
@@ -1112,7 +1145,7 @@
         "name": "Intel Core i7-8700"
       },
       {
-        "name": "Intel Core i7‑8750H"
+        "name": "Intel Core i7-8750H"
       },
       {
         "name": "Intel Core i7-13700H"
@@ -1421,6 +1454,9 @@
         "name": "Intel Core Ultra 7 265F"
       },
       {
+        "name": "Intel Core Ultra 7 270K Plus"
+      },
+      {
         "name": "Intel Core Ultra 7 265K",
         "core_count": "20",
         "thread_count": "20",
@@ -1551,9 +1587,6 @@
     ],
     "Intel Celeron": [
       {
-        "name": "Intel Celeron"
-      },
-      {
         "name": "Intel Celeron G5900"
       },
       {
@@ -1567,6 +1600,9 @@
       },
       {
         "name": "Intel Celeron N4120"
+      },
+      {
+        "name": "Intel Celeron N2840"
       },
       {
         "name": "Intel Celeron J4025"
@@ -1631,6 +1667,9 @@
         "name": "Intel Pentium Silver N6000"
       },
       {
+        "name": "Intel Pentium Silver N6005"
+      },
+      {
         "name": "Intel Pentium Silver J5040"
       },
       {
@@ -1658,6 +1697,9 @@
       },
       {
         "name": "Intel Xeon W-2104"
+      },
+      {
+        "name": "Intel Xeon W-2225"
       }
     ],
     "Intel Processor": [
@@ -2093,6 +2135,21 @@
         "integrated_gpu": "AMD Radeon Graphics"
       },
       {
+        "name": "AMD Ryzen 5 7600X3D",
+        "core_count": "6",
+        "thread_count": "12",
+        "base_clock": "4.1",
+        "boost_clock": "4.7",
+        "tdp": "65",
+        "l1_cache": "384",
+        "l2_cache": "6",
+        "l3_cache": "96",
+        "total_cache": "102",
+        "socket": "AMD Socket AM5",
+        "memory_support": "DDR5",
+        "integrated_gpu": "AMD Radeon Graphics"
+      },
+      {
         "name": "AMD Ryzen 5 8400F",
         "core_count": "6",
         "thread_count": "12",
@@ -2135,6 +2192,20 @@
         "socket": "AMD Socket AM5",
         "memory_support": "DDR5",
         "integrated_gpu": "AMD Radeon 760M"
+      },
+      {
+        "name": "AMD Ryzen 5 9500F",
+        "core_count": "6",
+        "thread_count": "12",
+        "base_clock": "3.8",
+        "boost_clock": "5",
+        "tdp": "65",
+        "l1_cache": "480",
+        "l2_cache": "6",
+        "l3_cache": "32",
+        "total_cache": "38",
+        "socket": "AMD Socket AM5",
+        "memory_support": "DDR5"
       },
       {
         "name": "AMD Ryzen 5 9600",
@@ -2377,6 +2448,20 @@
         "memory_support": "DDR4"
       },
       {
+        "name": "AMD Ryzen 7 5800X3D",
+        "core_count": "8",
+        "thread_count": "16",
+        "base_clock": "3.4",
+        "boost_clock": "4.5",
+        "tdp": "105",
+        "l1_cache": "512",
+        "l2_cache": "4",
+        "l3_cache": "96",
+        "total_cache": "101",
+        "socket": "AMD Socket AM4",
+        "memory_support": "DDR4"
+      },
+      {
         "name": "AMD Ryzen 7 7700",
         "core_count": "8",
         "thread_count": "16",
@@ -2451,6 +2536,20 @@
         "integrated_gpu": "AMD Radeon 780M"
       },
       {
+        "name": "AMD Ryzen 7 9700F",
+        "core_count": "8",
+        "thread_count": "16",
+        "base_clock": "3.8",
+        "boost_clock": "5.5",
+        "tdp": "65",
+        "l1_cache": "640",
+        "l2_cache": "8",
+        "l3_cache": "32",
+        "total_cache": "41",
+        "socket": "AMD Socket AM5",
+        "memory_support": "DDR5"
+      },
+      {
         "name": "AMD Ryzen 7 9700X",
         "core_count": "8",
         "thread_count": "16",
@@ -2506,6 +2605,21 @@
         "l2_cache": "4",
         "l3_cache": "16",
         "total_cache": "21",
+        "socket": "AMD Socket AM4",
+        "memory_support": "DDR4",
+        "integrated_gpu": "AMD Radeon Vega 8"
+      },
+      {
+        "name": "AMD Ryzen 7 PRO 4750G",
+        "core_count": "8",
+        "thread_count": "16",
+        "base_clock": "3.6",
+        "boost_clock": "4.4",
+        "tdp": "65",
+        "l1_cache": "512",
+        "l2_cache": "4",
+        "l3_cache": "8",
+        "total_cache": "13",
         "socket": "AMD Socket AM4",
         "memory_support": "DDR4",
         "integrated_gpu": "AMD Radeon Vega 8"
@@ -2764,6 +2878,9 @@
         "socket": "AMD Socket AM5",
         "memory_support": "DDR5",
         "integrated_gpu": "AMD Radeon Graphics"
+      },
+      {
+        "name": "AMD Ryzen 9 9950X3D2"
       },
       {
         "name": "AMD Ryzen 9 5900HX"

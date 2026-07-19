@@ -110,7 +110,8 @@ impl ProductManager {
         //     Section::Motherboard, Section::Cooler, Section::PowerSupply, Section::Case
         // ];
 
-        let products = self.fetch_sites(&sections, sites).await;
+        let mut products = self.fetch_sites(&sections, sites).await;
+        // products.retain(|p| sections.contains(&p.section));
         let mut products = ProductStorage::update(products, &sections, sites).await;
         self.parse(&mut products).await;
         ProductStorage::insert(products).await;

@@ -33,7 +33,7 @@ impl SectionParser for PCParser {
         let text = product.section.config().title_cleaner.replace_words(&text, true);
         let text = text.replace(" .6\"", ".6\"").replace(".,", ".").replace("GRAPHIQUE", "GRAPHICS")
             .replace("GRAPHIC ", "GRAPHICS ").replace("ᵉ", "E").replace("‑", "-").replace("™", "")
-            .replace("®", "").replace("(TM)", "").replace("–", "").replace("PROCESSOR ", "");
+            .replace("®", "").replace("(TM)", "").replace("–", "").replace("PROCESSOR ", "").replace("+ 128", "+128");
         let text = text.split_whitespace().collect::<Vec<_>>().join(" ");
 
         let cpu = extract_cpu(&text);
@@ -52,7 +52,11 @@ impl SectionParser for PCParser {
         let desc_sizes = get_sizes(desc.clone(), false);
         let title_sizes = get_sizes(product.title.clone(), true);
         let (storage_sizes, title_sizes): (Vec<_>, Vec<_>) = title_sizes.into_iter()
-            .partition(|(size, unit)| unit == "TB" || *size > 128 || *size == 128 && product.price < 6000);
+            .partition(|(size, unit)|
+                    unit == "TB" ||
+                    *size > 128 ||
+                    *size == 128 && (product.price < 3000 || text.contains("+128"))
+            );
         let mut title_sizes: Vec<_> = title_sizes.into_iter().map(|(size, _)| size).collect();
         title_sizes.sort();
 
@@ -201,14 +205,17 @@ impl SectionParser for PCParser {
         };
 
         if let Some(gpu) = gpu {
+            let gpu_label = match gpu.data.get_str("memory_size") {
+                Some(memory) => {
+                    let memory = format!("{memory}GB");
+                    product.filter_ids.insert("gpu_memory".to_string(), memory.clone());
+                    format!("{} {}", gpu.label, memory)
+                },
+                None => gpu.label
+            };
+
             product.filter_ids.insert("gpu".to_string(), gpu.id);
-            if let Some(memory) = gpu.data.get_str("memory_size") {
-                let memory = format!("{memory}GB");
-                product.components.insert("gpu".to_string(), format!("{} {memory}", gpu.label));
-                product.filter_ids.insert("gpu_memory".to_string(), memory);
-            } else {
-                product.components.insert("gpu".to_string(), gpu.label);
-            }
+            product.components.insert("gpu".to_string(), gpu_label);
         }
 
         if let Some(memory) = memory {
@@ -252,7 +259,6 @@ impl SectionParser for PCParser {
 
 fn extract_cpu(text: &str) -> Option<SearchResult> {
     let text = Section::CPU.config().title_cleaner.replace_words(&text, true);
-    let optionals = &["AMD", "Intel", "Core", "Gold", "Silver", "Processor", "Gemini Lake", "Jasper Lake"];
 
     // Dataset Search
     for node in &Section::CPU.parser().dataset().nodes {
@@ -261,7 +267,7 @@ fn extract_cpu(text: &str) -> Option<SearchResult> {
             continue
         }
 
-        if words_match(&text, &node.label.to_uppercase(), optionals) {
+        if words_match(&text, &node.label.to_uppercase(), &node.optional_words) {
             return Some(SearchResult {
                 id: node.id.clone(),
                 label: node.label.clone(),
@@ -332,7 +338,6 @@ fn extract_cpu(text: &str) -> Option<SearchResult> {
 fn extract_gpu(section: Section, text: &str, cpu_entry: &Option<Value>) -> Vec<SearchResult> {
     let text = Section::GPU.config().title_cleaner.replace_words(&text, true);
     let has_dedicated_gpu = vec!["RTX", "RX", "GTX", " GT "].into_iter().any(|w| text.contains(w));
-    let optionals = &["GeForce", "Radeon", "Nvidia", "Intel", "Graphics"];
     let mut gpus: Vec<_> = vec![];
 
     // Dataset Search
@@ -351,7 +356,7 @@ fn extract_gpu(section: Section, text: &str, cpu_entry: &Option<Value>) -> Vec<S
             _ => continue,
         }
 
-        if words_match(&text, &node.label.to_uppercase(), optionals) {
+        if words_match(&text, &node.label.to_uppercase(), &node.optional_words) {
             let label = node.label.split_whitespace()
                 .filter(|w| !(w.len() <= 4 && w.contains("GB")))
                 .collect::<Vec<_>>().join(" ");
@@ -365,10 +370,8 @@ fn extract_gpu(section: Section, text: &str, cpu_entry: &Option<Value>) -> Vec<S
         }
     }
 
-    if !gpus.is_empty() {
+    if !gpus.is_empty() || has_dedicated_gpu {
         return gpus
-    } else if has_dedicated_gpu {
-        return vec![]
     }
 
     if section != Section::GamingLaptop {

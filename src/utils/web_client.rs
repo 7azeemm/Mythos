@@ -68,6 +68,10 @@ impl WebClient {
         });
     }
 
+    pub fn get() -> &'static Self {
+        WEB_CLIENT.get().unwrap()
+    }
+
     pub async fn fetch(url: &str, web_client_type: &WebClientType) -> Result<String, Box<dyn Error>> {
         println!("Sending {web_client_type:?} request to `{url}`");
         let web_client = WEB_CLIENT.get().unwrap();

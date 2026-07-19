@@ -18,8 +18,8 @@ impl SectionParser for StorageParser {
         &self.dataset
     }
 
-    fn parse_specs(&self, product: &mut Product, cleaned_title: &str) {
-        if let Some(caps) = RegexCache::captures(r"(?i)\b((?:\d+)\s*(?:g|go|gb|t|to|tb)|(?:256|500|512|1024))\b", cleaned_title) {
+    fn parse_specs(&self, product: &mut Product, text: &str) {
+        if let Some(caps) = RegexCache::captures(r"(?i)\b((?:\d+)\s*(?:g|go|gb|t|to|tb)|(?:256|500|512|1024))\b", text) {
             if let Some(m) = caps.get(1) {
                 let size = m.as_str().to_uppercase();
                 let number: u64 = size.chars()
@@ -39,32 +39,23 @@ impl SectionParser for StorageParser {
         }
 
         let title = product.title.to_uppercase().replace(",", ".");
-        if (title.contains(" SSD") || title.contains("SPATIUM")) && !title.contains(" NVME") {
+        if title.contains(" NVME") || title.contains("M.2") || title.contains("PCIE") {
+            product.filter_ids.insert("storage_type".to_string(), "NVME".to_string());
+        } else if title.contains(" SSD") || title.contains("SPATIUM") {
             product.filter_ids.insert("storage_type".to_string(), "SSD".to_string());
-        } else if title.contains(" NVME") {
-            product.filter_ids.insert("storage_type".to_string(), "NVMe".to_string());
-        } else if title.contains(" HDD") || title.contains("TB") {
+        } else {
             product.filter_ids.insert("storage_type".to_string(), "HDD".to_string());
-        }
-
-        if title.contains("SATA") {
-            product.filter_ids.insert("storage_interface".to_string(), "SATA".to_string());
-        } else if title.contains("M.2") {
-            product.filter_ids.insert("storage_interface".to_string(), "M.2".to_string());
         }
     }
 
     fn post_processing(&self, product: &mut Product) -> Option<String> {
         let mut specs = Vec::new();
 
-        if let Some(size) = product.filter_ids.get("size") {
+        if let Some(size) = product.filter_ids.get("storage_size") {
             specs.push(size.clone());
         }
-        if let Some(memory_type) = product.filter_ids.get("type") {
+        if let Some(memory_type) = product.filter_ids.get("storage_type") {
             specs.push(memory_type.clone());
-        }
-        if let Some(interface) = product.filter_ids.get("interface") {
-            specs.push(interface.clone());
         }
 
         Some(specs.join(" "))

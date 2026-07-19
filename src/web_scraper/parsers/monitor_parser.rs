@@ -122,7 +122,7 @@ pub fn extract_display_specs(product: &mut Product, text: &str, laptop: bool) {
             }
         }
     }
-    if let Some(refresh_rate) = refresh_rate {
+    if let Some(refresh_rate) = refresh_rate && refresh_rate <= 1000 {
         let refresh_rate = format!("{refresh_rate}Hz");
         product.filter_ids.insert("refresh_rate".to_string(), refresh_rate.clone());
         specs_list.push(refresh_rate);

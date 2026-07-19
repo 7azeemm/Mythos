@@ -13,6 +13,7 @@ use std::str::FromStr;
 use std::sync::Arc;
 use strum_macros::{Display, EnumIter, EnumString};
 use crate::web_scraper::dataset::Dataset;
+use crate::web_scraper::parsers::power_supply::PowerSupplyParser;
 
 pub static SECTION_PARSERS: OnceCell<HashMap<Section, Arc<dyn SectionParser>>> = OnceCell::new();
 
@@ -130,6 +131,7 @@ impl SectionConfig {
                 Section::GPU => Arc::new(GPUParser { config, dataset }),
                 Section::Memory => Arc::new(MemoryParser { config, dataset }),
                 Section::Storage => Arc::new(StorageParser { config, dataset }),
+                Section::PowerSupply => Arc::new(PowerSupplyParser { config, dataset }),
                 Section::PC | Section::GamingPC | Section::AllInOnePC | Section::MiniPC |
                 Section::Laptop | Section::GamingLaptop | Section::MacBook => Arc::new(PCParser { config, dataset }),
                 Section::Monitor => Arc::new(MonitorParser { config, dataset }),

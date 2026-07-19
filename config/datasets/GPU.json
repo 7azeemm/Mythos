@@ -1,5 +1,5 @@
 {
-  "optionals": ["NVIDIA", "GeForce", "Radeon", "Dual", "GAMING", "OC"],
+  "optionals": ["NVIDIA", "GeForce", "Radeon", "Intel", "Graphics", "Dual", "GAMING", "OC"],
   "Arc": {
     "Arc 130T": [
       {

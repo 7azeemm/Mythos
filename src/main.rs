@@ -3,7 +3,6 @@ pub mod api;
 pub mod utils;
 pub mod storage;
 
-use std::collections::HashMap;
 use crate::api::server;
 use crate::storage::ProductStorage;
 use crate::utils::logger::setup_logging;
@@ -14,9 +13,6 @@ use dotenv::dotenv;
 use futures::StreamExt;
 use serde::{Deserialize, Serialize};
 use std::error::Error;
-use std::fmt::format;
-use serde_json::Value;
-use crate::utils::file_loader::FileLoader;
 use crate::utils::serde_ext::JsonExt;
 
 #[tokio::main]

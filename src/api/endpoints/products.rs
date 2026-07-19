@@ -2,7 +2,6 @@ use crate::api::error::ApiError::InvalidQuery;
 use crate::api::error::ApiResult;
 use crate::api::filters::{build_all_filters, product_matches_key, FilterGroup};
 use crate::storage::PRODUCT_STORAGE;
-use crate::utils::serde_ext::JsonExt;
 use crate::web_scraper::product::Product;
 use crate::web_scraper::sections::Section;
 use crate::web_scraper::sites::Site;
@@ -188,11 +187,11 @@ fn group_products(section: Section, products: Vec<Product>) -> Vec<(String, Vec<
 
     for mut product in products {
         let mut fields: Vec<&str> = Vec::new();
-        // for field in &section.config().group {
-        //     if let Some(value) = product.specs.get_str(field) {
-        //         fields.push(value);
-        //     }
-        // }
+        for field in &section.config().group {
+            if let Some(value) = product.filter_ids.get(field) {
+                fields.push(value);
+            }
+        }
 
         let name = match fields.len() {
             0 => product.title.clone(),
