@@ -206,7 +206,7 @@
   {
     "id": "Storage",
     "move_rules": [
-      ["Others", "extern|externe|usb|caddy|carte|Boitier|Boîtier|dock|argus|NAS|Led|ASUSTOR|SanDisk"]
+      ["Others", "extern|externe|usb|caddy|carte|Boitier|Boîtier|dock|argus|Led|ASUSTOR|SanDisk"]
     ],
     "title_cleaner": {
       "replace_words": [
@@ -248,7 +248,7 @@
     "id": "Cooler",
     "move_rules": [
       ["Others", "thermique|Thérmique|pate|termosthat|support|Pâte|portable|hub|kit de mise|usb|table|thermal||#control"],
-      ["Others", "acer|hp|dell|asus|lenovo|toshiba|noctua"],
+      ["Others", "acer|hp|dell|asus|lenovo|toshiba|noctua&!=ROG"],
       ["Others", "Refroidisseur|Refroidisseurs&SPIRIT OF GAMER airblade|havit|ice|17″ SOG"],
       ["PowerSupply", "#alimentation"],
       ["GPU", "graphique"]
@@ -298,22 +298,40 @@
   {
     "id": "Mouse",
     "move_rules": [
-      ["Others", "Air Mouse"],
+      ["Others", "Air Mouse|Systeme|Batterie|Ordinateur|Sac|Sacoche|Microphone|Refroidissement|nappe|portable|stick|epson|trepied|cable|chariot"],
+      ["Cooler", "WaterCooling"],
+      ["ConsoleAccessories", "volant|boite"],
+      ["Controller", "manette"],
+      ["GamingChair", "Chaise"],
       ["AccessoriesCombo", "pack|combo|ensemble||souris&clavier|casque"],
       ["MousePad", "tapis"],
       ["Keyboard", "clavier"],
       ["Headphones", "casque"]
-    ]
+    ],
+    "title_cleaner": {
+      "replace_words": [
+        ["Redragan", "Redragon"], ["WhiteShark", "White Shark"], ["Hyper X", "HyperX"]
+      ]
+    },
+    "filters": ["type", "brand"],
+    "id_field_name": "brand"
   },
   {
     "id": "Keyboard",
     "move_rules": [
-      ["Others", "Étiquette|Etiquette||touches&!=gamer"],
+      ["Others", "Étiquette|Etiquette|panneau|streamdeck|portable|android|macbook|ThinkPad|Scarab||touches&!=gamer"],
       ["AccessoriesCombo", "pack|combo|ensemble||clavier&souris|tapis|casque"],
       ["MousePad", "tapis"],
       ["Mouse", "souris"],
       ["Headphones", "casque"]
-    ]
+    ],
+    "title_cleaner": {
+      "replace_words": [
+        ["White-Shark", "White Shark"], ["WhiteShark", "White Shark"]
+      ]
+    },
+    "filters": ["type", "brand"],
+    "id_field_name": "brand"
   },
   {
     "id": "MousePad",
@@ -324,9 +342,10 @@
   {
     "id": "Headphones",
     "move_rules": [
-      ["Others", "touches"],
+      ["Others", "touches|nettoyage|lunette|power bank|haut"],
       ["AccessoriesCombo", "pack|combo|ensemble||clavier&souris"]
-    ]
+    ],
+    "filters": ["type"]
   },
   {
     "id": "GamingChair",
@@ -357,14 +376,15 @@
       ["ConsoleAccessories", "volant|dock|game stick&!=pack"],
       ["ConsoleGame", "jeu Nintendo Switch||jeux|jeu&PS5|PS4|PC|Nintendo&!=console"]
     ],
+    "filters": ["type"],
     "min_price": 400
   },
   {
     "id": "Controller",
     "move_rules": [
-      ["Others", "cable|câble"],
+      ["Others", "cable|câble|console de jeu"],
       ["Headphones", "casque|Écouteurs"],
-      ["ConsoleAccessories", "pistolet|film|chargeur|stand|volant|vitesses|panneau|streamdeck|thrustmaster|ecran||joystick&logitech||ventilateur&!=manette"],
+      ["ConsoleAccessories", "pistolet|trueforce|film|chargeur|stand|volant|vitesses|panneau|streamdeck|thrustmaster|ecran||joystick&logitech||ventilateur&!=manette"],
       ["ConsoleGame", "jeux|jeu&vidéo|Mario"]
     ]
   },
@@ -373,7 +393,8 @@
     "move_rules": [
       ["Controller", "manette|mannette|manettes"],
       ["ConsoleAccessories", "volant"]
-    ]
+    ],
+    "filters": ["platform"]
   },
   {
     "id": "ConsoleAccessories",

@@ -3,7 +3,12 @@ pub mod memory_parser;
 pub mod storage_parser;
 pub mod pc_parser;
 pub mod monitor_parser;
-pub mod power_supply;
+pub mod power_supply_parser;
+pub mod mouse_parser;
+pub mod keyboard_parser;
+pub mod headphones_parser;
+pub mod console_parser;
+pub mod console_game_parser;
 
 use crate::utils::regex_cache::RegexCache;
 use crate::utils::serde_ext::JsonExt;

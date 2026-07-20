@@ -18,6 +18,7 @@ use strum::IntoEnumIterator;
 use tokio::sync::Mutex;
 use tokio::time::sleep;
 use crate::utils::regex_cache::RegexCache;
+use crate::web_scraper::sites::tunisianet::Tunisianet;
 
 static PRODUCT_MANAGER: OnceLock<Arc<ProductManager>> = OnceLock::new();
 
@@ -97,7 +98,7 @@ impl ProductManager {
         let start_time = Instant::now();
         self.report.lock().await.started_at = Utc::now();
 
-        let sites = &[];
+        let sites = &[Tunisianet.name()];
         // let sections = Section::iter().collect::<Vec<_>>();
         let sections = vec![
             Section::CPU, Section::GPU, Section::PC, Section::GamingPC, Section::AllInOnePC, Section::MiniPC,

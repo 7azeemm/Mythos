@@ -69,6 +69,7 @@ impl ProductStorage {
         let mut storage = PRODUCT_STORAGE.write().await;
 
         // 1. Remove missing products
+        //TODO: remove description of removed products
         let new_product_ids: HashSet<&String> = products.iter().map(|p| &p.id).collect();
         let mut removed_products = Vec::new();
         storage.products.retain(|id, p| {
