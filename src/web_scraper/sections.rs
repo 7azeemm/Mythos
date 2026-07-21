@@ -142,9 +142,9 @@ impl SectionConfig {
                 Section::Headphones => Arc::new(HeadphonesParser { config, dataset }),
                 Section::Console => Arc::new(ConsoleParser { config, dataset }),
                 Section::ConsoleGame => Arc::new(ConsoleGameParser { config, dataset }),
+                Section::Monitor => Arc::new(MonitorParser { config, dataset }),
                 Section::PC | Section::GamingPC | Section::AllInOnePC | Section::MiniPC |
                 Section::Laptop | Section::GamingLaptop | Section::MacBook => Arc::new(PCParser { config, dataset }),
-                Section::Monitor => Arc::new(MonitorParser { config, dataset }),
                 _ => Arc::new(GenericSectionParser { config, dataset })
             };
 

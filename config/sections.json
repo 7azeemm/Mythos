@@ -407,16 +407,38 @@
   {
     "id": "Smartphone",
     "move_rules": [
-      ["Headphones", "ecouteurs"]
+      ["Headphones", "Ecouteurs"],
+      ["Tablet", "Tab|Pad"]
     ],
-    "min_price": 100
+    "min_price": 100,
+    "title_cleaner": {
+      "replace_words": [
+        ["0Pro 5G", "0 Pro 5G"], [" 50 S ", " 50S "], ["Pro+ ", "Pro Plus "], ["Pro + ", "Pro Plus "], [" Hot50 ", " Hot 50 "],
+        [" 40FF ", " 40 FF "], [" 16 E ", " 16E "], ["Fold6", "Fold 6"], ["Fold5", "Fold 5"], ["Fold3", "Fold 3"],
+        ["Flip6", "Flip 6"], ["Flip5", "Flip 5"], [" S25+ ", " S25 Plus "], [" S24+ ", " S24 Plus "], ["Note11S", "Note 11S"],
+        ["iPhone1", "iPhone 1"], [" 15 F ", " 15F "], [" Reno12", " Reno 12"], [" Reno14", " Reno 14"],
+        [" Reno15", " Reno 15"], [" Reno8", " Reno 8"], [" Reno11", " Reno 11"], [" 12 F ", " 12F "], [" 8 T ", " 8T "],
+        [" Play10 ", " Play 10 "], ["Honors ", "Honor "], [" Go1 ", " Go 1 "], [" Go2 ", " Go 2 "]
+      ]
+    },
+    "filters": ["model"],
+    "id_field_name": "model"
   },
   {
     "id": "Tablet",
-    "min_price": 70
+    "min_price": 70,
+    "title_cleaner": {
+      "add_brands_by_models": [
+        ["Samsung", "Galaxy"], ["Apple", "iPad"]
+      ]
+    },
+    "filters": ["brand"],
+    "id_field_name": "brand"
   },
   {
-    "id": "Smartwatch"
+    "id": "Smartwatch",
+    "filters": ["brand"],
+    "id_field_name": "brand"
   },
   {
     "id": "Television",

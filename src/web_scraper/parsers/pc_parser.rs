@@ -27,9 +27,9 @@ impl SectionParser for PCParser {
         &self.dataset
     }
 
-    fn parse_specs(&self, product: &mut Product, cleaned_title: &str) {
+    fn parse_specs(&self, product: &mut Product, text: &str) {
         let desc = product.description.clone().unwrap_or_default().replace("(5G)", "").replace("2.4", "");
-        let text: String = format!("{} | {desc}", cleaned_title).to_uppercase();
+        let text: String = format!("{} | {desc}", text).to_uppercase();
         let text = product.section.config().title_cleaner.replace_words(&text, true);
         let text = text.replace(" .6\"", ".6\"").replace(".,", ".").replace("GRAPHIQUE", "GRAPHICS")
             .replace("GRAPHIC ", "GRAPHICS ").replace("ᵉ", "E").replace("‑", "-").replace("™", "")
@@ -49,8 +49,8 @@ impl SectionParser for PCParser {
         let mut gpu_memory: Option<i32> = None;
 
         // Extract Sizes from title and description
-        let desc_sizes = get_sizes(desc.clone(), false);
-        let title_sizes = get_sizes(product.title.clone(), true);
+        let desc_sizes = get_sizes(&desc, false);
+        let title_sizes = get_sizes(&product.title, true);
         let (storage_sizes, title_sizes): (Vec<_>, Vec<_>) = title_sizes.into_iter()
             .partition(|(size, unit)|
                     unit == "TB" ||
@@ -426,7 +426,7 @@ fn extract_gpu(section: Section, text: &str, cpu_entry: &Option<Value>) -> Vec<S
     }
 }
 
-fn get_sizes(text: String, title: bool) -> Vec<(i32, String)> {
+pub fn get_sizes(text: &str, title: bool) -> Vec<(i32, String)> {
     let mut sizes = Vec::new();
 
     let size_pattern = if title {
@@ -435,7 +435,7 @@ fn get_sizes(text: String, title: bool) -> Vec<(i32, String)> {
         r"(?i)(\d+)\s*(?:g|go|gb|to|tb|tera|t o)\b"
     };
 
-    for caps in RegexCache::captures_iter(size_pattern, &text) {
+    for caps in RegexCache::captures_iter(size_pattern, text) {
         let Some(num) = caps.get(1).and_then(|v| v.as_str().parse::<i32>().ok()) else {
             continue;
         };

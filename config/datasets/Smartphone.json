@@ -1,0 +1,544 @@
+{
+  "Infinix": {
+    "Infinix Smart": [
+      "Infinix Smart 20",
+      "Infinix Smart 10",
+      "Infinix Smart 9 HD",
+      "Infinix Smart 9",
+      "Infinix Smart 8 HD",
+      "Infinix Smart 8",
+      "Infinix Smart 7 HD",
+      "Infinix Smart 7",
+      "Infinix Smart 6"
+    ],
+    "Infinix Hot": [
+      "Infinix Hot 60 5G",
+      "Infinix Hot 60i",
+      "Infinix Hot 60 FF",
+      "Infinix Hot 60 Pro Plus",
+      "Infinix Hot 50",
+      "Infinix Hot 50i",
+      "Infinix Hot 50 FF",
+      "Infinix Hot 50 Pro Plus",
+      "Infinix Hot 50S 5G",
+      "Infinix Hot 40",
+      "Infinix Hot 40i",
+      "Infinix Hot 40 FF",
+      "Infinix Hot 40 Pro",
+      "Infinix Hot 30i",
+      "Infinix Hot 30",
+      "Infinix Hot 20S",
+      "Infinix Hot 11"
+    ],
+    "Infinix Note": [
+      "Infinix Note 60 Pro 5G",
+      "Infinix Note 50S 5G",
+      "Infinix Note 40",
+      "Infinix Note 30",
+      "Infinix Note Edge 5G"
+    ],
+    "Infinix GT": [
+      "Infinix GT 50 Pro 5G",
+      "Infinix GT 20 Pro 5G"
+    ],
+    "Infinix": []
+  },
+  "iPhone": {
+    "iPhone 17": [
+      "iPhone 17 Pro Max",
+      "iPhone 17 Pro",
+      "iPhone 17 Air",
+      "iPhone 17E",
+      "iPhone 17"
+    ],
+    "iPhone 16": [
+      "iPhone 16 Pro Max",
+      "iPhone 16 Pro",
+      "iPhone 16 Plus",
+      "iPhone 16E",
+      "iPhone 16"
+    ],
+    "iPhone 15": [
+      "iPhone 15 Pro Max",
+      "iPhone 15 Pro",
+      "iPhone 15 Plus",
+      "iPhone 15"
+    ],
+    "iPhone 14": [
+      "iPhone 14 Pro Max",
+      "iPhone 14 Pro",
+      "iPhone 14 Plus",
+      "iPhone 14"
+    ],
+    "iPhone 13": [
+      "iPhone 13 Pro Max",
+      "iPhone 13 Pro",
+      "iPhone 13 Mini",
+      "iPhone 13"
+    ],
+    "iPhone 12": [
+      "iPhone 12 Pro Max",
+      "iPhone 12 Pro",
+      "iPhone 12 Mini",
+      "iPhone 12"
+    ],
+    "iPhone 11": [
+      "iPhone 11 Pro Max",
+      "iPhone 11 Pro",
+      "iPhone 11"
+    ],
+    "iPhone Air": [],
+    "iPhone X": [],
+    "iPhone XR": [],
+    "iPhone XS": [
+      "iPhone XS Max",
+      "iPhone XS"
+    ],
+    "iPhone 8": [],
+    "iPhone": []
+  },
+  "Samsung": {
+    "optionals": ["Galaxy"],
+    "Samsung Galaxy S": {
+      "Samsung Galaxy S26": [
+        "Samsung Galaxy S26 Ultra",
+        "Samsung Galaxy S26 Plus",
+        "Samsung Galaxy S26"
+      ],
+      "Samsung Galaxy S25": [
+        "Samsung Galaxy S25 Ultra",
+        "Samsung Galaxy S25 Plus",
+        "Samsung Galaxy S25"
+      ],
+      "Samsung Galaxy S24": [
+        "Samsung Galaxy S24 Ultra",
+        "Samsung Galaxy S24 Plus",
+        "Samsung Galaxy S24"
+      ],
+      "Samsung Galaxy S23": [
+        "Samsung Galaxy S23 Ultra",
+        "Samsung Galaxy S23 FE",
+        "Samsung Galaxy S23"
+      ],
+      "Samsung Galaxy S22": [
+        "Samsung Galaxy S22 Ultra",
+        "Samsung Galaxy S22"
+      ],
+      "Samsung Galaxy S21": [
+        "Samsung Galaxy S21 Ultra",
+        "Samsung Galaxy S21 FE",
+        "Samsung Galaxy S21"
+      ],
+      "Samsung Galaxy S20": [
+        "Samsung Galaxy S20 Ultra",
+        "Samsung Galaxy S20 FE",
+        "Samsung Galaxy S20"
+      ]
+    },
+    "Samsung Galaxy Note": {
+      "Samsung Galaxy Note 20": [
+        "Samsung Galaxy Note 20 Ultra",
+        "Samsung Galaxy Note 20"
+      ],
+      "Samsung Galaxy Note 10": [
+        "Samsung Galaxy Note 10 Plus",
+        "Samsung Galaxy Note 10",
+        "Samsung Galaxy Note 10 Lite"
+      ],
+      "Samsung Galaxy Note 9": [],
+      "Samsung Galaxy Note 8": []
+    },
+    "Samsung Galaxy Z Fold": [
+      "Samsung Galaxy Z Fold 7",
+      "Samsung Galaxy Z Fold 6",
+      "Samsung Galaxy Z Fold 5",
+      "Samsung Galaxy Z Fold 4",
+      "Samsung Galaxy Z Fold 3",
+      "Samsung Galaxy Z Fold"
+    ],
+    "Samsung Galaxy Z Flip": [
+      "Samsung Galaxy Z Flip 7",
+      "Samsung Galaxy Z Flip 6",
+      "Samsung Galaxy Z Flip 5",
+      "Samsung Galaxy Z Flip 4",
+      "Samsung Galaxy Z Flip 3",
+      "Samsung Galaxy Z Flip"
+    ],
+    "Samsung Galaxy A7": {
+      "Samsung Galaxy A77": [],
+      "Samsung Galaxy A76": [],
+      "Samsung Galaxy A73": [],
+      "Samsung Galaxy A72": [],
+      "Samsung Galaxy A71": []
+    },
+    "Samsung Galaxy A5": {
+      "Samsung Galaxy A57": [],
+      "Samsung Galaxy A56": [],
+      "Samsung Galaxy A55": [],
+      "Samsung Galaxy A54": [],
+      "Samsung Galaxy A53": [],
+      "Samsung Galaxy A52": []
+    },
+    "Samsung Galaxy A3": {
+      "Samsung Galaxy A37": [],
+      "Samsung Galaxy A36": [],
+      "Samsung Galaxy A35": [],
+      "Samsung Galaxy A34": [],
+      "Samsung Galaxy A33": []
+    },
+    "Samsung Galaxy A2": {
+      "Samsung Galaxy A27": [],
+      "Samsung Galaxy A26": [],
+      "Samsung Galaxy A25": [],
+      "Samsung Galaxy A24": [],
+      "Samsung Galaxy A23": []
+    },
+    "Samsung Galaxy A1": {
+      "Samsung Galaxy A17": [],
+      "Samsung Galaxy A16": [],
+      "Samsung Galaxy A15": [],
+      "Samsung Galaxy A14": [],
+      "Samsung Galaxy A13": []
+    },
+    "Samsung Galaxy A0": {
+      "Samsung Galaxy A07": [],
+      "Samsung Galaxy A06": [],
+      "Samsung Galaxy A05": [
+        "Samsung Galaxy A05S",
+        "Samsung Galaxy A05"
+      ],
+      "Samsung Galaxy A04": [
+        "Samsung Galaxy A04S",
+        "Samsung Galaxy A04E",
+        "Samsung Galaxy A04"
+      ],
+      "Samsung Galaxy A03": [
+        "Samsung Galaxy A03S",
+        "Samsung Galaxy A03"
+      ],
+      "Samsung Galaxy A02": []
+    },
+    "Samsung": []
+  },
+  "Xiaomi Redmi": {
+    "Redmi Note": {
+      "Redmi Note 15": [
+        "Redmi Note 15 Pro Plus",
+        "Redmi Note 15 Pro",
+        "Redmi Note 15"
+      ],
+      "Redmi Note 14": [
+        "Redmi Note 14 Pro Plus",
+        "Redmi Note 14 Pro",
+        "Redmi Note 14S",
+        "Redmi Note 14"
+      ],
+      "Redmi Note 13": [
+        "Redmi Note 13 Pro Plus",
+        "Redmi Note 13 Pro",
+        "Redmi Note 13"
+      ],
+      "Redmi Note 12": [
+        "Redmi Note 12 Pro Plus",
+        "Redmi Note 12 Pro",
+        "Redmi Note 12S",
+        "Redmi Note 12"
+      ],
+      "Redmi Note 11": [
+        "Redmi Note 11 Pro Plus",
+        "Redmi Note 11 Pro",
+        "Redmi Note 11S",
+        "Redmi Note 11"
+      ],
+      "Redmi Note 10": [
+        "Redmi Note 10 Pro",
+        "Redmi Note 10S",
+        "Redmi Note 10"
+      ],
+      "Redmi Note 9": [
+        "Redmi Note 9 Pro",
+        "Redmi Note 9S",
+        "Redmi Note 9"
+      ],
+      "Redmi Note 8": [
+        "Redmi Note 8 Pro",
+        "Redmi Note 8S",
+        "Redmi Note 8"
+      ]
+    },
+    "Redmi A1": [
+      "Redmi A1 Plus",
+      "Redmi A1"
+    ],
+    "Redmi A2": [
+      "Redmi A2+",
+      "Redmi A2"
+    ],
+    "Redmi A3": [
+      "Redmi A3",
+      "Redmi A3X"
+    ],
+    "Redmi A4": [],
+    "Redmi A5": [],
+    "Redmi A6": [],
+    "Redmi A7": [
+      "Redmi A7 Pro",
+      "Redmi A7"
+    ],
+    "Redmi 9": [
+      "Redmi 9T",
+      "Redmi 9"
+    ],
+    "Redmi 10": [
+      "Redmi 10C",
+      "Redmi 10"
+    ],
+    "Redmi 11": [],
+    "Redmi 12": [
+      "Redmi 12C",
+      "Redmi 12"
+    ],
+    "Redmi 13": [
+      "Redmi 13C",
+      "Redmi 13"
+    ],
+    "Redmi 14": [
+      "Redmi 14T",
+      "Redmi 14C",
+      "Redmi 14"
+    ],
+    "Redmi 15": [
+      "Redmi 15C",
+      "Redmi 15"
+    ],
+    "Xiaomi 14T": [],
+    "Xiaomi": []
+  },
+  "OPPO": {
+    "OPPO A1": {
+      "OPPO A17K": [],
+      "OPPO A18": []
+    },
+    "OPPO A3": {
+      "OPPO A38": [],
+      "OPPO A3S": [],
+      "OPPO A3X": [],
+      "OPPO A3": []
+    },
+    "OPPO A5": {
+      "OPPO A5 Pro": [],
+      "OPPO A58": [],
+      "OPPO A5X": [],
+      "OPPO A5": []
+    },
+    "OPPO A6": {
+      "OPPO A6 Pro": [],
+      "OPPO A60": [],
+      "OPPO A6X": [],
+      "OPPO A6": []
+    },
+    "OPPO A7": {
+      "OPPO A78": [],
+      "OPPO A77S": [],
+      "OPPO A77": [],
+      "OPPO A76": []
+    },
+    "OPPO A9": {
+      "OPPO A96": []
+    },
+    "OPPO Reno": {
+      "OPPO Reno 15": [
+        "OPPO Reno 15F",
+        "OPPO Reno 15"
+      ],
+      "OPPO Reno 14": [
+        "OPPO Reno 14F",
+        "OPPO Reno 14"
+      ],
+      "OPPO Reno 12": [
+        "OPPO Reno 12F",
+        "OPPO Reno 12"
+      ],
+      "OPPO Reno 11": [
+        "OPPO Reno 11F",
+        "OPPO Reno 11"
+      ],
+      "OPPO Reno 8": [
+        "OPPO Reno 8T",
+        "OPPO Reno 8"
+      ],
+      "OPPO Reno": []
+    },
+    "OPPO": []
+  },
+  "Honor": {
+    "Honor 600": [
+      "Honor 600 Lite",
+      "Honor 600"
+    ],
+    "Honor 400": [
+      "Honor 400 Pro",
+      "Honor 400"
+    ],
+    "Honor 90": [
+      "Honor 90 Lite",
+      "Honor 90"
+    ],
+    "Honor X9": [
+      "Honor X9D",
+      "Honor X9B",
+      "Honor X9C"
+    ],
+    "Honor X8": [
+      "Honor X8D",
+      "Honor X8B"
+    ],
+    "Honor X7": [
+      "Honor X7D",
+      "Honor X7B",
+      "Honor X7C",
+      "Honor X7E"
+    ],
+    "Honor X6": [
+      "Honor X6A",
+      "Honor X6B",
+      "Honor X6C"
+    ],
+    "Honor X5": [
+      "Honor X5C",
+      "Honor X5B"
+    ],
+    "Honor Play 10": [],
+    "Honor": []
+  },
+  "Vivo": {
+    "Vivo Y36": [],
+    "Vivo Y31": [],
+    "Vivo Y31D": [],
+    "Vivo Y29": [],
+    "Vivo Y28": [],
+    "Vivo Y27": [],
+    "Vivo Y21D": [],
+    "Vivo Y21": [],
+    "Vivo Y19S": [],
+    "Vivo Y17S": [],
+    "Vivo Y16": [],
+    "Vivo Y15S": [],
+    "Vivo Y12S": [],
+    "Vivo Y04": [],
+    "Vivo Y03": [],
+    "Vivo Y02T": [],
+    "Vivo Y02S": [],
+    "Vivo Y02": [],
+    "Vivo V70 FE": [],
+    "Vivo V70": [],
+    "Vivo V50": [],
+    "Vivo V40 Lite": [],
+    "Vivo V40": [],
+    "Vivo V30 Lite": [],
+    "Vivo V30": [],
+    "Vivo V29E": [],
+    "Vivo V29": [],
+    "Vivo": []
+  },
+  "Realme": {
+    "Realme 11": [],
+    "Realme 10": [],
+    "Realme C75": [],
+    "Realme C67": [],
+    "Realme C61": [],
+    "Realme C55": [],
+    "Realme C53": [],
+    "Realme C51": [],
+    "Realme C50": [],
+    "Realme C33": [],
+    "Realme C30S": [],
+    "Realme C25Y": [],
+    "Realme Note 50": [],
+    "Realme Note 60X": [],
+    "Realme": []
+  },
+  "Huawei": {
+    "Huawei Nova Y91": [],
+    "Huawei Nova Y90": [],
+    "Huawei Nova Y71": [],
+    "Huawei Nova Y60": [],
+    "Huawei Nova 11i": [],
+    "Huawei Nova 10 SE": [],
+    "Huawei Nova 9 SE": [],
+    "Huawei Nova 9": [],
+    "Huawei": []
+  },
+  "Tecno": {
+    "Tecno Pova 6": [
+      "Tecno Pova 6 Pro",
+      "Tecno Pova 6 Neo",
+      "Tecno Pova 6"
+    ],
+    "Tecno Spark 30": [
+      "Tecno Spark 30C",
+      "Tecno Spark 30"
+    ],
+    "Tecno Spark 20": [
+      "Tecno Spark 20 Pro",
+      "Tecno Spark 20C",
+      "Tecno Spark 20"
+    ],
+    "Tecno Spark 10": [
+      "Tecno Spark 10C",
+      "Tecno Spark 10"
+    ],
+    "Tecno Spark 8": [
+      "Tecno Spark 8P",
+      "Tecno Spark 8C",
+      "Tecno Spark 8"
+    ],
+    "Tecno Spark Go 3 Ink": [],
+    "Tecno Spark Go 1": [],
+    "Tecno Spark Go 2": [],
+    "Tecno Spark Go 2025": [],
+    "Tecno Spark Go 2024": [],
+    "Tecno": []
+  },
+  "Itel": {
+    "Itel RS4": [],
+    "Itel S38": [],
+    "Itel S24": [],
+    "Itel S23": [],
+    "Itel S18": [],
+    "Itel P65": [],
+    "Itel P55+": [],
+    "Itel P55": [],
+    "Itel P40": [],
+    "Itel P38 Pro": [],
+    "Itel P38": [],
+    "Itel P70": [],
+    "Itel A50": [],
+    "Itel A50C": [],
+    "Itel A58 Lite": [],
+    "Itel A58 Pro": [],
+    "Itel A60S": [],
+    "Itel A70": [],
+    "Itel A80": [],
+    "Itel A90": [],
+    "Itel A100C": [],
+    "Itel City": [],
+    "Itel": []
+  },
+  "OnePlus": [],
+  "Nokia": [],
+  "Lenovo": [],
+  "ZTE": [],
+  "TCL": [],
+  "OSCAL": [],
+  "IKU": [],
+  "Logicom": [],
+  "Lesia Young": [
+    "Lesia Young 1",
+    "Lesia Young 2",
+    "Lesia Young 3",
+    "Lesia Young 6",
+    "Lesia Young 9",
+    "Lesia Young"
+  ]
+}
