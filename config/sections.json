@@ -445,7 +445,9 @@
     "move_rules": [
       ["Others", "Télécommande"]
     ],
-    "min_price": 100
+    "min_price": 100,
+    "filters": ["brand", "display_size", "resolution"],
+    "id_field_name": "brand"
   },
   {
     "id": "Others"

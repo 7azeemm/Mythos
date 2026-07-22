@@ -1,7 +1,7 @@
 use crate::utils::regex_cache::RegexCache;
 use crate::utils::serde_ext::JsonExt;
 use crate::web_scraper::dataset::{Dataset, SearchResult};
-use crate::web_scraper::parsers::monitor_parser::extract_display_specs;
+use crate::web_scraper::parsers::monitor_parser::parse_display_specs;
 use crate::web_scraper::parsers::{words_match, SectionConfig, SectionParser};
 use crate::web_scraper::product::Product;
 use crate::web_scraper::sections::Section;
@@ -190,8 +190,8 @@ impl SectionParser for PCParser {
         }
 
         // Extract Display
-        if vec![Section::Laptop, Section::GamingLaptop, Section::MacBook, Section::AllInOnePC].contains(&product.section) {
-            extract_display_specs(product, &text, product.section != Section::AllInOnePC);
+        if product.section.is_laptop() || product.section == Section::AllInOnePC {
+            parse_display_specs(product, &text);
         }
 
         if let Some(cpu) = cpu {

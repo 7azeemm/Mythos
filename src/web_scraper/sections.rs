@@ -19,6 +19,7 @@ use crate::web_scraper::parsers::headphones_parser::HeadphonesParser;
 use crate::web_scraper::parsers::keyboard_parser::KeyboardParser;
 use crate::web_scraper::parsers::mouse_parser::MouseParser;
 use crate::web_scraper::parsers::power_supply_parser::PowerSupplyParser;
+use crate::web_scraper::parsers::television_parser::TelevisionParser;
 
 pub static SECTION_PARSERS: OnceCell<HashMap<Section, Arc<dyn SectionParser>>> = OnceCell::new();
 
@@ -143,6 +144,7 @@ impl SectionConfig {
                 Section::Console => Arc::new(ConsoleParser { config, dataset }),
                 Section::ConsoleGame => Arc::new(ConsoleGameParser { config, dataset }),
                 Section::Monitor => Arc::new(MonitorParser { config, dataset }),
+                Section::Television => Arc::new(TelevisionParser { config, dataset }),
                 Section::PC | Section::GamingPC | Section::AllInOnePC | Section::MiniPC |
                 Section::Laptop | Section::GamingLaptop | Section::MacBook => Arc::new(PCParser { config, dataset }),
                 _ => Arc::new(GenericSectionParser { config, dataset })

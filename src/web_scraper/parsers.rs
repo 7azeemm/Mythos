@@ -9,6 +9,7 @@ pub mod keyboard_parser;
 pub mod headphones_parser;
 pub mod console_parser;
 pub mod console_game_parser;
+pub mod television_parser;
 
 use crate::utils::regex_cache::RegexCache;
 use crate::utils::serde_ext::JsonExt;

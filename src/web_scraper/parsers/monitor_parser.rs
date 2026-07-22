@@ -1,10 +1,9 @@
-use std::sync::Arc;
-use serde_json::to_string;
 use crate::utils::regex_cache::RegexCache;
 use crate::web_scraper::dataset::Dataset;
 use crate::web_scraper::parsers::SectionParser;
-use crate::web_scraper::product::{Product, Specs};
-use crate::web_scraper::sections::{SectionConfig};
+use crate::web_scraper::product::Product;
+use crate::web_scraper::sections::{Section, SectionConfig};
+use std::sync::Arc;
 
 pub struct MonitorParser {
     pub config: Arc<SectionConfig>,
@@ -23,11 +22,11 @@ impl SectionParser for MonitorParser {
     fn parse_specs(&self, product: &mut Product, cleaned_title: &str) {
         let desc = product.description.clone().unwrap_or_default();
         let text: String = format!("{cleaned_title} | {desc}").to_uppercase();
-        extract_display_specs(product, &text, false);
+        parse_display_specs(product, &text);
     }
 }
 
-pub fn extract_display_specs(product: &mut Product, text: &str, laptop: bool) {
+pub fn parse_display_specs(product: &mut Product, text: &str) {
     let mut specs_list = Vec::new();
 
     let mut found_size = false;
@@ -37,7 +36,7 @@ pub fn extract_display_specs(product: &mut Product, text: &str, laptop: bool) {
             let size_str = size_str.replace(",", ".");
             if let Ok(size) = size_str.parse::<f32>() {
                 // filter impossible screen sizes
-                let range = if laptop { 10.0..=18.0 } else { 10.0..=120.0 };
+                let range = if product.section.is_laptop() { 10.0..=18.0 } else { 10.0..=120.0 };
                 if !range.contains(&size) {
                     continue;
                 }
@@ -60,7 +59,7 @@ pub fn extract_display_specs(product: &mut Product, text: &str, laptop: bool) {
     }
 
     let mut found_resolution = false;
-    let resolution_pattern = r"(?i)\b(FULL\s*HD|FHD|QHD|UHD|HD|WFHD|UWQHD|UWFHD|2K|2[.,]5K|2[.,]8K|3K|4K|5K|WUXGA|WQXGA|WXGA|WQHD)\b";
+    let resolution_pattern = r"(?i)\b(FULL\s*HD|FHD|QHD|UHD|HD|WFHD|UWQHD|UWFHD|2K|2[.,]5K|2[.,]8K|3K|4K|5K|8K|WUXGA|WQXGA|WXGA|WQHD)\b";
     for caps in RegexCache::captures_iter(resolution_pattern, text) {
         if let Some(mat) = caps.get(0) {
             let mut resolution = mat.as_str().trim().to_uppercase()
@@ -105,10 +104,14 @@ pub fn extract_display_specs(product: &mut Product, text: &str, laptop: bool) {
         }
     }
 
-    let panel_pattern = r"(?i)\b(IPS|OLED|LCD)\b";
+    if product.section == Section::Television {
+        return
+    }
+
+    let panel_pattern = r"(?i)\b(IPS|OLED|QLED|LCD)\b";
     if let Some(caps) = RegexCache::captures(panel_pattern, text) {
         if let Some(panel_type) = caps.get(1).and_then(|v| Some(v.as_str().to_string())) {
-            product.filter_ids.insert("panel_type".to_string(), panel_type.clone());
+            product.filter_ids.insert("panel_type".to_string(), panel_type.to_uppercase());
             specs_list.push(panel_type);
         }
     };
