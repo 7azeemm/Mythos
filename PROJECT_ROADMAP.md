@@ -1,61 +1,54 @@
-**Phase 1 — Foundation**
+## Phase 0 — Foundation
 
-- [ ]  Decide fate of `Specs` struct
-- [ ]  Create mobile/laptop GPU dataset
-- [ ]  Fill out datasets
-- [ ]  Fix grouping mode
+- [ ]  Complete Parsers
+- [ ]  Fix Grouping Mode
+- [ ]  Code Cleanup
+- [ ]  Image Validation
+- [ ]  New-category detector in retailer sites 
 
-**Phase 2 — Discord Bot**
+## Phase 1 — Discord Bot & Logging
 
-- [ ]  Pick Discord library (serenity vs. twilight)
-- [ ]  Slash commands + admin-only gate
-- [ ]  Wire `CycleReport`/`KnownEvents` to actual Discord messages
-- [ ]  Decide message batching/format
-- [ ]  Review queue UI/commands for `NotInDataset` items
-- [ ]  Fuzzy-match top-5 suggestions (pick a crate: `strsim`/`fuzzy-matcher`)
-- [ ]  Admin command: edit product fields
-- [ ]  Admin command: fix wrong dataset match
-- [ ]  Admin command: add/edit dataset entries
-- [ ]  Admin command: edit section config
-- [ ]  Atomic writes for all Discord-driven JSON edits
+- [ ]  Reviewing new Products (editing fields/reparsing/adding notes)
+- [ ]  Editing datasets/configs
+- [ ]  Logging errors/warnings
+- [ ]  Logging new/removed/edited products into a channel
 
-**Phase 3 — Site Robustness**
+## Phase 2 — Component Storage
 
-- [ ]  Image validity checker (HTTP check/Page fetch)
-- [ ]  New-category detector per site
+- [ ]  Storage for price history, availability and more
+- [ ]  Combined fields (as example: Laptop Section + GPU + RAM)
+- [ ]  Charts endpoint
 
-**Phase 4 — AI Dataset Maintenance**
+## Phase 3 — User Accounts & Paid Features
 
-- [ ]  Detect genuinely-new chipset/model triggers from review queue
-- [ ]  Web search + spec extraction for the unknown item
-- [ ]  Propose dataset JSON diff to Discord
-- [ ]  Human-approval gate before any write
-- [ ]  Dedup repeated proposals via fingerprinting
+- [ ]  User accounts database
+- [ ]  Alert System (price drops/restock/advanced query)
+- [ ]  Watchlist
 
-**Phase 5 — Component Storage**
+## Phase 4 — Website
 
-- [ ]  Design Component schema (spec fields + price history + aggregate stats)
-- [ ]  Key by existing `filter_ids`
-- [ ]  Decide storage format (JSON vs. lightweight embedded DB) — do this before coding
-- [ ]  Wire Component upsert into the existing parse-cycle update flow
+- [ ]  Search Bar
+- [ ]  Demand statistics for the future updates
+- [ ]  Track statistics across website (like clicks on products)
+- [ ]  Payment Gateway
+- [ ]  Legal Stuff
 
-**Phase 6 — Price History & Analytics**
+## The Future
 
-- [ ]  Per-component price charts
-- [ ]  Combined-factor aggregation layer
-- [ ]  Pick first 3-4 combined-factor charts to ship
-- [ ]  Decide precompute vs. compute-on-read for aggregates
+- AI Product Reviewer
+- Score System (Performance/Benchmarks/Sort by Score)
+- API Access
+- PC Builder
+- Marketplace
 
-**Phase 7 — Monetization**
+# Plans
 
-- [ ]  User accounts (auth strategy decision, password hashing)
-- [ ]  Tiered alert system (schema, matching engine, delivery)
-- [ ]  Benchmark data source decision for scoring (UL / PassMark / curated tier list)
-- [ ]  Map benchmark scores onto existing CPU/GPU dataset entries
-- [ ]  On-demand refresh (single-product v1, rate-limited)
-- [ ]  Additional paid features: full price-history access, saved watchlists, restock alerts, delivery-channel choice, CSV export, API access, priority site requests
+### Free
 
-**Phase 8 — Backlog (not now)**
+- 3 Alerts
+- Only Alert via Email/Discord
 
-- [ ]  PC Builder section
-- [ ]  Marketplace
+### Pro (30DT/Forever)
+
+- 15 Alerts
+- More Alert Sources (Email/Discord/Telegram/Instagram/Whatsapp/Facebook...)
