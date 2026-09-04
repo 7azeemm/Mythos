@@ -1,16 +1,16 @@
 use crate::api::error::ApiError::InvalidQuery;
 use crate::api::error::ApiResult;
-use crate::api::filters::{build_all_filters, product_matches_key, FilterGroup};
-use crate::storage::PRODUCT_STORAGE;
-use crate::web_scraper::product::Product;
-use crate::web_scraper::sections::Section;
-use crate::web_scraper::sites::Site;
-use axum::{extract::Path, Json};
+use crate::api::filters::{FilterGroup, build_all_filters, product_matches_key};
+use crate::core::product::Product;
+use crate::core::retailers::Retailer;
+use crate::core::sections::Section;
+use axum::{Json, extract::Path};
 use axum_extra::extract::Query;
 use serde::{Deserialize, Serialize};
 use std::collections::{HashMap, HashSet};
 use std::str::FromStr;
 use strum::IntoEnumIterator;
+use crate::core::storage::ProductStorage;
 
 const PAGE_SIZE: usize = 60;
 
@@ -46,14 +46,22 @@ pub struct PageQuery {
     pub site: Vec<String>,
     pub stock: Vec<String>,
     pub sort: Option<String>,
-    pub filters: Option<String>
+    pub filters: Option<String>,
 }
 
-pub async fn get_products(Path(section): Path<String>, Query(params): Query<PageQuery>) -> ApiResult<Json<PageResponse>> {
+pub async fn get_products(
+    Path(section): Path<String>,
+    Query(params): Query<PageQuery>,
+) -> ApiResult<Json<PageResponse>> {
     let section = Section::from_str(&section).map_err(|err| InvalidQuery(err))?;
     let page = params.page.unwrap_or(1).max(1);
-    let filters = params.filters.as_ref().map(|f| serde_json::from_str::<HashMap<String, Vec<String>>>(f))
-        .transpose().map_err(|err| InvalidQuery(err.to_string()))?.unwrap_or_default();
+    let filters = params
+        .filters
+        .as_ref()
+        .map(|f| serde_json::from_str::<HashMap<String, Vec<String>>>(f))
+        .transpose()
+        .map_err(|err| InvalidQuery(err.to_string()))?
+        .unwrap_or_default();
 
     let mut products = get_filtered_products(section, &params).await;
 
@@ -74,20 +82,24 @@ pub async fn get_products(Path(section): Path<String>, Query(params): Query<Page
                 components: section.config().components.clone(),
                 group_by: section.config().group.clone(),
                 min_price,
-                max_price
+                max_price,
             })
-        },
-        _ => None
+        }
+        _ => None,
     };
 
     // Apply Filters
-    products.retain(|p| filters.iter().all(|(key, ids)| ids.is_empty() || product_matches_key(p, key, ids)));
+    products.retain(|p| {
+        filters
+            .iter()
+            .all(|(key, ids)| ids.is_empty() || product_matches_key(p, key, ids))
+    });
     let total_products = products.len();
 
     // Sort Products
     match params.sort.as_deref() {
         Some("price_desc") => products.sort_by(|a, b| b.price.cmp(&a.price)),
-        _ => products.sort_by(|a, b| a.price.cmp(&b.price))
+        _ => products.sort_by(|a, b| a.price.cmp(&b.price)),
     }
 
     // Return paginated pages or groups if enabled
@@ -108,11 +120,7 @@ pub async fn get_products(Path(section): Path<String>, Query(params): Query<Page
         let total_pages = (total_products + PAGE_SIZE - 1) / PAGE_SIZE;
         let offset = (page - 1) * PAGE_SIZE;
 
-        let products: Vec<Product> = products
-            .into_iter()
-            .skip(offset)
-            .take(PAGE_SIZE)
-            .collect();
+        let products: Vec<Product> = products.into_iter().skip(offset).take(PAGE_SIZE).collect();
 
         (products, Vec::new(), total_pages)
     };
@@ -128,7 +136,10 @@ pub async fn get_products(Path(section): Path<String>, Query(params): Query<Page
 }
 
 async fn get_filtered_products(section: Section, params: &PageQuery) -> Vec<Product> {
-    PRODUCT_STORAGE.read().await.products
+    ProductStorage::get_storage()
+        .read()
+        .await
+        .products
         .iter()
         .filter_map(|(_, p)| {
             // section filter
@@ -145,8 +156,12 @@ async fn get_filtered_products(section: Section, params: &PageQuery) -> Vec<Prod
                     s = str.to_string();
                 }
 
-                let matches = p.title.to_lowercase().contains(&s)
-                    || p.description.as_ref().unwrap_or(&String::default()).to_lowercase().contains(&s);
+                let matches = p.title.to_lowercase().contains(&s) ||
+                    p.description
+                    .as_ref()
+                    .unwrap_or(&String::default())
+                    .to_lowercase()
+                    .contains(&s);
 
                 if matches == should_match {
                     return None;
@@ -195,7 +210,7 @@ fn group_products(section: Section, products: Vec<Product>) -> Vec<(String, Vec<
 
         let name = match fields.len() {
             0 => product.title.clone(),
-            _ => fields.join(" | ")
+            _ => fields.join(" | "),
         };
 
         match group_indices.get(&name) {

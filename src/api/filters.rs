@@ -1,7 +1,7 @@
-use std::cmp::Ordering;
-use crate::web_scraper::product::Product;
-use crate::web_scraper::sections::Section;
+use crate::core::product::Product;
+use crate::core::sections::Section;
 use serde::Serialize;
+use std::cmp::Ordering;
 use std::collections::HashMap;
 
 #[derive(Debug, Serialize)]
@@ -21,7 +21,8 @@ pub struct FilterValue {
 }
 
 fn extract_numeric_value(label: &str) -> Option<f64> {
-    let num_str: String = label.chars()
+    let num_str: String = label
+        .chars()
         .take_while(|c| c.is_ascii_digit() || *c == '.')
         .collect();
     if num_str.is_empty() || num_str == "." {
@@ -63,10 +64,7 @@ fn sort_options(key: &str, options: &mut [FilterValue]) {
         }
 
         // 3) Numeric ordering
-        if let (Some(an), Some(bn)) = (
-            extract_numeric_value(&a.label),
-            extract_numeric_value(&b.label),
-        ) {
+        if let (Some(an), Some(bn)) = (extract_numeric_value(&a.label), extract_numeric_value(&b.label)) {
             return an.total_cmp(&bn);
         }
 
@@ -109,14 +107,25 @@ fn collapse_children(children: &mut Vec<FilterValue>) {
     }
 }
 
-fn insert_count(nodes: &mut Vec<FilterValue>, prefix: &str, segments: &[&str], leaf_label: &str, count: usize) {
+fn insert_count(
+    nodes: &mut Vec<FilterValue>,
+    prefix: &str,
+    segments: &[&str],
+    leaf_label: &str,
+    count: usize,
+) {
     let seg = segments[0];
     let id = if prefix.is_empty() { seg.to_string() } else { format!("{prefix}/{seg}") };
 
     let idx = match nodes.iter().position(|n| n.id == id) {
         Some(i) => i,
         None => {
-            nodes.push(FilterValue { id: id.clone(), label: seg.to_string(), count: 0, children: vec![] });
+            nodes.push(FilterValue {
+                id: id.clone(),
+                label: seg.to_string(),
+                count: 0,
+                children: vec![],
+            });
             nodes.len() - 1
         }
     };
@@ -127,7 +136,13 @@ fn insert_count(nodes: &mut Vec<FilterValue>, prefix: &str, segments: &[&str], l
             nodes[idx].label = leaf_label.to_string();
         }
     } else {
-        insert_count(&mut nodes[idx].children, &id, &segments[1..], leaf_label, count);
+        insert_count(
+            &mut nodes[idx].children,
+            &id,
+            &segments[1..],
+            leaf_label,
+            count,
+        );
     }
 }
 
@@ -138,7 +153,12 @@ fn finalize_counts(options: &mut [FilterValue]) {
         let children_total: usize = node.children.iter().map(|c| c.count).sum();
         // Check if node is a group and has direct matches
         if node.count > 0 && !node.children.is_empty() {
-            eprintln!("Filter node `{}` has {} direct match(es) AND {} children.", node.id, node.count, node.children.len());
+            eprintln!(
+                "Filter node `{}` has {} direct match(es) AND {} children.",
+                node.id,
+                node.count,
+                node.children.len()
+            );
         }
         node.count += children_total;
     }
@@ -159,7 +179,10 @@ fn build_filter_group(key: &str, label: &str, products: &[&Product]) -> FilterGr
         insert_count(&mut options, "", &segments, &seg_label, *count);
     }
 
-    let missing = products.iter().filter(|p| !p.filter_ids.contains_key(key)).count();
+    let missing = products
+        .iter()
+        .filter(|p| !p.filter_ids.contains_key(key))
+        .count();
     if missing > 0 {
         insert_count(&mut options, "", &["Others", "Others"], "Others", missing);
     }
@@ -168,7 +191,11 @@ fn build_filter_group(key: &str, label: &str, products: &[&Product]) -> FilterGr
     finalize_counts(&mut options);
     sort_options(key, &mut options);
 
-    FilterGroup { key: key.to_string(), label: label.to_string(), options }
+    FilterGroup {
+        key: key.to_string(),
+        label: label.to_string(),
+        options,
+    }
 }
 
 fn label_from_key(key: &str, structured: bool) -> String {
@@ -194,7 +221,8 @@ fn scoped_products<'a>(
     selections: &HashMap<String, Vec<String>>,
     exclude_key: &str,
 ) -> Vec<&'a Product> {
-    products.iter()
+    products
+        .iter()
         .filter(|p| {
             selections.iter().all(|(key, ids)| {
                 key == exclude_key || ids.is_empty() || product_matches_key(p, key, ids)
@@ -204,19 +232,23 @@ fn scoped_products<'a>(
 }
 
 pub fn product_matches_key(product: &Product, key: &str, selected_ids: &[String]) -> bool {
-    let value = product.filter_ids.get(key).map(String::as_str).unwrap_or("Others/Others");
+    let value = product
+        .filter_ids
+        .get(key)
+        .map(String::as_str)
+        .unwrap_or("Others/Others");
     selected_ids.iter().any(|sel| {
-        value == sel ||
-            (value.len() > sel.len() &&
-                value.starts_with(sel.as_str()) &&
-                value.as_bytes()[sel.len()] == b'/')
+        value == sel
+            || (value.len() > sel.len()
+            && value.starts_with(sel.as_str())
+            && value.as_bytes()[sel.len()] == b'/')
     })
 }
 
 pub fn build_all_filters(
     section: Section,
     products: &[Product],
-    selections: &HashMap<String, Vec<String>>
+    selections: &HashMap<String, Vec<String>>,
 ) -> Vec<FilterGroup> {
     let keys = &section.config().filters;
     let mut groups = Vec::with_capacity(keys.len());

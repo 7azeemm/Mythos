@@ -1,19 +1,21 @@
-pub mod web_scraper;
 pub mod api;
+pub mod discord;
 pub mod utils;
-pub mod storage;
+pub mod core;
 
 use crate::api::server;
-use crate::storage::ProductStorage;
 use crate::utils::logger::setup_logging;
+use crate::utils::serde_ext::JsonExt;
 use crate::utils::web_client::WebClient;
-use crate::web_scraper::manager::ProductManager;
-use crate::web_scraper::sections::SectionConfig;
+use core::scanner::CatalogScanner;
+use core::sections::SectionConfig;
+use core::storage::ProductStorage;
+use core::tracking::error_tracker::ErrorTracker;
 use dotenv::dotenv;
 use futures::StreamExt;
 use serde::{Deserialize, Serialize};
 use std::error::Error;
-use crate::utils::serde_ext::JsonExt;
+use tokio::net::TcpListener;
 
 #[tokio::main]
 async fn main() {
@@ -22,26 +24,17 @@ async fn main() {
     println!("Starting...");
     dotenv().ok();
     setup_logging();
-    WebClient::init().await;
 
-    // let data = FileLoader::load_csv("config/datasets/GPU-chipsets.csv").await.unwrap();
-    // let mut map = HashMap::new();
-    // for record in data {
-    //     let mut name = record.get_str("name").unwrap().to_string();
-    //     if let Some(memory) = record.get_str("memory_size") {
-    //         if !memory.is_empty() {
-    //             name.push_str(&format!(" {memory}GB"));
-    //         }
-    //     }
-    //     map.insert(name, record);
-    // }
-    // FileLoader::save_to_file("config/datasets/GPU-chipsets.json", &map).await.unwrap();
+    discord::bot::start().await;
+    ErrorTracker::load().await;
+    WebClient::init().await;
 
     SectionConfig::load().await;
     ProductStorage::load().await;
-    ProductManager::schedule().await;
+    CatalogScanner::schedule().await;
 
-    server::run(3000).await.expect("Failed to start server");
+    let api_listener = TcpListener::bind("0.0.0.0:3000").await.expect("Failed to bind API port");
+    server::run(api_listener).await.expect("Failed to start server");
 
     WebClient::cleanup().await.ok();
 }

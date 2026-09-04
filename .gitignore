@@ -4,5 +4,6 @@
 /reports/
 /pages_cache.json
 /descriptions.json
-/known_events.json
 /data
+/state
+/.env

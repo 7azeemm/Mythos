@@ -1,3 +1,4 @@
+use axum::body::Body;
 use axum::{
     extract::ConnectInfo,
     http::{Request, StatusCode},
@@ -6,9 +7,12 @@ use axum::{
 };
 use std::net::SocketAddr;
 use std::time::Instant;
-use axum::body::Body;
 
-pub async fn logging_middleware(ConnectInfo(addr): ConnectInfo<SocketAddr>, req: Request<Body>, next: Next) -> Response {
+pub async fn logging_middleware(
+    ConnectInfo(addr): ConnectInfo<SocketAddr>,
+    req: Request<Body>,
+    next: Next,
+) -> Response {
     let method = req.method().to_string();
     let uri = req.uri().to_string();
 
@@ -19,7 +23,7 @@ pub async fn logging_middleware(ConnectInfo(addr): ConnectInfo<SocketAddr>, req:
     let status = response.status().as_u16();
 
     match status {
-        200..=399 => {},
+        200..=399 => {}
         400..=499 => {
             tracing::warn!(
                 target: "api",
@@ -32,7 +36,7 @@ pub async fn logging_middleware(ConnectInfo(addr): ConnectInfo<SocketAddr>, req:
             );
         }
         _ => {
-            tracing::error!(
+            tracing::warn!(
                 target: "api",
                 method = %method,
                 uri = %uri,

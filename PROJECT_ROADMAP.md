@@ -8,10 +8,11 @@
 
 ## Phase 1 — Discord Bot & Logging
 
-- [ ]  Reviewing new Products (editing fields/reparsing/adding notes)
+- [x]  Reviewing new Products (editing fields/reparsing/adding notes)
 - [ ]  Editing datasets/configs
-- [ ]  Logging errors/warnings
-- [ ]  Logging new/removed/edited products into a channel
+- [x]  Logging errors/warnings
+- [x]  Logging new/removed/edited products into a channel
+- [x]  Rich Discord catalog-scan reports
 
 ## Phase 2 — Component Storage
 

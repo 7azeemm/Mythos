@@ -1,10 +1,11 @@
+use crate::core::tracking::scrape_error::ProductParseError;
 use scraper::{ElementRef, Selector};
 
 pub trait ElementRefExt {
     fn get_text(&self) -> String;
-    fn select_elem(&self, selector: &Selector, element: &str) -> Result<ElementRef, String>;
-    fn select_text(&self, selector: &Selector, element: &str) -> Result<String, String>;
-    fn select_attr(&self, attr: &str, element: &str) -> Result<String, String>;
+    fn select_elem(&self, selector: &Selector, element: &str) -> Result<ElementRef, ProductParseError>;
+    fn select_text(&self, selector: &Selector, element: &str) -> Result<String, ProductParseError>;
+    fn select_attr(&self, attr: &str, element: &str) -> Result<String, ProductParseError>;
 }
 
 impl<'a> ElementRefExt for ElementRef<'a> {
@@ -15,15 +16,29 @@ impl<'a> ElementRefExt for ElementRef<'a> {
             .join(" ")
     }
 
-    fn select_elem(&self, selector: &Selector, element: &str) -> Result<ElementRef, String> {
-        self.select(selector).next().ok_or(format!("{element} not found"))
+    fn select_elem(&self, selector: &Selector, element: &str) -> Result<ElementRef, ProductParseError> {
+        self.select(selector)
+            .next()
+            .ok_or_else(|| ProductParseError::MissingElement {
+                field: element.to_string(),
+            })
     }
 
-    fn select_text(&self, selector: &Selector, element: &str) -> Result<String, String> {
-        Ok(self.select(selector).next().ok_or(format!("{element} not found"))?.get_text())
+    fn select_text(&self, selector: &Selector, element: &str) -> Result<String, ProductParseError> {
+        Ok(self.select(selector)
+            .next()
+            .ok_or_else(|| ProductParseError::MissingElement {
+                field: element.to_string(),
+            })?
+            .get_text())
     }
 
-    fn select_attr(&self, attr: &str, element: &str) -> Result<String, String> {
-        Ok(self.attr(attr).ok_or(format!("{element} not found"))?.to_string())
+    fn select_attr(&self, attr: &str, element: &str) -> Result<String, ProductParseError> {
+        Ok(self.attr(attr)
+            .ok_or_else(|| ProductParseError::MissingAttribute {
+                field: element.to_string(),
+                attribute: attr.to_string(),
+            })?
+            .to_string())
     }
 }

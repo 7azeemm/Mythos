@@ -1,11 +1,11 @@
-use std::fmt;
-use thiserror::Error;
 use axum::{
+    Json,
     http::StatusCode,
     response::{IntoResponse, Response},
-    Json,
 };
 use serde_json::json;
+use std::fmt;
+use thiserror::Error;
 
 #[derive(Debug)]
 pub enum ApiError {
@@ -29,16 +29,8 @@ impl fmt::Display for ApiError {
 impl IntoResponse for ApiError {
     fn into_response(self) -> Response {
         let (status, error_code, message) = match &self {
-            ApiError::NotFound(msg) => (
-                StatusCode::NOT_FOUND,
-                "NOT_FOUND",
-                msg.clone(),
-            ),
-            ApiError::InvalidQuery(msg) => (
-                StatusCode::BAD_REQUEST,
-                "INVALID_REQUEST",
-                msg.clone(),
-            ),
+            ApiError::NotFound(msg) => (StatusCode::NOT_FOUND, "NOT_FOUND", msg.clone()),
+            ApiError::InvalidQuery(msg) => (StatusCode::BAD_REQUEST, "INVALID_REQUEST", msg.clone()),
             ApiError::DatabaseError(msg) => {
                 tracing::error!("Database error: {}", msg);
                 (

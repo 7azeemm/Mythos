@@ -1,5 +1,5 @@
 use once_cell::sync::Lazy;
-use regex::{Captures, Match, Regex};
+use regex::{Captures, Regex};
 use std::borrow::Cow;
 use std::collections::HashMap;
 use std::sync::{Arc, RwLock};
@@ -28,7 +28,7 @@ impl RegexCache {
         for pattern in pattern.split("||") {
             if let Some(pattern) = pattern.strip_prefix("#") {
                 if Self::get(&format!("(?i){pattern}")).is_match(text) {
-                    return true
+                    return true;
                 }
             }
 
@@ -36,20 +36,20 @@ impl RegexCache {
             for part in pattern.split("&") {
                 let (part, negate) = match part.strip_prefix("!=") {
                     Some(p) => (p, true),
-                    None => (part, false)
+                    None => (part, false),
                 };
                 let pattern = format!("(?i)\\b(?:{part})\\b");
                 let matches = Self::get(&pattern).is_match(text);
                 if matches == negate {
                     matched = false;
-                    break
+                    break;
                 } else {
                     matched = true;
                 }
             }
 
             if matched {
-                return true
+                return true;
             }
         }
 
