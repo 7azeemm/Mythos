@@ -9,7 +9,7 @@ use std::error::Error;
 use std::time::Duration;
 use tokio::time::sleep;
 
-const USER_AGENT: &'static str = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36";
+pub(crate) const USER_AGENT: &'static str = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36";
 const TIMEOUT: Duration = Duration::from_secs(30);
 
 static WEB_CLIENT: OnceCell<WebClient> = OnceCell::new();
@@ -32,15 +32,14 @@ impl WebClient {
             .user_agent(USER_AGENT)
             .default_headers({
                 let mut headers = HeaderMap::new();
-                headers.insert("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8".parse().unwrap());
+                headers.insert("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8,".parse().unwrap());
                 headers.insert("Accept-Language", "en-US,en;q=0.5".parse().unwrap());
-                headers.insert("Accept-Encoding", "gzip, deflate, br".parse().unwrap());
+                headers.insert("Accept-Encoding", "gzip, deflate, br, zstd".parse().unwrap());
                 headers.insert("Cache-Control", "max-age=0".parse().unwrap());
                 headers.insert("Connection", "keep-alive".parse().unwrap());
                 headers
             })
             .timeout(TIMEOUT)
-            .tcp_nodelay(true)
             .build()
             .expect("Failed to build HTTP client");
 
@@ -104,8 +103,7 @@ impl WebClient {
 
                 let result: Result<String, String> = match context.new_page().await {
                     Ok(page) => {
-                        let result = Self::fetch_browser_page(&page, url)
-                            .await.map_err(|e| e.to_string());
+                        let result = Self::fetch_browser_page(&page, url).await.map_err(|e| e.to_string());
                         let _ = page.close().await;
                         result
                     }

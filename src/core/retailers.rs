@@ -225,6 +225,10 @@ pub trait Retailer: Send + Sync {
             page_count,
         )
     }
+    
+    async fn check_api(&self, _category: &str, _section: Section) -> Option<(PageReport, Vec<Product>)> {
+        None
+    }
 
     fn parse(&self,
         section: Section,
@@ -235,7 +239,7 @@ pub trait Retailer: Send + Sync {
         let mut errors = Vec::new();
         let doc = Html::parse_document(&body);
 
-        if self.check_if_page_empty(&doc) {
+        if self.is_page_empty(&doc) {
             return (vec![], errors, true);
         }
 
@@ -287,7 +291,7 @@ pub trait Retailer: Send + Sync {
             _ => None,
         };
 
-        Product::new(
+        Ok(Product::new(
             self.name(),
             url,
             title,
@@ -297,7 +301,7 @@ pub trait Retailer: Send + Sync {
             status,
             price,
             old_price,
-        ).map_err(|message| ProductParseError::Other { message })
+        ))
     }
 
     fn parse_basics(&self, element: ElementRef) -> Result<(String, String, String), ProductParseError> {
@@ -334,7 +338,7 @@ pub trait Retailer: Send + Sync {
         Ok(button_text.parse::<i32>().map_err(|_| PaginationError::InvalidValue { value: button_text })?)
     }
 
-    fn check_if_page_empty(&self, doc: &Html) -> bool {
+    fn is_page_empty(&self, doc: &Html) -> bool {
         if let Some(sel) = &self.config().empty_page_sel {
             if doc.select(sel).next().is_some() {
                 return true;
@@ -360,7 +364,7 @@ pub trait Retailer: Send + Sync {
             let last_retry = retries == MAX_RETRIES;
 
             metrics.description_requests += 1;
-            let page_content = match self.fetch(url).await {
+            let body = match self.fetch(url).await {
                 Ok(content) => content,
                 Err(err) if last_retry => {
                     break Err(DescriptionError::FetchFailed {
@@ -372,17 +376,15 @@ pub trait Retailer: Send + Sync {
                     continue;
                 }
             };
-            metrics.html_bytes += page_content.len() as u64;
+            metrics.html_bytes += body.len() as u64;
 
             let desc = {
-                if let Some(elem) = Html::parse_document(&page_content).select(&sel).next() {
+                if let Some(elem) = Html::parse_document(&body).select(&sel).next() {
                     elem.get_text()
                 } else if last_retry {
                     // Check if the product page exists and does not redirect to another page
-                    if page_content.contains("PAGE NOT FOUND")
-                        || Html::parse_document(&page_content)
-                            .select(&self.config().product_sel).next().is_some()
-                    {
+                    if body.contains("PAGE NOT FOUND") ||
+                        Html::parse_document(&body).select(&self.config().product_sel).next().is_some() {
                         break Err(DescriptionError::ProductMissing);
                     }
                     break Err(DescriptionError::MissingContent);

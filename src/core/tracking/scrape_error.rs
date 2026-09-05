@@ -21,6 +21,8 @@ pub enum PaginationError {
 pub enum UrlError {
     #[error("URL is empty")]
     Empty,
+    #[error("URL is malformed or contains credentials: `{value}`")]
+    Malformed { value: String },
     #[error("URL must start with http:// or https://: `{value}`")]
     InvalidScheme { value: String },
     #[error("URL contains spaces: `{value}`")]
@@ -31,6 +33,7 @@ impl UrlError {
     fn fingerprint(&self) -> &'static str {
         match self {
             Self::Empty => "empty",
+            Self::Malformed { .. } => "malformed",
             Self::InvalidScheme { .. } => "invalid_scheme",
             Self::ContainsSpaces { .. } => "contains_spaces",
         }

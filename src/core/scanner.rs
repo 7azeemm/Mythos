@@ -24,6 +24,7 @@ use once_cell::sync::Lazy;
 use strum::IntoEnumIterator;
 use tokio::sync::RwLock;
 use tokio::time::sleep;
+use crate::core::retailers::megapc::MegaPC;
 
 static USE_CACHE: bool = false;
 static CATALOG_SCANNER: OnceLock<Arc<CatalogScanner>> = OnceLock::new();
@@ -64,7 +65,9 @@ impl CatalogScanner {
         tokio::spawn(async move {
             loop {
                 *scanner.next_scheduled_at.write().await = None;
-                if let Err(error) = scanner.start(Section::iter().collect(), vec![], ScanTrigger::Scheduled).await {
+                let sites = vec![];
+                let sections = Section::iter().collect();
+                if let Err(error) = scanner.start(sections, sites, ScanTrigger::Scheduled).await {
                     tracing::error!(%error, "Scheduled scan failed");
                 }
 
@@ -253,6 +256,7 @@ impl CatalogScanner {
 
         let start_time = Instant::now();
         let mut all_products = Vec::new();
+        let mut page_reports = Vec::new();
 
         let mut browser_tasks = Vec::new();
         let mut client_tasks = Vec::new();
@@ -266,8 +270,15 @@ impl CatalogScanner {
 
             for site in sites {
                 for (_, url) in site.config().sections.iter().filter(|(s, _)| s == section) {
+                    if let Some((report, products)) = site.check_api(url, *section).await {
+                        page_reports.push(report);
+                        all_products.extend(products);
+                        sleep(time::Duration::from_millis(250)).await;
+                        continue
+                    }
+
                     let task = async move {
-                        let (reports, products, page_count) = site.scrape_page(url, 1, *section).await;
+                        let (report, products, page_count) = site.scrape_page(url, 1, *section).await;
                         let page_count = page_count.unwrap_or(1);
                         let mut tasks = Vec::new();
                         for page in 2..page_count + 1 {
@@ -278,7 +289,7 @@ impl CatalogScanner {
                             });
                         }
                         sleep(time::Duration::from_millis(100)).await;
-                        (reports, products, tasks)
+                        (report, products, tasks)
                     };
 
                     match site.config().web_client_type {
@@ -312,7 +323,6 @@ impl CatalogScanner {
 
         let (browser_results, client_results) = tokio::join!(browser_future, client_future);
 
-        let mut page_reports = Vec::new();
         let mut client_tasks = Vec::new();
         let mut browser_tasks = Vec::new();
 

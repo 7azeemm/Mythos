@@ -78,7 +78,7 @@ impl Retailer for SkyMilShop {
         Ok((title, url, image))
     }
 
-    fn check_if_page_empty(&self, doc: &Html) -> bool {
+    fn is_page_empty(&self, doc: &Html) -> bool {
         if let Some(sel) = &self.config().empty_page_sel {
             if let Some(elem) = doc.select(sel).next() {
                 let text = elem.get_text();

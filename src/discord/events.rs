@@ -8,14 +8,16 @@ use chrono::{DateTime, Utc};
 use once_cell::sync::OnceCell;
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
-use serenity::builder::CreateMessage;
+use serenity::builder::{CreateMessage, EditMessage, CreateAttachment, CreateAllowedMentions};
 use serenity::http::Http;
 use std::sync::Arc;
 use tokio::sync::mpsc;
+use crate::core::retailers::utils::validate_url;
 use crate::core::tracking::scan_metrics::ScanMetrics;
+use crate::utils::web_client::WebClient;
 
 static EVENT_SENDER: OnceCell<mpsc::UnboundedSender<DiscordEvent>> = OnceCell::new();
-static SCAN_EVENT_SENDER: OnceCell<mpsc::UnboundedSender<DiscordEvent>> = OnceCell::new();
+static PRODUCT_EVENT_SENDER: OnceCell<mpsc::UnboundedSender<DiscordEvent>> = OnceCell::new();
 
 #[derive(Clone, Copy, Debug)]
 pub enum ProductChangeKind {
@@ -93,6 +95,7 @@ pub enum DiscordEvent {
         changes: Vec<Value>,
     },
     Alert(AlertEvent),
+    DebugUrl(String),
     Scan(ScanRecord),
     ScanStarted {
         started_at: DateTime<Utc>,
@@ -104,15 +107,16 @@ pub enum DiscordEvent {
 
 pub fn initialize(http: Arc<Http>, config: DiscordConfig) {
     let (sender, receiver) = mpsc::unbounded_channel();
-    let (scan_sender, scan_receiver) = mpsc::unbounded_channel();
+    let (product_sender, product_receiver) = mpsc::unbounded_channel();
     
     let _ = EVENT_SENDER.set(sender);
-    let _ = SCAN_EVENT_SENDER.set(scan_sender);
+    let _ = PRODUCT_EVENT_SENDER.set(product_sender);
 
-    for mut receiver in [receiver, scan_receiver] {
+    for mut receiver in [receiver, product_receiver] {
         let http = http.clone();
         let config = config.clone();
         tokio::spawn(async move {
+            let mut scan_message = None;
             while let Some(event) = receiver.recv().await {
                 let result = match event {
                     DiscordEvent::Product {
@@ -125,43 +129,61 @@ pub fn initialize(http: Arc<Http>, config: DiscordConfig) {
                         } else {
                             embeds::product_actions(&product)
                         };
-                        let message = CreateMessage::new()
-                            .embed(embeds::product(&product, kind, &changes))
-                            .components(components);
+                        let mut embed = embeds::product(&product, kind, &changes);
+                        let mut message = CreateMessage::new().components(components);
+                        if let Ok(attachment) = download_product_image(&product).await {
+                            embed = embed.thumbnail(format!("attachment://{}", attachment.filename));
+                            message = message.add_file(attachment);
+                        }
+                        let message = message.embed(embed);
                         config
                             .product_channel(kind)
                             .send_message(&http, message)
                             .await
                             .map(|_| ())
                     }
-                    DiscordEvent::Scan(record) => config
-                        .scan_channel
-                        .send_message(
-                            &http,
-                            CreateMessage::new()
-                                .embed(embeds::scan_overview(&record))
-                                .components(embeds::scan_actions(&record.id)),
-                        )
-                        .await
-                        .map(|_| ()),
+                    DiscordEvent::Scan(record) => {
+                        if let Some(message_id) = scan_message.take() {
+                            config.scan_channel.edit_message(
+                                &http, message_id,
+                                EditMessage::new()
+                                    .embed(embeds::scan_overview(&record))
+                                    .components(embeds::scan_actions(&record.id)),
+                            ).await.map(|_| ())
+                        } else {
+                            config.scan_channel.send_message(
+                                &http, CreateMessage::new()
+                                    .embed(embeds::scan_overview(&record))
+                                    .components(embeds::scan_actions(&record.id)),
+                            ).await.map(|_| ())
+                        }
+                    },
                     DiscordEvent::ScanStarted {
                         started_at,
                         trigger,
                         sections,
                         retailers,
-                    } => config
-                        .scan_channel
-                        .send_message(
-                            &http,
-                            CreateMessage::new().embed(embeds::scan_started(
-                                started_at,
-                                &trigger,
-                                &sections,
-                                &retailers,
-                            )),
-                        )
-                        .await
-                        .map(|_| ()),
+                    } => {
+                        scan_message = None;
+                        config.scan_channel
+                            .send_message(
+                                &http,
+                                CreateMessage::new().embed(embeds::scan_started(
+                                    started_at,
+                                    &trigger,
+                                    &sections,
+                                    &retailers,
+                                )),
+                            )
+                            .await
+                            .map(|message| { scan_message = Some(message.id); })
+                    },
+                    DiscordEvent::DebugUrl(message) => config.alert_channel
+                        .send_message(&http, CreateMessage::new()
+                            .content(embeds::truncate(&message, 1900))
+                            .flags(serenity::model::channel::MessageFlags::SUPPRESS_EMBEDS)
+                            .allowed_mentions(CreateAllowedMentions::new()))
+                        .await.map(|_| ()),
                     DiscordEvent::Alert(alert) => config
                         .alert_channel
                         .send_message(&http, CreateMessage::new().embed(embeds::alert(&alert)))
@@ -178,8 +200,8 @@ pub fn initialize(http: Arc<Http>, config: DiscordConfig) {
 }
 
 pub fn emit(event: DiscordEvent) {
-    let sender = if matches!(event, DiscordEvent::Scan(_) | DiscordEvent::ScanStarted { .. }) {
-        SCAN_EVENT_SENDER.get()
+    let sender = if matches!(event, DiscordEvent::Product { .. }) {
+        PRODUCT_EVENT_SENDER.get()
     } else {
         EVENT_SENDER.get()
     };
@@ -200,4 +222,44 @@ pub fn alert(
         message: message.into(),
         fields,
     }));
+}
+
+async fn download_product_image(product: &Product) -> Result<CreateAttachment, String> {
+    validate_url(&product.image).map_err(|error| error.to_string())?;
+
+    let client = &WebClient::get().http_client;
+    let request = || client.get(&product.image)
+        .header(reqwest::header::ACCEPT, "image/webp,image/png,image/jpeg,image/gif;q=0.9,*/*;q=0.1")
+        .timeout(std::time::Duration::from_secs(10));
+
+    let mut response = request().send().await.map_err(|error| error.to_string())?;
+    if response.status() == reqwest::StatusCode::FORBIDDEN {
+        response = request().header(reqwest::header::REFERER, &product.url)
+            .send().await.map_err(|error| error.to_string())?;
+    }
+
+    let mut response = response.error_for_status().map_err(|error| error.to_string())?;
+    const MAX_BYTES: usize = 8 * 1024 * 1024;
+    if response.content_length().is_some_and(|size| size > MAX_BYTES as u64) {
+        return Err("image exceeds 8 MiB attachment limit".into());
+    }
+
+    let mut bytes = Vec::new();
+    while let Some(chunk) = response.chunk().await.map_err(|error| error.to_string())? {
+        if bytes.len() + chunk.len() > MAX_BYTES {
+            return Err("image exceeds 8 MiB attachment limit".into());
+        }
+        bytes.extend_from_slice(&chunk);
+    }
+
+    let extension = image_extension(&bytes).ok_or("response is not a supported image (possibly HTML or a placeholder)")?;
+    Ok(CreateAttachment::bytes(bytes, format!("product.{extension}")))
+}
+
+fn image_extension(bytes: &[u8]) -> Option<&'static str> {
+    if bytes.starts_with(b"\x89PNG\r\n\x1a\n") { Some("png") }
+    else if bytes.starts_with(b"\xff\xd8\xff") { Some("jpg") }
+    else if bytes.starts_with(b"GIF87a") || bytes.starts_with(b"GIF89a") { Some("gif") }
+    else if bytes.starts_with(b"RIFF") && bytes.get(8..12) == Some(b"WEBP") { Some("webp") }
+    else { None }
 }

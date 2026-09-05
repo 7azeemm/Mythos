@@ -103,13 +103,9 @@ pub fn product(product: &Product, kind: ProductChangeKind, changes: &[Value]) ->
     }
 
     if let Some(description) = product.description.as_deref().filter(|value| !value.trim().is_empty()) {
-        for (index, part) in split_text(&truncate(description.trim(), 1800), 900, 2).into_iter().enumerate() {
+        for part in split_text(&truncate(description.trim(), 1800), 900, 2).into_iter() {
             embed = embed.field(
-                if index == 0 {
-                    "About this product".into()
-                } else {
-                    format!("About this product · continued {}", index + 1)
-                },
+                "Description:",
                 part,
                 false,
             );

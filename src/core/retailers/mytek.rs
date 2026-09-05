@@ -99,7 +99,7 @@ impl Retailer for Mytek {
 
         let status = ProductStatus::from_str(&status).map_err(|_| ProductParseError::UnknownStatus { value: status })?;
 
-        Product::new(self.name(), url, title, section, description, image, status, price, old_price).map_err(|message| ProductParseError::Other { message })
+        Ok(Product::new(self.name(), url, title, section, description, image, status, price, old_price))
     }
 
     fn format_url(&self, url: &str, page: i32) -> String {

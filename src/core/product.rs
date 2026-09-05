@@ -40,8 +40,10 @@ impl Product {
         status: ProductStatus,
         price: i32,
         old_price: Option<i32>,
-    ) -> Result<Self, String> {
-        Ok(Self {
+    ) -> Self {
+        let image = image.replace("-home_default", "").replace("-product_zoom", "");
+
+        Self {
             id: Uuid::new_v4().to_string(),
             url,
             title,
@@ -60,7 +62,7 @@ impl Product {
             updated_at: None,
             removed_at: None,
             added_at: Utc::now(),
-        })
+        }
     }
 
     pub fn find_changes(&self, new: &Product, minimal: bool) -> Vec<Value> {

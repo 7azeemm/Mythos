@@ -3,7 +3,7 @@ use crate::utils::scraper_ext::ElementRefExt;
 use once_cell::sync::Lazy;
 use scraper::{ElementRef, Selector};
 
-static IMAGE_ATTRIBUTES: &[&str] = &["data-full-size-image-url", "src", "data-original", "data-src", "data-lazy-src", "data-nectar-img-src"];
+static IMAGE_ATTRIBUTES: &[&str] = &["data-full-size-image-url", "data-original", "data-src", "data-lazy-src", "data-nectar-img-src", "src"];
 
 pub fn extract_basics(element: ElementRef, title_sel: &Selector, image_sel: &Selector) -> Result<(String, String, String), ProductParseError> {
     let title_elem = element.select_elem(title_sel, "title")?;
@@ -20,9 +20,9 @@ pub fn extract_basics(element: ElementRef, title_sel: &Selector, image_sel: &Sel
             }
         }
     }
-    let mut image = match image_opt {
-        Some(img) => img,
-        None => return Err(ProductParseError::MissingImageUrl),
+    
+    let Some(image) = image_opt else {
+        return Err(ProductParseError::MissingImageUrl)
     };
 
     Ok((title, url, image))
@@ -62,23 +62,18 @@ pub fn parse_price(text: &str) -> Result<i32, ProductParseError> {
 }
 
 pub fn validate_url(url: &str) -> Result<(), UrlError> {
-    if url.is_empty() {
-        return Err(UrlError::Empty);
-    }
-
-    //TODO: if contains base64 then fetch the product page to get image url
-
-    // if url.contains("base64") {
-    //     return Err(format!("url is encoded, probably the page isn't fully loaded: {url}"));
-    // }
-
-    if !(url.starts_with("http://") || url.starts_with("https://")) {
-        return Err(UrlError::InvalidScheme { value: url.to_string() });
-    }
-
-    if url.contains(' ') {
-        return Err(UrlError::ContainsSpaces { value: url.to_string() });
-    }
-
-    Ok(())
+    let result = if url.is_empty() {
+        Err(UrlError::Empty)
+    } else if !(url.starts_with("http://") || url.starts_with("https://")) {
+        Err(UrlError::InvalidScheme { value: url.to_string() })
+    } else if url.chars().any(char::is_whitespace) {
+        Err(UrlError::ContainsSpaces { value: url.to_string() })
+    } else if reqwest::Url::parse(url).ok().is_none_or(|parsed|
+        parsed.host_str().is_none() || !parsed.username().is_empty() || parsed.password().is_some()
+    ) {
+        Err(UrlError::Malformed { value: url.to_string() })
+    } else {
+        Ok(())
+    };
+    result
 }
