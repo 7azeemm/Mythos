@@ -116,7 +116,7 @@ pub struct RetailerConfig {
     pub title_sel: Lazy<Selector>,
     pub image_sel: Lazy<Selector>,
     pub price_sel: Lazy<Selector>,
-    pub old_price_sel: Lazy<Selector>,
+    pub original_price_sel: Lazy<Selector>,
     pub price_sel_2: Option<Lazy<Selector>>,
     pub status_sel: Option<Lazy<Selector>>,
     pub desc_sel: Option<Lazy<Selector>>,
@@ -278,7 +278,7 @@ pub trait Retailer: Send + Sync {
         let cfg = self.config();
 
         let (title, url, image) = self.parse_basics(element)?;
-        let (price, old_price) = extract_prices(element, &cfg.price_sel, &cfg.old_price_sel, &cfg.price_sel_2)?;
+        let (price, original_price) = extract_prices(element, &cfg.price_sel, &cfg.original_price_sel, &cfg.price_sel_2)?;
         let status = self.parse_status(element)?;
         let description = match (section.requires_desc(), &cfg.desc_sel) {
             (true, Some(sel)) => match element.select_text(sel, "description") {
@@ -300,7 +300,7 @@ pub trait Retailer: Send + Sync {
             image,
             status,
             price,
-            old_price,
+            original_price,
         ))
     }
 

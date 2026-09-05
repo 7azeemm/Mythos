@@ -4,15 +4,14 @@
 - [ ]  Fix Grouping Mode
 - [ ]  Code Cleanup
 - [ ]  Image Validation
-- [ ]  New-category detector in retailer sites 
+- [ ]  New-category detector in retailer sites
 
 ## Phase 1 — Discord Bot & Logging
 
-- [x]  Reviewing new Products (editing fields/reparsing/adding notes)
-- [ ]  Editing datasets/configs
-- [x]  Logging errors/warnings
-- [x]  Logging new/removed/edited products into a channel
-- [x]  Rich Discord catalog-scan reports
+- [X]  Reviewing new Products (editing fields/reparsing/adding notes)
+- [X]  Logging errors/warnings
+- [X]  Logging new/removed/edited products into a channel
+- [X]  Rich Discord catalog-scan reports
 
 ## Phase 2 — Component Storage
 

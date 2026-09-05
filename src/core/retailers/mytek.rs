@@ -17,7 +17,7 @@ static CONFIG: RetailerConfig = RetailerConfig {
     title_sel: Lazy::new(|| Selector::parse("").unwrap()),
     image_sel: Lazy::new(|| Selector::parse("").unwrap()),
     price_sel: Lazy::new(|| Selector::parse("").unwrap()),
-    old_price_sel: Lazy::new(|| Selector::parse("").unwrap()),
+    original_price_sel: Lazy::new(|| Selector::parse("").unwrap()),
     price_sel_2: None,
     status_sel: Some(Lazy::new(|| Selector::parse("").unwrap())),
     desc_sel: Some(Lazy::new(|| Selector::parse("").unwrap())),
@@ -63,7 +63,7 @@ static CONFIG: RetailerConfig = RetailerConfig {
         (Section::ConsoleAccessories, "https://www.mytek.tn/gaming/accessoires-de-jeux/accessoires-jeux-de-course.html"),
         (Section::ConsoleAccessories, "https://www.mytek.tn/gaming/accessoires-de-jeux/casque-de-realite-virtuelle.html"),
         (Section::Smartphone, "https://www.mytek.tn/smartphone.html"),
-        (Section::Smartphone, "http://mytek.tn/telephonie-tunisie/smartphone-mobile-tunisie/iphone.html"),
+        (Section::Smartphone, "http://www.mytek.tn/telephonie-tunisie/smartphone-mobile-tunisie/iphone.html"),
         (Section::Tablet, "https://www.mytek.tn/informatique/tablettes-tactiles/tablettes-android.html"),
         (Section::Tablet, "https://www.mytek.tn/informatique/tablettes-tactiles/ipad.html"),
         (Section::Smartwatch, "https://www.mytek.tn/telephonie-tunisie/smartwatch/montre-connectee.html"),
@@ -85,7 +85,7 @@ impl Retailer for Mytek {
         let price = parse_price(&element.select_attr("data-price", "price")?)?;
         let final_price = parse_price(&element.select_attr("data-final-price", "final-price")?)?;
 
-        let (price, old_price) = match price == final_price {
+        let (price, original_price) = match price == final_price {
             true => (price, None),
             false => (final_price, Some(price)),
         };
@@ -99,7 +99,7 @@ impl Retailer for Mytek {
 
         let status = ProductStatus::from_str(&status).map_err(|_| ProductParseError::UnknownStatus { value: status })?;
 
-        Ok(Product::new(self.name(), url, title, section, description, image, status, price, old_price))
+        Ok(Product::new(self.name(), url, title, section, description, image, status, price, original_price))
     }
 
     fn format_url(&self, url: &str, page: i32) -> String {

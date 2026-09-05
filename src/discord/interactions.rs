@@ -6,9 +6,7 @@ use crate::core::tracking::error_tracker::{ErrorCycleSummary, ErrorStatusFilter,
 use crate::core::tracking::scan_cache::ScanCache;
 use crate::discord::embeds;
 use crate::discord::events::{self, DiscordEvent, ProductChangeKind};
-use chrono::Utc;
 use serde::Serialize;
-use serde_json::{Value, json};
 use serenity::all::{
     ActionRowComponent, CommandInteraction, ComponentInteraction, Context, CreateActionRow,
     CreateButton, CreateInputText, CreateInteractionResponse, CreateInteractionResponseMessage,
@@ -554,9 +552,8 @@ async fn apply_json_edit(
 
     let mut product: Product = serde_json::from_str(&raw).map_err(|error| format!("Invalid product JSON: {error}"))?;
 
-    let changes = old.find_changes(&product, false);
+    let changes = product.record_changes(&old, false);
     if changes.len() > 0 {
-        product.updated_at = Some(Utc::now());
         ProductStorage::replace_by_id(product_id, product.clone()).await?;
         events::emit(DiscordEvent::Product {
             kind: ProductChangeKind::Edited,
@@ -577,15 +574,13 @@ async fn apply_note(
         .ok_or("Missing note")?
         .trim()
         .to_string();
-    let product = ProductStorage::add_note(product_id, note.clone()).await?;
+    let update = ProductStorage::add_note(product_id, note).await?;
     events::emit(DiscordEvent::Product {
         kind: ProductChangeKind::Edited,
-        product: product.clone(),
-        changes: vec![
-            json!({ "field": "notes", "old_value": "", "new_value": "Note added", "timestamp": Utc::now() }),
-        ],
+        product: update.product.clone(),
+        changes: update.changes,
     });
-    update_product_modal(ctx, modal, &product).await
+    update_product_modal(ctx, modal, &update.product).await
 }
 
 async fn reparse(
@@ -593,30 +588,16 @@ async fn reparse(
     component: &ComponentInteraction,
     product_id: &str,
 ) -> Result<(), String> {
-    let mut product = ProductStorage::get(product_id)
-        .await.ok_or_else(|| "Product not found".to_string())?;
-
-    let old = product.clone();
-    product.filter_ids.clear();
-    product.components.clear();
-    product.section.parser().parse(&mut product);
-    product.updated_at = Some(Utc::now());
-
-    let changes = old.find_changes(&product, false);
-    if changes.len() > 0 {
-        let mut history = product.history.as_array().cloned().unwrap_or_default();
-        history.extend(changes.iter().cloned());
-        product.history = Value::Array(history);
-
-        ProductStorage::replace_by_id(&product.id, product.clone()).await?;
+    let update = ProductStorage::reparse_product(product_id).await?;
+    if !update.changes.is_empty() {
         events::emit(DiscordEvent::Product {
             kind: ProductChangeKind::Edited,
-            product: product.clone(),
-            changes,
+            product: update.product.clone(),
+            changes: update.changes,
         });
     }
 
-    update_product_component(ctx, component, &product).await
+    update_product_component(ctx, component, &update.product).await
 }
 
 async fn show_remove_confirmation(

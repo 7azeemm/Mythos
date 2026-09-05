@@ -18,7 +18,7 @@ pub struct Product {
     pub image: String,
     pub status: ProductStatus,
     pub price: i32,
-    pub old_price: Option<i32>,
+    pub original_price: Option<i32>,
     pub filter_ids: HashMap<String, String>,
     pub components: HashMap<String, String>,
     pub notes: Vec<String>,
@@ -39,7 +39,7 @@ impl Product {
         image: String,
         status: ProductStatus,
         price: i32,
-        old_price: Option<i32>,
+        original_price: Option<i32>,
     ) -> Self {
         let image = image.replace("-home_default", "").replace("-product_zoom", "");
 
@@ -53,7 +53,7 @@ impl Product {
             image,
             status,
             price,
-            old_price,
+            original_price,
             filter_ids: Default::default(),
             components: Default::default(),
             notes: Default::default(),
@@ -71,7 +71,7 @@ impl Product {
         change(&mut changes, "description", &self.description, &new.description);
         change(&mut changes, "status", &self.status, &new.status);
         change(&mut changes, "price", &self.price, &new.price);
-        change(&mut changes, "old_price", &self.old_price, &new.old_price);
+        change(&mut changes, "original_price", &self.original_price, &new.original_price);
         change(&mut changes, "image", &self.image, &new.image);
         if !minimal {
             change(&mut changes, "id", &self.id, &new.id);
@@ -87,6 +87,19 @@ impl Product {
             change(&mut changes, "updated_at", &self.updated_at, &new.updated_at);
             change(&mut changes, "removed_at", &self.removed_at, &new.removed_at);
         }
+        changes
+    }
+
+    pub fn record_changes(&mut self, old: &Product, minimal: bool) -> Vec<Value> {
+        let changes = old.find_changes(self, minimal);
+        if changes.is_empty() {
+            return changes;
+        }
+
+        let mut history = self.history.as_array().cloned().unwrap_or_default();
+        history.extend(changes.iter().cloned());
+        self.history = Value::Array(history);
+        self.updated_at = Some(Utc::now());
         changes
     }
 }

@@ -14,18 +14,18 @@ use crate::core::parsers::television_parser::TelevisionParser;
 use crate::core::parsers::{GenericSectionParser, SectionParser};
 use crate::utils::file_loader::FileLoader;
 use crate::utils::regex_cache::RegexCache;
-use once_cell::sync::OnceCell;
+use once_cell::sync::Lazy;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use std::str::FromStr;
-use std::sync::Arc;
+use std::sync::{Arc, RwLock};
+use strum::IntoEnumIterator;
 use strum_macros::{Display, EnumIter, EnumString};
 
-pub static SECTION_PARSERS: OnceCell<HashMap<Section, Arc<dyn SectionParser>>> = OnceCell::new();
+pub static SECTION_PARSERS: Lazy<RwLock<HashMap<Section, Arc<dyn SectionParser>>>> =
+    Lazy::new(|| RwLock::new(HashMap::new()));
 
-#[derive(
-    Copy, Clone, Debug, Hash, PartialEq, Eq, Serialize, Deserialize, EnumString, Display, EnumIter,
-)]
+#[derive(Copy, Clone, Debug, Hash, PartialEq, Eq, Serialize, Deserialize, EnumString, Display, EnumIter)]
 pub enum Section {
     PC,
     GamingPC,
@@ -99,12 +99,11 @@ impl Section {
     }
 
     pub fn parser(&self) -> Arc<dyn SectionParser> {
-        SECTION_PARSERS
-            .get()
-            .unwrap()
-            .get(&self)
-            .cloned()
-            .expect(&format!("Section `{self}` not found in the config file"))
+        self.try_parser().expect(&format!("Section `{self}` not found in the config file"))
+    }
+
+    pub fn try_parser(&self) -> Option<Arc<dyn SectionParser>> {
+        SECTION_PARSERS.read().ok()?.get(self).cloned()
     }
 
     pub fn config(&self) -> Arc<SectionConfig> {
@@ -136,34 +135,54 @@ fn default_id_field_name() -> String {
 
 impl SectionConfig {
     pub async fn load() {
+        Self::reload().await.unwrap();
+    }
+
+    pub async fn reload() -> Result<usize, String> {
         let mut parsers: HashMap<Section, Arc<dyn SectionParser>> = HashMap::new();
 
-        for config in FileLoader::load_or_default::<Vec<SectionConfig>>("config/sections.json").await.unwrap() {
+        for config in FileLoader::load_or_default::<Vec<SectionConfig>>("config/sections.json").await? {
             let section = config.id;
             let config = Arc::new(config);
-            let dataset = Dataset::load(section).await.unwrap();
+            let dataset = Dataset::load(section).await?;
 
-            let parser: Arc<dyn SectionParser> = match section {
-                Section::GPU => Arc::new(GPUParser { config, dataset }),
-                Section::Memory => Arc::new(MemoryParser { config, dataset }),
-                Section::Storage => Arc::new(StorageParser { config, dataset }),
-                Section::PowerSupply => Arc::new(PowerSupplyParser { config, dataset }),
-                Section::Mouse => Arc::new(MouseParser { config, dataset }),
-                Section::Keyboard => Arc::new(KeyboardParser { config, dataset }),
-                Section::Headphones => Arc::new(HeadphonesParser { config, dataset }),
-                Section::Console => Arc::new(ConsoleParser { config, dataset }),
-                Section::ConsoleGame => Arc::new(ConsoleGameParser { config, dataset }),
-                Section::Monitor => Arc::new(MonitorParser { config, dataset }),
-                Section::Television => Arc::new(TelevisionParser { config, dataset }),
-                Section::PC | Section::GamingPC | Section::AllInOnePC | Section::MiniPC |
-                Section::Laptop | Section::GamingLaptop | Section::MacBook => Arc::new(PCParser { config, dataset }),
-                _ => Arc::new(GenericSectionParser { config, dataset }),
-            };
+            let parser = build_parser(section, config, dataset);
 
-            parsers.insert(section, parser);
+            if parsers.insert(section, parser).is_some() {
+                return Err(format!("Duplicate section `{section}` in config/sections.json"));
+            }
         }
 
-        SECTION_PARSERS.set(parsers).ok();
+        if let Some(section) = Section::iter().find(|section| !parsers.contains_key(section)) {
+            return Err(format!("Section `{section}` is missing from config/sections.json"));
+        }
+
+        let count = parsers.len();
+        *SECTION_PARSERS.write().unwrap() = parsers;
+        Ok(count)
+    }
+}
+
+fn build_parser(
+    section: Section,
+    config: Arc<SectionConfig>,
+    dataset: Dataset,
+) -> Arc<dyn SectionParser> {
+    match section {
+        Section::GPU => Arc::new(GPUParser { config, dataset }),
+        Section::Memory => Arc::new(MemoryParser { config, dataset }),
+        Section::Storage => Arc::new(StorageParser { config, dataset }),
+        Section::PowerSupply => Arc::new(PowerSupplyParser { config, dataset }),
+        Section::Mouse => Arc::new(MouseParser { config, dataset }),
+        Section::Keyboard => Arc::new(KeyboardParser { config, dataset }),
+        Section::Headphones => Arc::new(HeadphonesParser { config, dataset }),
+        Section::Console => Arc::new(ConsoleParser { config, dataset }),
+        Section::ConsoleGame => Arc::new(ConsoleGameParser { config, dataset }),
+        Section::Monitor => Arc::new(MonitorParser { config, dataset }),
+        Section::Television => Arc::new(TelevisionParser { config, dataset }),
+        Section::PC | Section::GamingPC | Section::AllInOnePC | Section::MiniPC |
+        Section::Laptop | Section::GamingLaptop | Section::MacBook => Arc::new(PCParser { config, dataset }),
+        _ => Arc::new(GenericSectionParser { config, dataset }),
     }
 }
 

@@ -12,7 +12,7 @@ static CONFIG: RetailerConfig = RetailerConfig {
     title_sel: Lazy::new(|| Selector::parse("h2.woocommerce-loop-product__title a[href]").unwrap()),
     image_sel: Lazy::new(|| Selector::parse("div.xts-product-image img").unwrap()),
     price_sel: Lazy::new(|| Selector::parse("span.price span bdi").unwrap()),
-    old_price_sel: Lazy::new(|| Selector::parse("span.price del span bdi").unwrap()),
+    original_price_sel: Lazy::new(|| Selector::parse("span.price del span bdi").unwrap()),
     price_sel_2: Some(Lazy::new(|| Selector::parse("span.price ins span bdi").unwrap())),
     status_sel: Some(Lazy::new(|| Selector::parse("div.berocket_better_labels span b[style]").unwrap())),
     desc_sel: None,

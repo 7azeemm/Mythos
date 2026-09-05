@@ -27,14 +27,14 @@ pub fn product(product: &Product, kind: ProductChangeKind, changes: &[Value]) ->
         ProductChangeKind::Viewed => ("Product", DARK),
     };
     let discount = product
-        .old_price
-        .filter(|old| *old > 0 && product.price >= 0 && *old > product.price)
-        .map(|old| {
-            let saved = i64::from(old) - i64::from(product.price);
-            let percent = (saved as f64 / old as f64 * 100.0).round() as i32;
+        .original_price
+        .filter(|original| *original > 0 && product.price >= 0 && *original > product.price)
+        .map(|original| {
+            let saved = i64::from(original) - i64::from(product.price);
+            let percent = (saved as f64 / original as f64 * 100.0).round() as i32;
             format!(
                 "**{} TND**\n~~{} TND~~ · **{}% off**\nSave {} TND",
-                product.price, old, percent, saved
+                product.price, original, percent, saved
             )
         })
         .unwrap_or_else(|| format!("**{} TND**", product.price));
@@ -1417,6 +1417,13 @@ fn nonempty(value: String, fallback: &str) -> String {
 }
 
 fn humanize(value: &str) -> String {
+    match value.to_ascii_lowercase().as_str() {
+        "cpu" => return "CPU".to_string(),
+        "gpu" => return "GPU".to_string(),
+        "id" => return "ID".to_string(),
+        _ => {},
+    }
+
     let mut chars = value.replace('_', " ").chars().collect::<Vec<_>>();
     if let Some(first) = chars.first_mut() {
         first.make_ascii_uppercase();
@@ -1425,12 +1432,21 @@ fn humanize(value: &str) -> String {
 }
 
 fn format_change(change: &Value) -> String {
-    let field = humanize(
-        change
-            .get("field")
-            .and_then(Value::as_str)
-            .unwrap_or("field"),
-    );
+    let field_name = change
+        .get("field")
+        .and_then(Value::as_str)
+        .unwrap_or("field");
+    let field = humanize(field_name);
+    if matches!(field_name, "filters" | "components") {
+        if let Some(formatted) = format_object_change(
+            &field,
+            change.get("old_value"),
+            change.get("new_value"),
+        ) {
+            return formatted;
+        }
+    }
+
     let old = compact(change.get("old_value"));
     let new = compact(change.get("new_value"));
 
@@ -1448,6 +1464,30 @@ fn format_change(change: &Value) -> String {
     }
 }
 
+fn format_object_change(
+    field: &str,
+    old: Option<&Value>,
+    new: Option<&Value>,
+) -> Option<String> {
+    let old = old.and_then(Value::as_object)?;
+    let new = new.and_then(Value::as_object)?;
+    let keys = old.keys().chain(new.keys()).collect::<BTreeSet<_>>();
+    let lines = keys
+        .into_iter()
+        .filter(|key| old.get(*key) != new.get(*key))
+        .map(|key| {
+            format!(
+                "  - **{}:** `{}` → `{}`",
+                humanize(key),
+                truncate(&compact(old.get(key)).replace('\n', " ").replace('`', "'"), 180),
+                truncate(&compact(new.get(key)).replace('\n', " ").replace('`', "'"), 180)
+            )
+        })
+        .collect::<Vec<_>>();
+
+    (!lines.is_empty()).then(|| format!("- **{field}:**\n{}", lines.join("\n")))
+}
+
 fn compact(value: Option<&Value>) -> String {
     match value {
         Some(Value::String(value)) => value.clone(),
@@ -1460,9 +1500,5 @@ pub fn truncate(value: &str, max_chars: usize) -> String {
     if value.chars().count() <= max_chars {
         return value.to_string();
     }
-    value
-        .chars()
-        .take(max_chars.saturating_sub(3))
-        .collect::<String>()
-        + "..."
+    value.chars().take(max_chars.saturating_sub(3)).collect::<String>() + "..."
 }

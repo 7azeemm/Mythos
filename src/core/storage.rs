@@ -1,11 +1,12 @@
 use crate::core::product::{Product, ProductStatus};
+use crate::core::scanner::CatalogScanner;
 use crate::core::sections::Section;
 use crate::core::tracking::scan_report::ScanReport;
 use crate::utils::file_loader::FileLoader;
 use chrono::Utc;
 use once_cell::sync::Lazy;
 use serde::{Deserialize, Serialize};
-use serde_json::{Value, json};
+use serde_json::Value;
 use std::collections::{HashMap, HashSet};
 use std::time::Instant;
 use strum::IntoEnumIterator;
@@ -19,6 +20,20 @@ const REMOVED_PRODUCTS_PATH: &str = "data/removed_products.json";
 pub struct ProductStorage {
     pub products: HashMap<String, Product>,
     pub removed_products: Vec<Product>,
+}
+
+#[derive(Clone, Debug)]
+pub struct ProductUpdate {
+    pub product: Product,
+    pub changes: Vec<Value>,
+}
+
+#[derive(Clone, Debug, Default)]
+pub struct ReparseSummary {
+    pub total: usize,
+    pub changed: usize,
+    pub moved: usize,
+    pub updates: Vec<ProductUpdate>,
 }
 
 #[derive(Clone, Debug, Default)]
@@ -153,26 +168,98 @@ impl ProductStorage {
         Ok(previous)
     }
 
-    pub async fn add_note(product_id: &str, note: String) -> Result<Product, String> {
+    pub async fn reparse_section(section: Section) -> Result<ReparseSummary, String> {
+        section.try_parser().ok_or_else(|| "The parsers are still starting".to_string())?;
+        let mut storage = PRODUCT_STORAGE.write().await;
+        let mut summary = ReparseSummary::default();
+        let mut affected_sections = HashSet::from([section]);
+
+        for product in storage.products.values_mut().filter(|product| product.section == section) {
+            summary.total += 1;
+            let old = product.clone();
+            let changes = Self::reparse(product);
+            if changes.is_empty() {
+                continue;
+            }
+
+            affected_sections.insert(product.section);
+            summary.changed += 1;
+            summary.moved += usize::from(product.section != old.section);
+            summary.updates.push(ProductUpdate {
+                product: product.clone(),
+                changes,
+            });
+        }
+
+        if summary.changed == 0 {
+            return Ok(summary);
+        }
+
+        Self::save_sections(&storage, &affected_sections).await?;
+
+        Ok(summary)
+    }
+
+    pub async fn reparse_product(product_id: &str) -> Result<ProductUpdate, String> {
         let mut storage = PRODUCT_STORAGE.write().await;
         let product = storage.products.get_mut(product_id).ok_or_else(|| "Product not found".to_string())?;
+        product
+            .section
+            .try_parser()
+            .ok_or_else(|| "The parsers are still starting".to_string())?;
+        let old_section = product.section;
+        let changes = Self::reparse(product);
+        let update = ProductUpdate {
+            product: product.clone(),
+            changes,
+        };
 
-        let mut history = product.history.as_array().cloned().unwrap_or_default();
-        history.push(json!({
-            "field": "notes",
-            "old_value": null,
-            "new_value": note,
-            "timestamp": Utc::now(),
-        }));
+        if !update.changes.is_empty() {
+            let affected_sections = HashSet::from([old_section, update.product.section]);
+            Self::save_sections(&storage, &affected_sections).await?;
+        }
 
+        Ok(update)
+    }
+
+    fn reparse(product: &mut Product) -> Vec<Value> {
+        let old = product.clone();
+        CatalogScanner::normalize_product_section(product);
+        product.filter_ids.clear();
+        product.components.clear();
+        product.section.parser().parse(product);
+        product.record_changes(&old, false)
+    }
+
+    async fn save_sections(
+        storage: &ProductStorage,
+        sections: &HashSet<Section>,
+    ) -> Result<(), String> {
+        for section in sections {
+            let products: HashMap<String, Product> = storage
+                .products
+                .iter()
+                .filter(|(_, product)| product.section == *section)
+                .map(|(id, product)| (id.clone(), product.clone()))
+                .collect();
+            FileLoader::save_to_file(&format!("data/{section}.json"), &products).await?;
+        }
+        Ok(())
+    }
+
+    pub async fn add_note(product_id: &str, note: String) -> Result<ProductUpdate, String> {
+        let mut storage = PRODUCT_STORAGE.write().await;
+        let product = storage.products.get_mut(product_id).ok_or_else(|| "Product not found".to_string())?;
+        let old = product.clone();
         product.notes.push(note);
-        product.history = Value::Array(history);
-        product.updated_at = Some(Utc::now());
-
-        let product = product.clone();
+        let changes = product.record_changes(&old, false);
+        let update = ProductUpdate {
+            product: product.clone(),
+            changes,
+        };
         drop(storage);
         Self::save().await;
-        Ok(product)
+        Ok(update)
     }
 
     pub async fn pending_review(section: Option<Section>) -> Vec<Product> {
@@ -265,15 +352,13 @@ impl ProductStorage {
             }
 
             if !changes.is_empty() {
-                let mut history = existing.history.as_array().cloned().unwrap_or_default();
-                history.extend(changes.iter().cloned());
-
                 product.id = existing.id.clone();
-                product.history = Value::Array(history);
+                product.history = existing.history.clone();
                 product.notes = existing.notes.clone();
                 product.approved = existing.approved;
-                product.updated_at = Some(now);
                 product.added_at = existing.added_at;
+
+                let changes = product.record_changes(existing, true);
 
                 report.edited_items.push((product, changes));
             }

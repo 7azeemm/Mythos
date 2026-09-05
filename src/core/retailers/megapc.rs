@@ -63,7 +63,7 @@ static CONFIG: RetailerConfig = RetailerConfig {
     title_sel: Lazy::new(|| Selector::parse("a[href]").unwrap()),
     image_sel: Lazy::new(|| Selector::parse("div.card-img-container img").unwrap()),
     price_sel: Lazy::new(|| Selector::parse("span.inline-block").unwrap()),
-    old_price_sel: Lazy::new(|| Selector::parse("del.text-sm").unwrap()),
+    original_price_sel: Lazy::new(|| Selector::parse("del.text-sm").unwrap()),
     price_sel_2: None,
     status_sel: None,
     desc_sel: None,

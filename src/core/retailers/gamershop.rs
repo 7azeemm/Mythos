@@ -12,7 +12,7 @@ static CONFIG: RetailerConfig = RetailerConfig {
     title_sel: Lazy::new(|| Selector::parse("h2.product_name a[href]").unwrap()),
     image_sel: Lazy::new(|| Selector::parse("a.product-thumbnail img.product_image").unwrap()),
     price_sel: Lazy::new(|| Selector::parse("span.price").unwrap()),
-    old_price_sel: Lazy::new(|| Selector::parse("span.regular-price").unwrap()),
+    original_price_sel: Lazy::new(|| Selector::parse("span.regular-price").unwrap()),
     price_sel_2: None,
     status_sel: Some(Lazy::new(|| Selector::parse("div.product-quantities label").unwrap())),
     desc_sel: Some(Lazy::new(|| Selector::parse("div.product-des").unwrap())),

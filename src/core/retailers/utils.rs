@@ -20,7 +20,7 @@ pub fn extract_basics(element: ElementRef, title_sel: &Selector, image_sel: &Sel
             }
         }
     }
-    
+
     let Some(image) = image_opt else {
         return Err(ProductParseError::MissingImageUrl)
     };
@@ -28,9 +28,9 @@ pub fn extract_basics(element: ElementRef, title_sel: &Selector, image_sel: &Sel
     Ok((title, url, image))
 }
 
-pub fn extract_prices(element: ElementRef, price_sel: &Selector, old_price_sel: &Selector, price_sel_2: &Option<Lazy<Selector>>) -> Result<(i32, Option<i32>), ProductParseError> {
+pub fn extract_prices(element: ElementRef, price_sel: &Selector, original_price_sel: &Selector, price_sel_2: &Option<Lazy<Selector>>) -> Result<(i32, Option<i32>), ProductParseError> {
     if let Some(price_sel_2) = price_sel_2 {
-        match element.select(old_price_sel).next() {
+        match element.select(original_price_sel).next() {
             Some(p) => {
                 let price = element.select_text(price_sel_2, "price")?;
                 Ok((parse_price(&price)?, Some(parse_price(&p.get_text())?)))
@@ -39,8 +39,8 @@ pub fn extract_prices(element: ElementRef, price_sel: &Selector, old_price_sel: 
         }
     } else {
         let price = parse_price(&element.select_text(price_sel, "price")?)?;
-        let old_price = element.select(old_price_sel).next().map(|p| parse_price(&p.get_text())).transpose()?;
-        Ok((price, old_price))
+        let original_price = element.select(original_price_sel).next().map(|p| parse_price(&p.get_text())).transpose()?;
+        Ok((price, original_price))
     }
 }
 

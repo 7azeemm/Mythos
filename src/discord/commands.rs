@@ -1,16 +1,17 @@
 use crate::core::product::ProductStatus;
 use crate::core::retailers::RETAILERS;
 use crate::core::scanner::CatalogScanner;
-use crate::core::sections::Section;
+use crate::core::sections::{Section, SectionConfig};
 use crate::core::storage::{ProductQuery, ProductStorage};
 use crate::core::tracking::error_tracker::{ErrorStatusFilter, ErrorTracker};
 use crate::core::tracking::scan_cache::ScanTrigger;
 use crate::discord::embeds;
+use crate::discord::events::{self, DiscordEvent, ProductChangeKind};
 use crate::discord::interactions::{respond_product, respond_queue};
 use serenity::all::{
     CommandDataOption, CommandDataOptionValue, CommandInteraction, CommandOptionType, Context,
     CreateAutocompleteResponse, CreateCommand, CreateCommandOption, CreateInteractionResponse,
-    CreateInteractionResponseMessage, Permissions,
+    CreateInteractionResponseMessage, EditInteractionResponse, Permissions,
 };
 use std::str::FromStr;
 use strum::IntoEnumIterator;
@@ -119,6 +120,21 @@ pub fn definitions() -> Vec<CreateCommand> {
                     .set_autocomplete(true)
                     .required(false),
             ),
+        CreateCommand::new("reparse")
+            .description("Reparse every stored product in a section")
+            .default_member_permissions(permissions)
+            .add_option(
+                CreateCommandOption::new(
+                    CommandOptionType::String,
+                    "section",
+                    "Section to reparse",
+                )
+                .required(true)
+                .set_autocomplete(true),
+            ),
+        CreateCommand::new("reload")
+            .description("Reload section configs and datasets")
+            .default_member_permissions(permissions),
         CreateCommand::new("scan")
             .description("Run a catalog scan")
             .default_member_permissions(permissions)
@@ -174,8 +190,70 @@ pub async fn handle(ctx: &Context, command: &CommandInteraction) -> Result<(), S
         }
         "scan" => handle_scan(ctx, command).await,
         "errors" => handle_errors(ctx, command).await,
+        "reparse" => handle_reparse(ctx, command).await,
+        "reload" => handle_reload(ctx, command).await,
         _ => Ok(()),
     }
+}
+
+async fn handle_reparse(ctx: &Context, command: &CommandInteraction) -> Result<(), String> {
+    let section_name = option(command, "section").ok_or_else(|| "Choose a section".to_string())?;
+    let section = Section::from_str(section_name)?;
+
+    command
+        .defer_ephemeral(&ctx.http)
+        .await
+        .map_err(|error| error.to_string())?;
+
+    let summary = match ProductStorage::reparse_section(section).await {
+        Ok(summary) => summary,
+        Err(error) => {
+            command
+                .edit_response(
+                    &ctx.http,
+                    EditInteractionResponse::new().content(format!("Reparse failed: {error}")),
+                )
+                .await
+                .map_err(|response_error| response_error.to_string())?;
+            return Ok(());
+        }
+    };
+    for update in &summary.updates {
+        events::emit(DiscordEvent::Product {
+            kind: ProductChangeKind::Edited,
+            product: update.product.clone(),
+            changes: update.changes.clone(),
+        });
+    }
+    let unchanged = summary.total.saturating_sub(summary.changed);
+    command.edit_response(
+            &ctx.http,
+            EditInteractionResponse::new().content(format!(
+                "Reparsed **{}** products starting in **{section}**:\n**{}** changed\n**{}** moved to another section\n**{unchanged}** unchanged.",
+                summary.total, summary.changed, summary.moved,
+            )),
+        )
+        .await
+        .map(|_| ())
+        .map_err(|error| error.to_string())
+}
+
+async fn handle_reload(ctx: &Context, command: &CommandInteraction) -> Result<(), String> {
+    command
+        .defer_ephemeral(&ctx.http)
+        .await
+        .map_err(|error| error.to_string())?;
+
+    let content = match SectionConfig::reload().await {
+        Ok(count) => format!("Reloaded configs and datasets for **{count}** sections."),
+        Err(error) => format!("Reload failed; the existing configs are still active: {error}"),
+    };
+
+    command
+        .edit_response(&ctx.http, EditInteractionResponse::new().content(content))
+        .await
+        .map(|_| ())
+        .map_err(|error| error.to_string())
 }
 
 async fn handle_errors(ctx: &Context, command: &CommandInteraction) -> Result<(), String> {

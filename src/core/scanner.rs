@@ -225,7 +225,9 @@ impl CatalogScanner {
         report: &mut ScanReport,
     ) -> Result<(), String> {
         let mut products = self.scrape_sites(sections, retailers, report).await;
-        report.metrics.moved_sections = self.normalize_products(&mut products);
+        for product in &mut products {
+            report.metrics.moved_sections += usize::from(Self::normalize_product_section(product));
+        }
 
         ProductStorage::synchronize(products, sections, retailers, report).await;
         self.parse_changed_products(report).await;
@@ -384,29 +386,24 @@ impl CatalogScanner {
         all_products
     }
 
-    fn normalize_products(&self, products: &mut [Product]) -> usize {
-        let mut moved = 0;
-        for product in products {
-            let original = product.section;
+    pub(crate) fn normalize_product_section(product: &mut Product) -> bool {
+        let original = product.section;
 
-            if product.price == 0 {
-                product.section = Section::Others;
-                continue;
-            }
-
-            self.resolve_product_section(product);
-
-            if product.price <= product.section.config().min_price {
-                product.section = Section::Others;
-                continue;
-            }
-
-            moved += usize::from(product.section != original);
+        if product.price == 0 {
+            product.section = Section::Others;
+            return product.section != original;
         }
-        moved
+
+        Self::resolve_product_section(product);
+
+        if product.price <= product.section.config().min_price {
+            product.section = Section::Others;
+        }
+
+        product.section != original
     }
 
-    fn resolve_product_section(&self, product: &mut Product) {
+    fn resolve_product_section(product: &mut Product) {
         let mut visited = HashSet::new();
         let mut current = product.section;
 
@@ -509,7 +506,7 @@ fn compare_duplicate_candidates(left: &Product, right: &Product) -> CmpOrdering 
         .then_with(|| left.description.cmp(&right.description))
         .then_with(|| left.image.cmp(&right.image))
         .then_with(|| left.price.cmp(&right.price))
-        .then_with(|| left.old_price.cmp(&right.old_price))
+        .then_with(|| left.original_price.cmp(&right.original_price))
         .then_with(|| left.status.to_string().cmp(&right.status.to_string()))
 }
 

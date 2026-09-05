@@ -15,7 +15,7 @@ static CONFIG: RetailerConfig = RetailerConfig {
     title_sel: Lazy::new(|| Selector::parse("a.font-heading").unwrap()),
     image_sel: Lazy::new(|| Selector::parse("img[alt]").unwrap()),
     price_sel: Lazy::new(|| Selector::parse("p.font-heading").unwrap()),
-    old_price_sel: Lazy::new(|| Selector::parse("p.line-through").unwrap()),
+    original_price_sel: Lazy::new(|| Selector::parse("p.line-through").unwrap()),
     price_sel_2: None,
     status_sel: Some(Lazy::new(|| Selector::parse("div.flex-wrap span").unwrap())),
     desc_sel: None,
